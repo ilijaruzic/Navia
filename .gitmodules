@@ -11,3 +11,6 @@
 [submodule "Navia.Engine/lib/glfw"]
 	path = Navia.Engine/lib/glfw
 	url = https://github.com/glfw/glfw.git
+[submodule "Navia.Engine/lib/stb"]
+	path = Navia.Engine/lib/stb
+	url = https://github.com/nothings/stb.git

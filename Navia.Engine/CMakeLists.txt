@@ -24,4 +24,4 @@ target_include_directories(Navia.Engine
             lib/glad/include
             lib/glfw/include
             lib/imgui
-            lib/stb_image)
+            lib/stb)
