@@ -1,4 +1,4 @@
-#include "WindowEvent.hpp"
+#include "navia/events/WindowEvent.hpp"
 
 namespace Navia {
 WindowResizeEvent::WindowResizeEvent(size_t width, size_t height) : width(width), height(height) {}

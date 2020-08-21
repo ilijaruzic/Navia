@@ -1,7 +1,6 @@
-#include "Layer.hpp"
+#include "navia/core/Layer.hpp"
 
 namespace Navia {
-
 Layer::Layer(const std::string& name) : name(name) {}
 
 Layer::~Layer() {}

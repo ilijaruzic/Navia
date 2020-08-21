@@ -18,10 +18,11 @@
 
 #include <array>
 #include <vector>
+#include <tuple>
 #include <unordered_map>
 #include <unordered_set>
 
-#include "Logger.hpp"
+#include "navia/core/Logger.hpp"
 
 #ifdef NAVIA_PLATFORM_WINDOWS
     #include <Windows.h>

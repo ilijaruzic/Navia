@@ -1,4 +1,4 @@
-#include "Application.hpp"
+#include "navia/core/Application.hpp"
 #include <glad/glad.h>
 
 namespace Navia {

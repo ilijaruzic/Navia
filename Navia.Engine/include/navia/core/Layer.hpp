@@ -1,7 +1,7 @@
 #ifndef _LAYER_HPP_
 #define _LAYER_HPP_
 
-#include "Event.hpp"
+#include "navia/events/Event.hpp"
 
 namespace Navia {
 class Layer {

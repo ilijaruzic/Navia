@@ -1,4 +1,4 @@
-#include "Event.hpp"
+#include "navia/events/Event.hpp"
 
 namespace Navia {
 int operator&(const EventCategory& lhs, const EventCategory& rhs) {

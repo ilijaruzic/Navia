@@ -1,7 +1,7 @@
+#include "navia/events/KeyEvent.hpp"
+#include "navia/events/MouseEvent.hpp"
+#include "navia/events/WindowEvent.hpp"
 #include "navia/platform/windows/WindowsWindow.hpp"
-#include "KeyEvent.hpp"
-#include "MouseEvent.hpp"
-#include "WindowEvent.hpp"
 #include <glad/glad.h>
 
 namespace Navia {

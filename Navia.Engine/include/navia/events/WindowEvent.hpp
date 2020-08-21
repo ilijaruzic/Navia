@@ -1,7 +1,7 @@
 #ifndef _WINDOWEVENT_HPP_
 #define _WINDOWEVENT_HPP_
 
-#include "Event.hpp"
+#include "navia/events/Event.hpp"
 
 namespace Navia {
 class WindowResizeEvent : public Event {

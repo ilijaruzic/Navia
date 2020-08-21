@@ -1,7 +1,7 @@
 #ifndef _LAYER_STACK_HPP_
 #define _LAYER_STACK_HPP_
 
-#include "Layer.hpp"
+#include "navia/core/Layer.hpp"
 
 namespace Navia {
 class LayerStack {

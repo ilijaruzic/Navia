@@ -1,5 +1,5 @@
-#include "ExampleLayer.hpp"
 #include "SandboxApplication.hpp"
+#include "layers/ExampleLayer.hpp"
 #include <NaviaEntrypoint.hpp>
 
 Navia::Application* Navia::create() {

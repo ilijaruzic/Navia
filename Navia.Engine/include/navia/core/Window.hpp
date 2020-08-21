@@ -1,7 +1,7 @@
 #ifndef _WINDOW_HPP_
 #define _WINDOW_HPP_
 
-#include "Event.hpp"
+#include "navia/events/Event.hpp"
 
 namespace Navia {
 struct WindowProperties {

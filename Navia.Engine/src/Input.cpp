@@ -1,4 +1,4 @@
-#include "Input.hpp"
+#include "navia/core/Input.hpp"
 
 namespace Navia {
 bool Input::isMouseButtonPressed(size_t button) {

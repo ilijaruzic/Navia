@@ -1,5 +1,5 @@
-#include "Application.hpp"
-#include "WindowsInput.hpp"
+#include "navia/core/Application.hpp"
+#include "navia/platform/windows/WindowsInput.hpp"
 #include <GLFW/glfw3.h>
 
 namespace Navia {

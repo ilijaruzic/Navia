@@ -49,15 +49,10 @@ target_precompile_headers(Navia.Engine PUBLIC PrecompiledHeaders.hpp)
 target_include_directories(Navia.Engine
         PUBLIC
             include
-            include/navia/core
-            include/navia/events
-            include/navia/imgui
             lib/glm
             lib/imgui
             lib/spdlog/include
         PRIVATE
-            include/navia/platform/opengl
-            include/navia/platform/windows
             lib/glad/include
             lib/glfw/include
             lib/stb)

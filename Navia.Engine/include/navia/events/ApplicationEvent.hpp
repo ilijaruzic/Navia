@@ -1,7 +1,7 @@
 #ifndef _APPLICATION_EVENT_HPP_
 #define _APPLICATION_EVENT_HPP_
 
-#include "Event.hpp"
+#include "navia/events/Event.hpp"
 
 namespace Navia {
 class ApplicationTickEvent : public Event {

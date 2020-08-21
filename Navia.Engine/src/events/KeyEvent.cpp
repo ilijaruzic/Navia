@@ -1,4 +1,4 @@
-#include "KeyEvent.hpp"
+#include "navia/events/KeyEvent.hpp"
 
 namespace Navia {
 KeyEvent::KeyEvent(size_t keyCode) : keyCode(keyCode) {}

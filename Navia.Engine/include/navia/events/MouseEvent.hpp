@@ -1,7 +1,7 @@
 #ifndef _MOUSE_EVENT_HPP_
 #define _MOUSE_EVENT_HPP_
 
-#include "Event.hpp"
+#include "navia/events/Event.hpp"
 
 namespace Navia {
 class MouseMovedEvent : public Event {

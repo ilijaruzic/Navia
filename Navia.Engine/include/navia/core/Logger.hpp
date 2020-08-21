@@ -1,7 +1,6 @@
 #ifndef _LOGGER_HPP_
 #define _LOGGER_HPP_
 
-#include "Core.hpp"
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
 

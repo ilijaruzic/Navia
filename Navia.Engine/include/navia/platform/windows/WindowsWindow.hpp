@@ -1,7 +1,7 @@
 #ifndef _WINDOWS_WINDOW_HPP_
 #define _WINDOWS_WINDOW_HPP_
 
-#include "Window.hpp"
+#include "navia/core/Window.hpp"
 #include <GLFW/glfw3.h>
 
 namespace Navia {

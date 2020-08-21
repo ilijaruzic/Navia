@@ -1,4 +1,4 @@
-#include "MouseEvent.hpp"
+#include "navia/events/MouseEvent.hpp"
 
 namespace Navia {
 MouseMovedEvent::MouseMovedEvent(float x, float y) : x(x), y(y) {}

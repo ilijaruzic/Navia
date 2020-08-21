@@ -1,7 +1,7 @@
 #ifndef _KEY_EVENT_HPP_
 #define _KEY_EVENT_HPP_
 
-#include "Event.hpp"
+#include "navia/events/Event.hpp"
 
 namespace Navia {
 class KeyEvent : public Event {

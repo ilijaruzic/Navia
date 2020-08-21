@@ -1,10 +1,10 @@
 #ifndef _IMGUI_LAYER_HPP_
 #define _IMGUI_LAYER_HPP_
 
-#include "Layer.hpp"
-#include "MouseEvent.hpp"
-#include "KeyEvent.hpp"
-#include "WindowEvent.hpp"
+#include "navia/core/Layer.hpp"
+#include "navia/events/MouseEvent.hpp"
+#include "navia/events/KeyEvent.hpp"
+#include "navia/events/WindowEvent.hpp"
 
 namespace Navia {
 class ImGuiLayer : public Layer {

@@ -1,12 +1,12 @@
 #ifndef _APPLICATION_HPP_
 #define _APPLICATION_HPP_
 
-#include "Core.hpp"
-#include "Event.hpp"
-#include "LayerStack.hpp"
-#include "ImGuiLayer.hpp"
-#include "WindowEvent.hpp"
-#include "Window.hpp"
+#include "navia/core/Core.hpp"
+#include "navia/core/LayerStack.hpp"
+#include "navia/core/Window.hpp"
+#include "navia/events/Event.hpp"
+#include "navia/events/WindowEvent.hpp"
+#include "navia/imgui/ImGuiLayer.hpp"
 
 namespace Navia {
 class Application {

@@ -15,5 +15,4 @@ add_executable(Navia.Sandbox ${SOURCE_FILES} ${INCLUDE_FILES})
 target_link_libraries(Navia.Sandbox PUBLIC Navia.Engine)
 target_include_directories(Navia.Sandbox
         PRIVATE
-            include
-            include/layers)
+            include)

@@ -1,9 +1,7 @@
 #ifndef _WINDOWS_INPUT_HPP_
 #define _WINDOWS_INPUT_HPP_
 
-#include <cstddef>
-#include <utility>
-#include "Input.hpp"
+#include "navia/core/Input.hpp"
 
 namespace Navia {
 class WindowsInput : public Input {
