@@ -5,10 +5,15 @@ add_compile_options(/EHsc)
 
 set(CMAKE_CXX_STANDARD 20)
 set(SOURCE_FILES
-        src/SandboxApplication.cpp )
+        src/layers/ExampleLayer.cpp
+        src/SandboxApplication.cpp)
 set(INCLUDE_FILES
+        include/layers/ExampleLayer.hpp
         include/SandboxApplication.hpp)
 
-add_executable(Navia.Sandbox ${SOURCE_FILES})
+add_executable(Navia.Sandbox ${SOURCE_FILES} ${INCLUDE_FILES})
 target_link_libraries(Navia.Sandbox PUBLIC Navia.Engine)
-target_include_directories(Navia.Sandbox PRIVATE include)
+target_include_directories(Navia.Sandbox
+        PRIVATE
+            include
+            include/layers)

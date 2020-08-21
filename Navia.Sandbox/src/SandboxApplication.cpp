@@ -1,5 +1,13 @@
+#include "ExampleLayer.hpp"
 #include "SandboxApplication.hpp"
+#include <NaviaEntrypoint.hpp>
 
-int main() {
-    while (true);
+Navia::Application* Navia::create() {
+    return new SandboxApplication();
 }
+
+SandboxApplication::SandboxApplication() {
+    pushLayer(new ExampleLayer());
+}
+
+SandboxApplication::~SandboxApplication() {}

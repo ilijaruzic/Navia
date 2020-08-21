@@ -1,7 +1,3 @@
-[submodule "Navia.Engine/lib/imgui"]
-	path = Navia.Engine/lib/imgui
-	url = https://github.com/ocornut/imgui.git
-	branch = docking
 [submodule "Navia.Engine/lib/glm"]
 	path = Navia.Engine/lib/glm
 	url = https://github.com/g-truc/glm
@@ -14,3 +10,6 @@
 [submodule "Navia.Engine/lib/stb"]
 	path = Navia.Engine/lib/stb
 	url = https://github.com/nothings/stb.git
+[submodule "Navia.Engine/lib/imgui"]
+	path = Navia.Engine/lib/imgui
+	url = https://github.com/ilijaruzic/imgui.git
