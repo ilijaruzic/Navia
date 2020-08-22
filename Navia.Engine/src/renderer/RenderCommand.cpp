@@ -4,6 +4,10 @@
 namespace Navia {
 RendererAPI* RenderCommand::rendererAPI = new OpenGLRendererAPI();
 
+void RenderCommand::init() {
+    rendererAPI->init();
+}
+
 void RenderCommand::setClearColor(const glm::vec4& color) {
     rendererAPI->setClearColor(color);
 }

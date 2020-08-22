@@ -5,6 +5,10 @@
 namespace Navia {
 Renderer::SceneData* Renderer::data = new SceneData();
 
+void Renderer::init() {
+    RenderCommand::init();
+}
+
 RendererAPI::APIVendor Renderer::getRendererAPI() {
     return RendererAPI::getAPIVendor();
 }

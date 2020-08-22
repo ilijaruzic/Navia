@@ -10,6 +10,8 @@ Application::Application() : window(std::unique_ptr<Window>(Window::create())), 
 
     window->setEventCallback(NAVIA_BIND_EVENT_CALLBACK(Application::onEvent));
 
+    Renderer::init();
+
     pushOverlay(imGuiLayer);
 }
 

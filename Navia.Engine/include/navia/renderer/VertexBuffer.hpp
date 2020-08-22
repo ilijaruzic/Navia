@@ -7,7 +7,7 @@
 namespace Navia {
 class VertexBuffer {
 public:
-    static VertexBuffer* create(float* vertices, size_t size);
+    static Ref<VertexBuffer> create(float* vertices, size_t size);
     virtual ~VertexBuffer() = default;
 
     virtual const BufferLayout& getLayout() const = 0;

@@ -8,7 +8,7 @@
 namespace Navia {
 class VertexArray {
 public:
-    static VertexArray* create();
+    static Ref<VertexArray> create();
     virtual ~VertexArray() = default;
 
     virtual void setIndexBuffer(Ref<IndexBuffer> indexBuffer) = 0;

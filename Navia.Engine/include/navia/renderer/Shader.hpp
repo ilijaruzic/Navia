@@ -15,8 +15,11 @@ enum class ShaderDatatype {
 
 class Shader {
 public:
-    static Shader* create(const std::string& vertexSource, const std::string& fragmentSource);
+    static Ref<Shader> create(const std::string& filepath);
+    static Ref<Shader> create(const std::string& name, const std::string& vertexSource, const std::string& fragmentSource);
     virtual ~Shader() = default;
+
+    virtual std::string getName() const = 0;
 
     virtual void bind() const = 0;
     virtual void unbind() const = 0;

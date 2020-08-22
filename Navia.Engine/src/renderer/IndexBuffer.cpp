@@ -3,13 +3,13 @@
 #include "navia/renderer/Renderer.hpp"
 
 namespace Navia {
-IndexBuffer* IndexBuffer::create(size_t* indices, size_t size) {
+Ref<IndexBuffer> IndexBuffer::create(size_t* indices, size_t size) {
     switch (Renderer::getRendererAPI()) {
         case RendererAPI::APIVendor::None:
             NAVIA_CORE_ASSERT(false, "API not supported yet!");
             break;
         case RendererAPI::APIVendor::OpenGL:
-            return new OpenGLIndexBuffer(indices, size);
+            return createRef<OpenGLIndexBuffer>(indices, size);
         case RendererAPI::APIVendor::Direct3D:
             NAVIA_CORE_ASSERT(false, "API not supported yet!");
             break;

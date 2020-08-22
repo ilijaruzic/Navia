@@ -9,6 +9,8 @@
 namespace Navia {
 class Renderer {
 public:
+    static void init();
+
     static RendererAPI::APIVendor getRendererAPI();
 
     static void beginScene(OrthographicCamera& camera);

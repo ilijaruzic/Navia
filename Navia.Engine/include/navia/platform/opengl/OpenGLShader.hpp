@@ -5,11 +5,16 @@
 #include "navia/core/Core.hpp"
 #include "navia/renderer/Shader.hpp"
 
+typedef unsigned int GLenum;
+
 namespace Navia {
 class OpenGLShader : public Shader {
 public:
-    OpenGLShader(const std::string& vertexSource, const std::string& fragmentSource);
+    OpenGLShader(const std::string& filepath);
+    OpenGLShader(const std::string& name, const std::string& vertexSource, const std::string& fragmentSource);
     ~OpenGLShader();
+
+    std::string getName() const override;
 
     void bind() const override;
     void unbind() const override;
@@ -26,6 +31,11 @@ public:
 
 private:
     size_t rendererId{ 0 };
+    std::string name;
+
+    std::string getSourceFromFile(const std::string& filepath) const;
+    std::unordered_map<GLenum, std::string> preprocess(const std::string& source) const;
+    void compileAndLink(const std::unordered_map<GLenum, std::string>& sources);
 };
 }
 

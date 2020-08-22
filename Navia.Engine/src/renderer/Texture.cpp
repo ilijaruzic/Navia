@@ -1,15 +1,15 @@
-#include "navia/renderer/VertexArray.hpp"
 #include "navia/renderer/Renderer.hpp"
-#include "navia/platform/opengl/OpenGLVertexArray.hpp"
+#include "navia/renderer/Texture.hpp"
+#include "navia/platform/opengl/OpenGLTexture.hpp"
 
 namespace Navia {
-Ref<VertexArray> VertexArray::create() {
+Ref<Texture2D> Texture2D::create(const std::string& filepath) {
     switch (Renderer::getRendererAPI()) {
         case RendererAPI::APIVendor::None:
         NAVIA_CORE_ASSERT(false, "API not supported yet!");
             break;
         case RendererAPI::APIVendor::OpenGL:
-            return createRef<OpenGLVertexArray>();
+            return createRef<OpenGLTexture2D>(filepath);
         case RendererAPI::APIVendor::Direct3D:
         NAVIA_CORE_ASSERT(false, "API not supported yet!");
             break;

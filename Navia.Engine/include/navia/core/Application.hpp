@@ -8,6 +8,7 @@
 #include "navia/events/Event.hpp"
 #include "navia/events/WindowEvent.hpp"
 #include "navia/imgui/ImGuiLayer.hpp"
+#include "navia/renderer/Renderer.hpp"
 
 namespace Navia {
 class Application {

@@ -6,7 +6,7 @@
 namespace Navia {
 class IndexBuffer {
 public:
-    static IndexBuffer* create(size_t* indices, size_t count);
+    static Ref<IndexBuffer> create(size_t* indices, size_t count);
     virtual ~IndexBuffer() = default;
 
     virtual size_t getCount() const = 0;

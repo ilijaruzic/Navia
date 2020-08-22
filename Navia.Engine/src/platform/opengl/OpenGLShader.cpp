@@ -3,65 +3,41 @@
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Navia {
-OpenGLShader::OpenGLShader(const std::string& vertexSource, const std::string& fragmentSource) {
-    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    const GLchar* source = static_cast<const GLchar*>(vertexSource.c_str());
-    glShaderSource(vertexShader, 1, &source, 0);
-    glCompileShader(vertexShader);
-    GLint isCompiled{};
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &isCompiled);
-    if(isCompiled == GL_FALSE) {
-        GLint maxLength{};
-        glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &maxLength);
-        std::vector<GLchar> infoLog(maxLength);
-        glGetShaderInfoLog(vertexShader, maxLength, &maxLength, &infoLog[0]);
-        glDeleteShader(vertexShader);
-        NAVIA_CORE_ERROR("{0}", infoLog.data());
-        NAVIA_CORE_ASSERT(false, "Vertex shader failed to compile!");
-        return;
+static GLenum getShaderTypeFromString(const std::string& type) {
+    if (type == "vertex") {
+        return GL_VERTEX_SHADER;
     }
+    if (type == "fragment" || type == "pixel") {
+        return GL_FRAGMENT_SHADER;
+    }
+    NAVIA_CORE_ASSERT(false, "Unknown shader type!");
+    return 0;
+}
 
-    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    source = static_cast<const GLchar*>(fragmentSource.c_str());
-    glShaderSource(fragmentShader, 1, &source, 0);
-    glCompileShader(fragmentShader);
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &isCompiled);
-    if (isCompiled == GL_FALSE) {
-        GLint maxLength{};
-        glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &maxLength);
-        std::vector<GLchar> infoLog(maxLength);
-        glGetShaderInfoLog(fragmentShader, maxLength, &maxLength, &infoLog[0]);
-        glDeleteShader(fragmentShader);
-        glDeleteShader(vertexShader);
-        NAVIA_CORE_ERROR("{0}", infoLog.data());
-        NAVIA_CORE_ASSERT(false, "Fragment shader failed to compile!");
-        return;
-    }
+OpenGLShader::OpenGLShader(const std::string& filepath) {
+    auto source = getSourceFromFile(filepath);
+    auto sources = preprocess(source);
+    compileAndLink(sources);
+    auto lastSlash = filepath.find_last_of("/\\");
+    lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
+    auto lastDot = filepath.rfind('.');
+    auto count = lastDot == std::string::npos ? filepath.size() - lastSlash : lastDot - lastSlash;
+    name = filepath.substr(lastSlash, count);
+}
 
-    rendererId = glCreateProgram();
-    glAttachShader(rendererId, vertexShader);
-    glAttachShader(rendererId, fragmentShader);
-    glLinkProgram(rendererId);
-    GLint isLinked{};
-    glGetProgramiv(rendererId, GL_LINK_STATUS, (int *)&isLinked);
-    if (isLinked == GL_FALSE) {
-        GLint maxLength{};
-        glGetProgramiv(rendererId, GL_INFO_LOG_LENGTH, &maxLength);
-        std::vector<GLchar> infoLog(maxLength);
-        glGetProgramInfoLog(rendererId, maxLength, &maxLength, &infoLog[0]);
-        glDeleteProgram(rendererId);
-        glDeleteShader(vertexShader);
-        glDeleteShader(fragmentShader);
-        NAVIA_CORE_ERROR("{0}", infoLog.data());
-        NAVIA_CORE_ASSERT(false, "Shader failed to link!");
-        return;
-    }
-    glDetachShader(rendererId, vertexShader);
-    glDetachShader(rendererId, fragmentShader);
+OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSource, const std::string& fragmentSource) : name(name) {
+    std::unordered_map<GLenum, std::string> sources;
+    sources[GL_VERTEX_SHADER] = vertexSource;
+    sources[GL_FRAGMENT_SHADER] = fragmentSource;
+    compileAndLink(sources);
 }
 
 OpenGLShader::~OpenGLShader() {
     glDeleteProgram(rendererId);
+}
+
+std::string OpenGLShader::getName() const {
+    return name;
 }
 
 void OpenGLShader::bind() const {
@@ -105,5 +81,86 @@ void OpenGLShader::uploadUniformMat3(const std::string& name, const glm::mat3& m
 void OpenGLShader::uploadUniformMat4(const std::string& name, const glm::mat4& matrix) {
     auto location = glGetUniformLocation(rendererId, name.c_str());
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+}
+
+std::string OpenGLShader::getSourceFromFile(const std::string& filepath) const {
+    std::string data;
+    if (std::ifstream file(filepath, std::ios::in | std::ios::binary); file.is_open()) {
+        file.seekg(0, std::ios::end);
+        data.resize(file.tellg());
+        file.seekg(0, std::ios::beg);
+        file.read(&data[0], data.size());
+        file.close();
+    }
+    else {
+        NAVIA_CORE_ERROR("Failed to open file: {0}!", filepath);
+    }
+    return data;
+}
+
+std::unordered_map<GLenum, std::string> OpenGLShader::preprocess(const std::string& source) const {
+    std::unordered_map<GLenum, std::string> sources;
+    const char* typeToken = "#type";
+    size_t typeTokenLength = strlen(typeToken);
+    size_t position = source.find(typeToken, 0);
+    while (position != std::string::npos) {
+        size_t end = source.find_first_of("\r\n", position);
+        NAVIA_CORE_ASSERT(end != std::string::npos, "Syntax error!");
+        size_t begin = position + typeTokenLength + 1;
+        std::string type = source.substr(begin, end - begin);
+        NAVIA_CORE_ASSERT(getShaderTypeFromString(type), "Invalid shader type specifier!");
+        size_t next = source.find_first_not_of("\r\n", end);
+        NAVIA_CORE_ASSERT(next != std::string::npos, "Syntax error!");
+        position = source.find(typeToken, next);
+        sources[getShaderTypeFromString(type)] = (position == std::string::npos) ? source.substr(next) : source.substr(next, position - next);
+    }
+    return sources;
+}
+
+
+void OpenGLShader::compileAndLink(const std::unordered_map<GLenum, std::string>& sources) {
+    auto programId = glCreateProgram();
+    std::array<GLenum, 2> shaderIds;
+    size_t index{ 0 };
+    for (const auto& [shaderType, shaderSource] : sources) {
+        GLuint shader = glCreateShader(shaderType);
+        const GLchar* source = static_cast<const GLchar*>(shaderSource.c_str());
+        glShaderSource(shader, 1, &source, 0);
+        glCompileShader(shader);
+        GLint isCompiled{ 0 };
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
+        if (isCompiled == GL_FALSE) {
+            GLint maxLength{ 0 };
+            glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+            std::vector<GLchar> infoLog(maxLength);
+            glGetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]);
+            glDeleteShader(shader);
+            NAVIA_CORE_ERROR("{0}", infoLog.data());
+            NAVIA_CORE_ASSERT(false, "Shader failed to compile!");
+            return;
+        }
+        glAttachShader(programId, shader);
+        shaderIds[index++] = shader;
+    }
+    glLinkProgram(programId);
+    GLint isLinked{ 0 };
+    glGetProgramiv(programId, GL_LINK_STATUS, (int*) &isLinked);
+    if (isLinked == GL_FALSE) {
+        GLint maxLength{ 0 };
+        glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &maxLength);
+        std::vector<GLchar> infoLog(maxLength);
+        glGetProgramInfoLog(programId, maxLength, &maxLength, &infoLog[0]);
+        glDeleteProgram(programId);
+        for (auto shaderId : shaderIds) {
+            glDeleteShader(shaderId);
+        }
+        NAVIA_CORE_ERROR("{0}", infoLog.data());
+        NAVIA_CORE_ASSERT(false, "Shader failed to link!");
+        return;
+    }
+    for (auto shaderId : shaderIds) {
+        glDetachShader(programId, shaderId);
+    }
+    rendererId = programId;
 }
 }

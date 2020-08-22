@@ -14,6 +14,8 @@
 #include "navia/renderer/RenderCommand.hpp"
 #include "navia/renderer/Renderer.hpp"
 #include "navia/renderer/Shader.hpp"
+#include "navia/renderer/ShaderLibrary.hpp"
+#include "navia/renderer/Texture.hpp"
 #include "navia/renderer/VertexArray.hpp"
 #include "navia/renderer/VertexBuffer.hpp"
 

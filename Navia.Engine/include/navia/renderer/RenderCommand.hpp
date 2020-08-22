@@ -7,7 +7,7 @@
 namespace Navia {
 class RenderCommand {
 public:
-
+    static void init();
     static void setClearColor(const glm::vec4& color);
     static void clear();
     static void drawIndexed(Ref<VertexArray> vertexArray);

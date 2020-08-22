@@ -5,20 +5,20 @@
 #include <imgui.h>
 
 ExampleLayer::ExampleLayer() : Navia::Layer("ExampleLayer") {
-    // Square
+    // Squares
     {
-        squareVertexArray.reset(Navia::VertexArray::create());
+        squareVertexArray = Navia::VertexArray::create();
 
-        float squareVertices[3 * 4]{
-            -0.5f, -0.5f, 0.0f,
-             0.5f, -0.5f, 0.0f,
-             0.5f,  0.5f, 0.0f,
-            -0.5f,  0.5f, 0.0f
+        float squareVertices[5 * 4]{
+            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+             0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+             0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f
         };
-        Navia::Ref<Navia::VertexBuffer> squareVertexBuffer;
-        squareVertexBuffer.reset(Navia::VertexBuffer::create(squareVertices, sizeof(squareVertices)));
+        Navia::Ref<Navia::VertexBuffer> squareVertexBuffer = Navia::VertexBuffer::create(squareVertices, sizeof(squareVertices));
         Navia::BufferLayout squareLayout{
-            { Navia::ShaderDatatype::Float3, "inPosition" }
+            { Navia::ShaderDatatype::Float3, "inPosition" },
+            { Navia::ShaderDatatype::Float2, "inTextureCoords" }
         };
         squareVertexBuffer->setLayout(squareLayout);
         squareVertexArray->addVertexBuffer(squareVertexBuffer);
@@ -26,11 +26,10 @@ ExampleLayer::ExampleLayer() : Navia::Layer("ExampleLayer") {
         size_t squareIndices[6]{
                 0, 1, 2, 2, 3, 0
         };
-        Navia::Ref<Navia::IndexBuffer> squareIndexBuffer;
-        squareIndexBuffer.reset(Navia::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(size_t)));
+        Navia::Ref<Navia::IndexBuffer> squareIndexBuffer = Navia::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(size_t));
         squareVertexArray->setIndexBuffer(squareIndexBuffer);
 
-        std::string squareVertexSource{R"(
+        std::string squareFlatColorVertexSource{R"(
             #version 330 core
 
             layout(location = 0) in vec3 v_inPosition;
@@ -45,7 +44,7 @@ ExampleLayer::ExampleLayer() : Navia::Layer("ExampleLayer") {
                 gl_Position = v_uViewProjection * v_uTransform * vec4(v_inPosition, 1.0);
             }
         )"};
-        std::string squareFragmentSource{R"(
+        std::string squareFlatColorFragmentSource{R"(
             #version 330 core
 
             layout(location = 0) out vec4 f_outColor;
@@ -58,11 +57,16 @@ ExampleLayer::ExampleLayer() : Navia::Layer("ExampleLayer") {
                 f_outColor = vec4(f_uColor, 1.0);
             }
         )"};
-        squareShader.reset(Navia::Shader::create(squareVertexSource, squareFragmentSource));
+        squareFlatColorShader = Navia::Shader::create("squareFlatColorShader", squareFlatColorVertexSource, squareFlatColorFragmentSource);
+        auto squareTextureShader = shaderLibrary.load("../../Navia.Sandbox/assets/shaders/texture.glsl");
+        checkerboardTexture = Navia::Texture2D::create("../../Navia.Sandbox/assets/textures/checkerboard.png");
+        googleTexture = Navia::Texture2D::create("../../Navia.Sandbox/assets/textures/google.png");
+        std::dynamic_pointer_cast<Navia::OpenGLShader>(squareTextureShader)->bind();
+        std::dynamic_pointer_cast<Navia::OpenGLShader>(squareTextureShader)->uploadUniformInt("f_uTexture", 0);
     }
     // Triangle
     {
-        triangleVertexArray.reset(Navia::VertexArray::create());
+        triangleVertexArray = Navia::VertexArray::create();
 
         float triangleVertices[3 * 7]{
             -0.5f, -0.5f, 0.0f, 0.75f, 0.25f, 0.25f, 1.0f,
@@ -70,7 +74,7 @@ ExampleLayer::ExampleLayer() : Navia::Layer("ExampleLayer") {
              0.0f,  0.5f, 0.0f, 0.25f, 0.25f, 0.75f, 1.0f
         };
         Navia::Ref<Navia::VertexBuffer> triangleVertexBuffer;
-        triangleVertexBuffer.reset(Navia::VertexBuffer::create(triangleVertices, sizeof(triangleVertices)));
+        triangleVertexBuffer = Navia::VertexBuffer::create(triangleVertices, sizeof(triangleVertices));
         Navia::BufferLayout triangleLayout{
             { Navia::ShaderDatatype::Float3, "inPosition" },
             { Navia::ShaderDatatype::Float4, "inColor" }
@@ -82,7 +86,7 @@ ExampleLayer::ExampleLayer() : Navia::Layer("ExampleLayer") {
                 0, 1, 2
         };
         Navia::Ref<Navia::IndexBuffer> triangleIndexBuffer;
-        triangleIndexBuffer.reset(Navia::IndexBuffer::create(triangleIndices, sizeof(triangleIndices) / sizeof(size_t)));
+        triangleIndexBuffer = Navia::IndexBuffer::create(triangleIndices, sizeof(triangleIndices) / sizeof(size_t));
         triangleVertexArray->setIndexBuffer(triangleIndexBuffer);
 
         std::string triangleVertexSource{R"(
@@ -116,7 +120,7 @@ ExampleLayer::ExampleLayer() : Navia::Layer("ExampleLayer") {
                 f_outColor = v_outColor;
             }
         )"};
-        triangleShader.reset(Navia::Shader::create(triangleVertexSource, triangleFragmentSource));
+        triangleShader = Navia::Shader::create("triangleShader", triangleVertexSource, triangleFragmentSource);
     }
 }
 
@@ -154,17 +158,25 @@ void ExampleLayer::onUpdate(Navia::Timestep timestep) {
     camera.setRotation(cameraRotation);
 
     Navia::Renderer::beginScene(camera);
+
     glm::mat4 scale = glm::scale(glm::mat4{ 1.0f }, glm::vec3{ 0.1f });
-    std::dynamic_pointer_cast<Navia::OpenGLShader>(squareShader)->bind();
-    std::dynamic_pointer_cast<Navia::OpenGLShader>(squareShader)->uploadUniformFloat3("f_uColor", squareColor);
+    std::dynamic_pointer_cast<Navia::OpenGLShader>(squareFlatColorShader)->bind();
+    std::dynamic_pointer_cast<Navia::OpenGLShader>(squareFlatColorShader)->uploadUniformFloat3("f_uColor", squareColor);
     for (size_t j = 0; j < 20; ++j) {
         for (size_t i = 0; i < 20; ++i) {
             glm::vec3 position{i * 0.11f, j * 0.11f, 0.0f};
             glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) * scale;
-            Navia::Renderer::submit(squareShader, squareVertexArray, transform);
+            Navia::Renderer::submit(squareFlatColorShader, squareVertexArray, transform);
         }
     }
-    Navia::Renderer::submit(triangleShader, triangleVertexArray);
+    checkerboardTexture->bind();
+    auto squareTextureShader = shaderLibrary.get("texture");
+    Navia::Renderer::submit(squareTextureShader, squareVertexArray, glm::scale(glm::mat4{ 1.0f }, glm::vec3{ 1.5f }));
+    googleTexture->bind();
+    Navia::Renderer::submit(squareTextureShader, squareVertexArray, glm::scale(glm::mat4{ 1.0f }, glm::vec3{ 1.5f }));
+
+    // Navia::Renderer::submit(triangleShader, triangleVertexArray);
+
     Navia::Renderer::endScene();
 }
 

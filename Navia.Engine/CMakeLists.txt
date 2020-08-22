@@ -15,6 +15,7 @@ set(SOURCE_FILES
         src/platform/opengl/OpenGLIndexBuffer.cpp
         src/platform/opengl/OpenGLRendererAPI.cpp
         src/platform/opengl/OpenGLShader.cpp
+        src/platform/opengl/OpenGLTexture.cpp
         src/platform/opengl/OpenGLVertexArray.cpp
         src/platform/opengl/OpenGLVertexBuffer.cpp
         src/platform/windows/WindowsInput.cpp
@@ -27,8 +28,11 @@ set(SOURCE_FILES
         src/renderer/Renderer.cpp
         src/renderer/RendererAPI.cpp
         src/renderer/Shader.cpp
+        src/renderer/ShaderLibrary.cpp
+        src/renderer/Texture.cpp
         src/renderer/VertexArray.cpp
         src/renderer/VertexBuffer.cpp
+        src/stb/STBImageBuild.cpp
         src/Application.cpp
         src/Input.cpp
         src/Layer.cpp
@@ -57,6 +61,7 @@ set(INCLUDE_FILES
         include/navia/platform/opengl/OpenGLIndexBuffer.hpp
         include/navia/platform/opengl/OpenGLRendererAPI.hpp
         include/navia/platform/opengl/OpenGLShader.hpp
+        include/navia/platform/opengl/OpenGLTexture.hpp
         include/navia/platform/opengl/OpenGLVertexArray.hpp
         include/navia/platform/opengl/OpenGLVertexBuffer.hpp
         include/navia/platform/windows/WindowsInput.hpp
@@ -69,6 +74,8 @@ set(INCLUDE_FILES
         include/navia/renderer/Renderer.hpp
         include/navia/renderer/RendererAPI.hpp
         include/navia/renderer/Shader.hpp
+        include/navia/renderer/ShaderLibrary.hpp
+        include/navia/renderer/Texture.hpp
         include/navia/renderer/VertexArray.hpp
         include/navia/renderer/VertexBuffer.hpp
         PrecompiledHeaders.hpp)
@@ -77,9 +84,10 @@ add_subdirectory(lib/imgui)
 add_subdirectory(lib/glad)
 add_subdirectory(lib/glfw)
 add_subdirectory(lib/glm)
+add_subdirectory(lib/stb)
 
 add_library(Navia.Engine STATIC ${SOURCE_FILES} ${INCLUDE_FILES})
-target_link_libraries(Navia.Engine PRIVATE imgui opengl32 glad glfw)
+target_link_libraries(Navia.Engine PRIVATE imgui opengl32 glad glfw stb)
 target_precompile_headers(Navia.Engine PUBLIC PrecompiledHeaders.hpp)
 target_include_directories(Navia.Engine
         PUBLIC
