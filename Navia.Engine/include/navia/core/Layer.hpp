@@ -1,6 +1,7 @@
 #ifndef _LAYER_HPP_
 #define _LAYER_HPP_
 
+#include "navia/core/Timestep.hpp"
 #include "navia/events/Event.hpp"
 
 namespace Navia {
@@ -14,7 +15,7 @@ public:
     virtual void onAttach();
     virtual void onDetach();
     virtual void onImGuiRender();
-    virtual void onUpdate();
+    virtual void onUpdate(Timestep timestep);
     virtual void onEvent(Event& event);
 
 private:

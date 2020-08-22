@@ -6,6 +6,15 @@
 #include "navia/core/KeyCodes.hpp"
 #include "navia/core/Layer.hpp"
 #include "navia/core/MouseButtons.hpp"
+#include "navia/core/Timestep.hpp"
 #include "navia/core/Logger.hpp"
+#include "navia/renderer/BufferLayout.hpp"
+#include "navia/renderer/IndexBuffer.hpp"
+#include "navia/renderer/OrthographicCamera.hpp"
+#include "navia/renderer/RenderCommand.hpp"
+#include "navia/renderer/Renderer.hpp"
+#include "navia/renderer/Shader.hpp"
+#include "navia/renderer/VertexArray.hpp"
+#include "navia/renderer/VertexBuffer.hpp"
 
 #endif

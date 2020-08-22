@@ -1,5 +1,5 @@
 #include "navia/core/Application.hpp"
-#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 namespace Navia {
 Application* Application::instance{ nullptr };
@@ -13,8 +13,6 @@ Application::Application() : window(std::unique_ptr<Window>(Window::create())), 
     pushOverlay(imGuiLayer);
 }
 
-Application::~Application() {}
-
 Application& Application::getInstance() {
     return *instance;
 }
@@ -24,14 +22,13 @@ Window& Application::getWindow() const {
 }
 
 void Application::run() {
-    NAVIA_TRACE("Hello Sandbox!");
-
     while (running) {
-        glClearColor(1, 0, 1, 1);
-        glClear(GL_COLOR_BUFFER_BIT);
+        float time = static_cast<float>(glfwGetTime()); // abstraction needed
+        Timestep timestep{ time - lastFrameTime };
+        lastFrameTime = time;
 
         for (auto layer : layerStack) {
-            layer->onUpdate();
+            layer->onUpdate(timestep);
         }
 
         imGuiLayer->begin();

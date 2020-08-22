@@ -25,7 +25,7 @@ public:
 
 private:
     std::vector<Layer*> layers;
-    size_t layerIndex{};
+    size_t layerIndex{ 0 };
 };
 }
 

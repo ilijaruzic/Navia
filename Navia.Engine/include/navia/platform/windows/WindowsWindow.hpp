@@ -2,6 +2,7 @@
 #define _WINDOWS_WINDOW_HPP_
 
 #include "navia/core/Window.hpp"
+#include "navia/renderer/GraphicsContext.hpp"
 #include <GLFW/glfw3.h>
 
 namespace Navia {
@@ -22,6 +23,7 @@ public:
 
 private:
     GLFWwindow* window;
+    GraphicsContext* context;
 
     struct WindowData {
         std::string title;

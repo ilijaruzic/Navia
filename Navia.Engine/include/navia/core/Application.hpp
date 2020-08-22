@@ -3,6 +3,7 @@
 
 #include "navia/core/Core.hpp"
 #include "navia/core/LayerStack.hpp"
+#include "navia/core/Timestep.hpp"
 #include "navia/core/Window.hpp"
 #include "navia/events/Event.hpp"
 #include "navia/events/WindowEvent.hpp"
@@ -12,7 +13,7 @@ namespace Navia {
 class Application {
 public:
     Application();
-    virtual ~Application();
+    virtual ~Application() = default;
 
     static Application& getInstance();
     Window& getWindow() const;
@@ -26,10 +27,13 @@ public:
 
 private:
     static Application* instance;
-    std::unique_ptr<Window> window;
-    ImGuiLayer* imGuiLayer;
+
+    Scope<Window> window;
     bool running{ true };
+
+    ImGuiLayer* imGuiLayer;
     LayerStack layerStack;
+    float lastFrameTime{ 0.0f };
 
     bool onWindowClose(WindowCloseEvent& event);
 };

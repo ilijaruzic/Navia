@@ -15,7 +15,7 @@ void Layer::onDetach() {}
 
 void Layer::onImGuiRender() {}
 
-void Layer::onUpdate() {}
+void Layer::onUpdate(Timestep timestep) {}
 
 void Layer::onEvent(Event& event) {}
 }

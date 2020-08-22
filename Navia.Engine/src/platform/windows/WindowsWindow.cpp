@@ -1,8 +1,8 @@
 #include "navia/events/KeyEvent.hpp"
 #include "navia/events/MouseEvent.hpp"
 #include "navia/events/WindowEvent.hpp"
+#include "navia/platform/opengl/OpenGLGraphicsContext.hpp"
 #include "navia/platform/windows/WindowsWindow.hpp"
-#include <glad/glad.h>
 
 namespace Navia {
 static bool glfwInitialized{ false };
@@ -29,9 +29,10 @@ WindowsWindow::WindowsWindow(const WindowProperties& properties) {
     }
 
     window = glfwCreateWindow(properties.width, properties.height, data.title.c_str(), nullptr, nullptr);
-    glfwMakeContextCurrent(window);
-    auto result = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-    NAVIA_CORE_ASSERT(result, "Failed to initialize GLAD!");
+
+    context = new OpenGLGraphicsContext(window);
+    context->init();
+
     glfwSetWindowUserPointer(window, &data);
     setVSync(true);
     setEventCallbacks();
@@ -55,7 +56,7 @@ void* WindowsWindow::getNativeWindow() const {
 
 void WindowsWindow::onUpdate() {
     glfwPollEvents();
-    glfwSwapBuffers(window);
+    context->swapBuffers();
 }
 
 void WindowsWindow::setEventCallback(const EventCallbackType& callback) {

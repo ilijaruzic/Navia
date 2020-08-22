@@ -19,7 +19,7 @@ public:
     void end();
 
 private:
-    float time{};
+    float time{ 0.0f };
 };
 }
 

@@ -7,6 +7,7 @@ Navia::Application* Navia::create() {
 }
 
 SandboxApplication::SandboxApplication() {
+    NAVIA_TRACE("Hello Sandbox!");
     pushLayer(new ExampleLayer());
 }
 

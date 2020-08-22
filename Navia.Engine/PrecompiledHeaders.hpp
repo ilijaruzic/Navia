@@ -17,6 +17,7 @@
 #include <sstream>
 
 #include <array>
+#include <initializer_list>
 #include <vector>
 #include <tuple>
 #include <unordered_map>
