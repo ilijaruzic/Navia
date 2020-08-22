@@ -1,6 +1,6 @@
 # navia
 
-![navia](resources/img/navia_logo.png?raw=true "navia")
+![navia](assets/images/navia_logo.png?raw=true "navia")
 
 ## Getting Started
 Visual Studio 2017/2019 or CLion 2019/2020 is recommended, navia is officially untested on other development environments whilst we focus on a Windows build.
