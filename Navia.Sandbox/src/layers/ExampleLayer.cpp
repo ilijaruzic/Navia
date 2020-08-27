@@ -58,9 +58,9 @@ ExampleLayer::ExampleLayer() : Navia::Layer("ExampleLayer") {
             }
         )"};
         squareFlatColorShader = Navia::Shader::create("squareFlatColorShader", squareFlatColorVertexSource, squareFlatColorFragmentSource);
-        auto squareTextureShader = shaderLibrary.load("../../Navia.Sandbox/assets/shaders/texture.glsl");
-        checkerboardTexture = Navia::Texture2D::create("../../Navia.Sandbox/assets/textures/checkerboard.png");
-        googleTexture = Navia::Texture2D::create("../../Navia.Sandbox/assets/textures/google.png");
+        auto squareTextureShader = shaderLibrary.load("assets/shaders/texture.glsl");
+        checkerboardTexture = Navia::Texture2D::create("assets/textures/checkerboard.png");
+        googleTexture = Navia::Texture2D::create("assets/textures/google.png");
         std::dynamic_pointer_cast<Navia::OpenGLShader>(squareTextureShader)->bind();
         std::dynamic_pointer_cast<Navia::OpenGLShader>(squareTextureShader)->uploadUniformInt("f_uTexture", 0);
     }

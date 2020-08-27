@@ -15,7 +15,7 @@ std::pair<float, float> WindowsInput::getMousePositionImpl() {
     auto window = static_cast<GLFWwindow*>(Application::getInstance().getWindow().getNativeWindow());
     double x, y;
     glfwGetCursorPos(window, &x, &y);
-    return { x, y };
+    return { static_cast<float>(x), static_cast<float>(y) };
 }
 
 float WindowsInput::getMouseXImpl() {
