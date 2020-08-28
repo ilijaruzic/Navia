@@ -77,26 +77,74 @@ void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, cons
     NAVIA_PROFILE_FUNCTION();
 
     data->shader->setFloat4("f_uColor", color);
+    data->shader->setFloat("f_uTilingFactor", 1.0f);
     data->whiteTexture->bind();
 
-    glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) * glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
+    glm::mat4 transform =
+            glm::translate(glm::mat4{ 1.0f }, position) *
+            glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
     data->shader->setMat4("v_uTransform", transform);
 
     data->vertexArray->bind();
     RenderCommand::drawIndexed(data->vertexArray);
 }
 
-void Renderer2D::drawQuad(const glm::vec2& position, const glm::vec2& size, Ref<Texture2D> texture) {
-    drawQuad(glm::vec3{ position.x, position.y, 0.0f }, size, texture);
+void Renderer2D::drawQuad(const glm::vec2& position, const glm::vec2& size, Ref<Texture2D> texture, float tilingFactor, const glm::vec4& tintColor) {
+    drawQuad(glm::vec3{ position.x, position.y, 0.0f }, size, texture, tilingFactor, tintColor);
 }
 
-void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, Ref<Texture2D> texture) {
+void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, Ref<Texture2D> texture, float tilingFactor, const glm::vec4& tintColor) {
     NAVIA_PROFILE_FUNCTION();
 
-    data->shader->setFloat4("f_uColor", glm::vec4{ 1.0f });
+    data->shader->setFloat4("f_uColor", tintColor);
+    data->shader->setFloat("f_uTilingFactor", tilingFactor);
     texture->bind();
 
-    glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) * glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
+    glm::mat4 transform =
+            glm::translate(glm::mat4{ 1.0f }, position) *
+            glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
+    data->shader->setMat4("v_uTransform", transform);
+
+    data->vertexArray->bind();
+    RenderCommand::drawIndexed(data->vertexArray);
+}
+
+void Renderer2D::drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color) {
+    drawRotatedQuad(glm::vec3{ position.x, position.y, 0.0f }, size, rotation, color);
+}
+
+void Renderer2D::drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color) {
+    NAVIA_PROFILE_FUNCTION();
+
+    data->shader->setFloat4("f_uColor", color);
+    data->shader->setFloat("f_uTilingFactor", 1.0f);
+    data->whiteTexture->bind();
+
+    glm::mat4 transform =
+            glm::translate(glm::mat4{ 1.0f }, position) *
+            glm::rotate(glm::mat4{ 1.0f }, rotation, glm::vec3{ 0.0f, 0.0f, 1.0f }) *
+            glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
+    data->shader->setMat4("v_uTransform", transform);
+
+    data->vertexArray->bind();
+    RenderCommand::drawIndexed(data->vertexArray);
+}
+
+void Renderer2D::drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, Ref<Texture2D> texture, float tilingFactor, const glm::vec4& tintColor) {
+    drawRotatedQuad(glm::vec3{ position.x, position.y, 0.0f }, size, rotation, texture, tilingFactor, tintColor);
+}
+
+void Renderer2D::drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, Ref<Texture2D> texture, float tilingFactor, const glm::vec4& tintColor) {
+    NAVIA_PROFILE_FUNCTION();
+
+    data->shader->setFloat4("f_uColor", tintColor);
+    data->shader->setFloat("f_uTilingFactor", tilingFactor);
+    texture->bind();
+
+    glm::mat4 transform =
+            glm::translate(glm::mat4{ 1.0f }, position) *
+            glm::rotate(glm::mat4{ 1.0f }, rotation, glm::vec3{ 0.0f, 0.0f, 1.0f }) *
+            glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
     data->shader->setMat4("v_uTransform", transform);
 
     data->vertexArray->bind();

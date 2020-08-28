@@ -23,6 +23,9 @@ void ExampleLayer2D::onImGuiRender() {
     ImGui::Begin("Settings");
     ImGui::ColorEdit4("Square Color", glm::value_ptr(blue));
     ImGui::ColorEdit4("Rectangle Color", glm::value_ptr(red));
+    ImGui::SliderFloat("Rectangle Rotation", &rotation, 0.0f, 360.0f);
+    ImGui::SliderFloat("Texture Resolution", &resolution, 1.0f, 10.0f);
+    ImGui::ColorEdit4("Texture Tint Color", glm::value_ptr(tint));
     ImGui::End();
 }
 
@@ -34,7 +37,7 @@ void ExampleLayer2D::onUpdate(Navia::Timestep timestep) {
     {
         NAVIA_PROFILE_SCOPE("Navia::RenderCommand initial setup");
 
-        Navia::RenderCommand::setClearColor(glm::vec4{0.0f, 0.0f, 0.0f, 1.0f});
+        Navia::RenderCommand::setClearColor(glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f });
         Navia::RenderCommand::clear();
     }
 
@@ -42,9 +45,9 @@ void ExampleLayer2D::onUpdate(Navia::Timestep timestep) {
         NAVIA_PROFILE_SCOPE("Navia::Renderere2D draws");
 
         Navia::Renderer2D::beginScene(cameraController.getCamera());
-        Navia::Renderer2D::drawQuad(glm::vec2{-1.0f, 0.0f}, glm::vec2{0.8f, 0.8f}, blue);
-        Navia::Renderer2D::drawQuad(glm::vec2{0.5f, -0.5f}, glm::vec2{0.5f, 0.7f}, red);
-        Navia::Renderer2D::drawQuad(glm::vec3{0.0f, 0.0f, -0.1f}, glm::vec2{10.0f, 10.0f}, texture);
+        Navia::Renderer2D::drawQuad(glm::vec2{ -1.0f,  0.0f }, glm::vec2{ 0.8f, 0.8f }, blue);
+        Navia::Renderer2D::drawRotatedQuad(glm::vec2{ 0.5f, -0.5f }, glm::vec2{ 0.5f, 0.7f }, glm::radians(rotation), red);
+        Navia::Renderer2D::drawQuad(glm::vec3{  0.0f, 0.0f, -0.1f}, glm::vec2{ 10.0f, 10.0f }, texture, resolution, tint);
         Navia::Renderer2D::endScene();
     }
 }
