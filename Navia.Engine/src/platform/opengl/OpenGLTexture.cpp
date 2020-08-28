@@ -3,6 +3,16 @@
 #include <stb_image.h>
 
 namespace Navia {
+OpenGLTexture2D::OpenGLTexture2D(size_t width, size_t height) : width(width), height(height), internalFormat(GL_RGBA8), format(GL_RGBA) {
+    glCreateTextures(GL_TEXTURE_2D, 1, &rendererId);
+    glTextureStorage2D(rendererId, 1, internalFormat, width, height);
+
+    glTextureParameteri(rendererId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTextureParameteri(rendererId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTextureParameteri(rendererId, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTextureParameteri(rendererId, GL_TEXTURE_WRAP_T, GL_REPEAT);
+}
+
 OpenGLTexture2D::OpenGLTexture2D(const std::string& filepath) : filepath(filepath) {
     int width, height, channels;
     stbi_set_flip_vertically_on_load(1);
@@ -11,8 +21,8 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& filepath) : filepath(filepat
     this->width = width;
     this->height = height;
 
-    auto internalFormat{ 0 };
-    auto format{ 0 };
+    GLenum internalFormat{ 0 };
+    GLenum format{ 0 };
     if (channels == 4) {
         internalFormat = GL_RGBA8;
         format = GL_RGBA;
@@ -21,6 +31,8 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& filepath) : filepath(filepat
         internalFormat = GL_RGB8;
         format = GL_RGB;
     }
+    this->internalFormat = internalFormat;
+    this->format = format;
     NAVIA_CORE_ASSERT(internalFormat & format, "Unsuported format!");
 
     glCreateTextures(GL_TEXTURE_2D, 1, &rendererId);
@@ -46,6 +58,12 @@ size_t OpenGLTexture2D::getWidth() const {
 
 size_t OpenGLTexture2D::getHeight() const {
     return height;
+}
+
+void OpenGLTexture2D::setData(void* data, size_t size) {
+    size_t bytesPerPixel = format == GL_RGBA ? 4 : 3;
+    NAVIA_CORE_ASSERT(size == width * height * bytesPerPixel, "Data have to be entire texture!");
+    glTextureSubImage2D(rendererId, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, data);
 }
 
 void OpenGLTexture2D::bind(size_t slot) const {

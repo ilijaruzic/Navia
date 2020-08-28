@@ -3,13 +3,14 @@
 #include "navia/renderer/RenderCommand.hpp"
 #include "navia/renderer/VertexArray.hpp"
 #include "navia/renderer/VertexBuffer.hpp"
+#include "navia/renderer/Texture.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Navia {
 struct Renderer2DData {
     Ref<VertexArray> vertexArray;
-    Ref<Shader> flatColorShader;
-    Ref<Shader> textureShader;
+    Ref<Shader> shader;
+    Ref<Texture2D> whiteTexture;
 };
 static Renderer2DData* data;
 
@@ -38,10 +39,13 @@ void Renderer2D::init() {
     Ref<IndexBuffer> indexBuffer = IndexBuffer::create(indices, sizeof(indices) / sizeof(size_t));
     data->vertexArray->setIndexBuffer(indexBuffer);
 
-    data->flatColorShader = Shader::create("assets/shaders/flatColor.glsl");
-    data->textureShader = Shader::create("assets/shaders/texture.glsl");
-    data->textureShader->bind();
-    data->textureShader->setInt("f_uTexture", 0);
+    data->whiteTexture = Texture2D::create(1, 1);
+    size_t whiteTextureData = 0xffffffff;
+    data->whiteTexture->setData(&whiteTextureData, sizeof(size_t));
+
+    data->shader = Shader::create("assets/shaders/shader.glsl");
+    data->shader->bind();
+    data->shader->setInt("f_uTexture", 0);
 }
 
 void Renderer2D::shutdown() {
@@ -49,10 +53,8 @@ void Renderer2D::shutdown() {
 }
 
 void Renderer2D::beginScene(const OrthographicCamera& camera) {
-    data->flatColorShader->bind();
-    data->flatColorShader->setMat4("v_uViewProjection", camera.getViewProjectionMatrix());
-    data->textureShader->bind();
-    data->textureShader->setMat4("v_uViewProjection", camera.getViewProjectionMatrix());
+    data->shader->bind();
+    data->shader->setMat4("v_uViewProjection", camera.getViewProjectionMatrix());
 }
 
 void Renderer2D::endScene() {
@@ -64,11 +66,11 @@ void Renderer2D::drawQuad(const glm::vec2& position, const glm::vec2& size, cons
 }
 
 void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color) {
-    data->flatColorShader->bind();
-    data->flatColorShader->setFloat4("f_uColor", color);
+    data->shader->setFloat4("f_uColor", color);
+    data->whiteTexture->bind();
 
     glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) * glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
-    data->flatColorShader->setMat4("v_uTransform", transform);
+    data->shader->setMat4("v_uTransform", transform);
 
     data->vertexArray->bind();
     RenderCommand::drawIndexed(data->vertexArray);
@@ -79,12 +81,11 @@ void Renderer2D::drawQuad(const glm::vec2& position, const glm::vec2& size, Ref<
 }
 
 void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, Ref<Texture2D> texture) {
-    data->textureShader->bind();
+    data->shader->setFloat4("f_uColor", glm::vec4{ 1.0f });
+    texture->bind();
 
     glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) * glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
-    data->textureShader->setMat4("v_uTransform", transform);
-
-    texture->bind();
+    data->shader->setMat4("v_uTransform", transform);
 
     data->vertexArray->bind();
     RenderCommand::drawIndexed(data->vertexArray);
