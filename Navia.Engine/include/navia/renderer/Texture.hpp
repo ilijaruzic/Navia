@@ -13,6 +13,8 @@ public:
     virtual void setData(void* data, size_t size) = 0;
 
     virtual void bind(size_t slot = 0) const = 0;
+
+    virtual bool operator==(const Texture& rhs) const = 0;
 };
 
 class Texture2D : public Texture {

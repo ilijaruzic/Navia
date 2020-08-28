@@ -20,6 +20,7 @@ public:
     void unbind() const override;
 
     void setInt(const std::string& name, int value) override;
+    void setIntArray(const std::string& name, int* array, size_t count) override;
 
     void setFloat(const std::string& name, float value) override;
     void setFloat2(const std::string& name, const glm::vec2& vector) override;
@@ -38,6 +39,7 @@ private:
     void compileAndLink(const std::unordered_map<GLenum, std::string>& sources);
 
     void uploadUniformInt(const std::string& name, int value);
+    void uploadUniformIntArray(const std::string& name, int* array, size_t count);
 
     void uploadUniformFloat(const std::string& name, float value);
     void uploadUniformFloat2(const std::string& name, const glm::vec2& vector);

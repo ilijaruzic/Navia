@@ -84,4 +84,8 @@ void OpenGLTexture2D::bind(size_t slot) const {
 
     glBindTextureUnit(slot, rendererId);
 }
+
+bool OpenGLTexture2D::operator==(const Texture& rhs) const {
+    return rendererId == static_cast<const OpenGLTexture2D&>(rhs).rendererId;
+}
 }

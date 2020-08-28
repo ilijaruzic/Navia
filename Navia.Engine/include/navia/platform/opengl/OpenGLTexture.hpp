@@ -17,6 +17,8 @@ public:
 
     void bind(size_t slot) const override;
 
+    bool operator==(const Texture& rhs) const override;
+
 private:
     std::string filepath;
     size_t width{ 0 };

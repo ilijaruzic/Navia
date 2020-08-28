@@ -64,6 +64,13 @@ void OpenGLShader::setInt(const std::string& name, int value) {
     uploadUniformInt(name, value);
 }
 
+
+void OpenGLShader::setIntArray(const std::string& name, int* array, size_t count) {
+    NAVIA_PROFILE_FUNCTION();
+
+    uploadUniformIntArray(name, array, count);
+}
+
 void OpenGLShader::setFloat(const std::string& name, float value) {
     NAVIA_PROFILE_FUNCTION();
 
@@ -190,6 +197,11 @@ void OpenGLShader::compileAndLink(const std::unordered_map<GLenum, std::string>&
 void OpenGLShader::uploadUniformInt(const std::string& name, int value) {
     auto location = glGetUniformLocation(rendererId, name.c_str());
     glUniform1i(location, value);
+}
+
+void OpenGLShader::uploadUniformIntArray(const std::string& name, int* array, size_t count) {
+    auto location = glGetUniformLocation(rendererId, name.c_str());
+    glUniform1iv(location, count, array);
 }
 
 void OpenGLShader::uploadUniformFloat(const std::string& name, float value) {
