@@ -13,3 +13,4 @@ cmake-build-release
 _deps
 .idea
 imgui.ini
+*.json
