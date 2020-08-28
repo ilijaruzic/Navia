@@ -5,6 +5,8 @@ namespace Navia {
 void OpenGLRendererAPI::init() {
      glEnable(GL_BLEND);
      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+     glEnable(GL_DEPTH_TEST);
 }
 
 void OpenGLRendererAPI::setViewport(size_t x, size_t y, size_t width, size_t height) {

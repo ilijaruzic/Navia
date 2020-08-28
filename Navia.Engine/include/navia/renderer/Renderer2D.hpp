@@ -3,6 +3,7 @@
 
 #include "navia/core/Core.hpp"
 #include "navia/renderer/OrthographicCamera.hpp"
+#include "navia/renderer/Texture.hpp"
 #include <glm/glm.hpp>
 
 namespace Navia {
@@ -16,6 +17,8 @@ public:
 
     static void drawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
     static void drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
+    static void drawQuad(const glm::vec2& position, const glm::vec2& size, Ref<Texture2D> texture);
+    static void drawQuad(const glm::vec3& position, const glm::vec2& size, Ref<Texture2D> texture);
 };
 }
 

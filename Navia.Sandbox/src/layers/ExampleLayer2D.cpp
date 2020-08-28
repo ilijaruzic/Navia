@@ -6,7 +6,7 @@
 ExampleLayer2D::ExampleLayer2D() : Navia::Layer("ExampleLayer2D") {}
 
 void ExampleLayer2D::onAttach() {
-
+    texture = Navia::Texture2D::create("assets/textures/checkerboard.png");
 }
 
 void ExampleLayer2D::onDetach() {
@@ -29,6 +29,7 @@ void ExampleLayer2D::onUpdate(Navia::Timestep timestep) {
     Navia::Renderer2D::beginScene(cameraController.getCamera());
     Navia::Renderer2D::drawQuad(glm::vec2{ -1.0f,  0.0f }, glm::vec2{ 0.8f, 0.8f }, blue);
     Navia::Renderer2D::drawQuad(glm::vec2{  0.5f, -0.5f }, glm::vec2{ 0.5f, 0.7f }, red);
+    Navia::Renderer2D::drawQuad(glm::vec3{  0.0f,  0.0f, -0.1f }, glm::vec2{ 10.0f, 10.0f }, texture);
     Navia::Renderer2D::endScene();
 }
 

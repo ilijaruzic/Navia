@@ -22,6 +22,7 @@ private:
     // Temporary
     Navia::Ref<Navia::Shader> shader;
     Navia::Ref<Navia::VertexArray> vertexArray;
+    Navia::Ref<Navia::Texture2D> texture;
 };
 
 #endif
