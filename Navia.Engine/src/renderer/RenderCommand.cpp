@@ -8,6 +8,10 @@ void RenderCommand::init() {
     rendererAPI->init();
 }
 
+void RenderCommand::setViewport(size_t x, size_t y, size_t width, size_t height) {
+    rendererAPI->setViewport(x, y, width, height);
+}
+
 void RenderCommand::setClearColor(const glm::vec4& color) {
     rendererAPI->setClearColor(color);
 }

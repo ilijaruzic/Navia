@@ -17,8 +17,8 @@ ExampleLayer::ExampleLayer() : Navia::Layer("ExampleLayer") {
         };
         Navia::Ref<Navia::VertexBuffer> squareVertexBuffer = Navia::VertexBuffer::create(squareVertices, sizeof(squareVertices));
         Navia::BufferLayout squareLayout{
-            { Navia::ShaderDatatype::Float3, "inPosition" },
-            { Navia::ShaderDatatype::Float2, "inTextureCoords" }
+            { Navia::ShaderDatatype::Float3, "v_inPosition" },
+            { Navia::ShaderDatatype::Float2, "v_inTextureCoords" }
         };
         squareVertexBuffer->setLayout(squareLayout);
         squareVertexArray->addVertexBuffer(squareVertexBuffer);
@@ -76,8 +76,8 @@ ExampleLayer::ExampleLayer() : Navia::Layer("ExampleLayer") {
         Navia::Ref<Navia::VertexBuffer> triangleVertexBuffer;
         triangleVertexBuffer = Navia::VertexBuffer::create(triangleVertices, sizeof(triangleVertices));
         Navia::BufferLayout triangleLayout{
-            { Navia::ShaderDatatype::Float3, "inPosition" },
-            { Navia::ShaderDatatype::Float4, "inColor" }
+            { Navia::ShaderDatatype::Float3, "v_inPosition" },
+            { Navia::ShaderDatatype::Float4, "v_inColor" }
         };
         triangleVertexBuffer->setLayout(triangleLayout);
         triangleVertexArray->addVertexBuffer(triangleVertexBuffer);
@@ -131,33 +131,12 @@ void ExampleLayer::onImGuiRender() {
 }
 
 void ExampleLayer::onUpdate(Navia::Timestep timestep) {
-    if (Navia::Input::isKeyPressed(NAVIA_KEY_A)) {
-        cameraPosition.x -= cameraMovementSpeed * timestep;
-    }
-    else if (Navia::Input::isKeyPressed(NAVIA_KEY_D)) {
-        cameraPosition.x += cameraMovementSpeed * timestep;
-    }
-    if (Navia::Input::isKeyPressed(NAVIA_KEY_S)) {
-        cameraPosition.y -= cameraMovementSpeed * timestep;
-    }
-    else if (Navia::Input::isKeyPressed(NAVIA_KEY_W)) {
-        cameraPosition.y += cameraMovementSpeed * timestep;
-    }
-
-    if (Navia::Input::isKeyPressed(NAVIA_KEY_Q)) {
-        cameraRotation += cameraRotationSpeed * timestep;
-    }
-    else if (Navia::Input::isKeyPressed(NAVIA_KEY_E)) {
-        cameraRotation -= cameraRotationSpeed * timestep;
-    }
+    cameraController.onUpdate(timestep);
 
     Navia::RenderCommand::setClearColor(glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f });
     Navia::RenderCommand::clear();
 
-    camera.setPosition(cameraPosition);
-    camera.setRotation(cameraRotation);
-
-    Navia::Renderer::beginScene(camera);
+    Navia::Renderer::beginScene(cameraController.getCamera());
 
     glm::mat4 scale = glm::scale(glm::mat4{ 1.0f }, glm::vec3{ 0.1f });
     std::dynamic_pointer_cast<Navia::OpenGLShader>(squareFlatColorShader)->bind();
@@ -181,5 +160,5 @@ void ExampleLayer::onUpdate(Navia::Timestep timestep) {
 }
 
 void ExampleLayer::onEvent(Navia::Event& event) {
-
+    cameraController.onEvent(event);
 }

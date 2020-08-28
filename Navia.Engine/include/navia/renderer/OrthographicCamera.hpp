@@ -8,6 +8,8 @@ class OrthographicCamera {
 public:
     OrthographicCamera(float left, float right, float bottom, float top);
 
+    void setProjection(float left, float right, float bottom, float top);
+
     const glm::vec3& getPosition() const;
     float getRotation() const;
     const glm::mat4& getViewMatrix() const;

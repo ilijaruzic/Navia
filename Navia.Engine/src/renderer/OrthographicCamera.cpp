@@ -4,6 +4,11 @@
 namespace Navia {
 OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top) : projectionMatrix(glm::ortho(left, right, bottom, top, -1.0f, 1.0f)), viewProjectionMatrix(projectionMatrix * viewMatrix) {}
 
+void OrthographicCamera::setProjection(float left, float right, float bottom, float top) {
+    projectionMatrix = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
+    viewProjectionMatrix = projectionMatrix * viewMatrix;
+}
+
 const glm::vec3& OrthographicCamera::getPosition() const {
     return position;
 }

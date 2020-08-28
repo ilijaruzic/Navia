@@ -9,6 +9,10 @@ void Renderer::init() {
     RenderCommand::init();
 }
 
+void Renderer::onWindowResize(size_t width, size_t height) {
+    RenderCommand::setViewport(0, 0, width, height);
+}
+
 RendererAPI::APIVendor Renderer::getRendererAPI() {
     return RendererAPI::getAPIVendor();
 }

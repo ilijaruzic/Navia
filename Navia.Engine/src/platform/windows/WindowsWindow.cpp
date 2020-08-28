@@ -78,7 +78,6 @@ bool WindowsWindow::isVSync() const {
 }
 
 void WindowsWindow::setEventCallbacks() const {
-
     glfwSetWindowSizeCallback(window, [](GLFWwindow* glfwWindow, int width, int height) {
         WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(glfwWindow));
         data.width = width;

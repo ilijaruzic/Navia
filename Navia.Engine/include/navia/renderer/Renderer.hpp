@@ -13,10 +13,13 @@ public:
 
     static RendererAPI::APIVendor getRendererAPI();
 
+    static void onWindowResize(size_t width, size_t height);
+
     static void beginScene(OrthographicCamera& camera);
     static void endScene();
 
     static void submit(Ref<Shader> shader, Ref<VertexArray> vertexArray, const glm::mat4& transform = glm::mat4{ 1.0f });
+
 
 private:
     struct SceneData {

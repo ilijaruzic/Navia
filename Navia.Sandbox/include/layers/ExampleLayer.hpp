@@ -12,11 +12,7 @@ public:
     void onEvent(Navia::Event& event) override;
 
 private:
-    Navia::OrthographicCamera camera{ -1.6f, 1.6f, -0.9f, 0.9f };
-    glm::vec3 cameraPosition{ 0.0f };
-    float cameraMovementSpeed{ 5.0f };
-    float cameraRotation{ 0.0f };
-    float cameraRotationSpeed{ 180.0f };
+    Navia::OrthographicCameraController cameraController{ 1280.0f / 720.0f, true };
 
     glm::vec4 squareColor{ 0.0f, 0.5f, 0.75f, 1.0f };
 

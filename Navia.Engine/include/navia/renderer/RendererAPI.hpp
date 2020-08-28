@@ -20,6 +20,7 @@ public:
     static APIVendor getAPIVendor();
 
     virtual void init() = 0;
+    virtual void setViewport(size_t x, size_t y, size_t width, size_t height) = 0;
     virtual void setClearColor(const glm::vec4& color) = 0;
     virtual void clear() = 0;
     virtual void drawIndexed(Ref<VertexArray> vertexArray) = 0;

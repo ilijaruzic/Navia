@@ -4,6 +4,14 @@ project(Navia.Engine VERSION 1.0 DESCRIPTION "Navia game engine library" LANGUAG
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)
 set(SOURCE_FILES
+        src/core/Application.cpp
+        src/core/Input.cpp
+        src/core/Layer.cpp
+        src/core/LayerStack.cpp
+        src/core/Logger.cpp
+        src/core/OrthographicCameraController.cpp
+        src/core/Timestep.cpp
+        src/core/Window.cpp
         src/events/ApplicationEvent.cpp
         src/events/Event.cpp
         src/events/KeyEvent.cpp
@@ -32,14 +40,7 @@ set(SOURCE_FILES
         src/renderer/Texture.cpp
         src/renderer/VertexArray.cpp
         src/renderer/VertexBuffer.cpp
-        src/stb/STBImageBuild.cpp
-        src/Application.cpp
-        src/Input.cpp
-        src/Layer.cpp
-        src/LayerStack.cpp
-        src/Logger.cpp
-        src/Timestep.cpp
-        src/Window.cpp)
+        src/stb/STBImageBuild.cpp)
 set(INCLUDE_FILES
         include/navia/core/Application.hpp
         include/navia/core/Core.hpp
@@ -49,6 +50,7 @@ set(INCLUDE_FILES
         include/navia/core/LayerStack.hpp
         include/navia/core/Logger.hpp
         include/navia/core/MouseButtons.hpp
+        include/navia/core/OrthographicCameraController.hpp
         include/navia/core/Timestep.hpp
         include/navia/core/Window.hpp
         include/navia/events/ApplicationEvent.hpp
@@ -78,7 +80,7 @@ set(INCLUDE_FILES
         include/navia/renderer/Texture.hpp
         include/navia/renderer/VertexArray.hpp
         include/navia/renderer/VertexBuffer.hpp
-        PrecompiledHeaders.hpp)
+        PrecompiledHeaders.hpp src/core/OrthographicCameraController.cpp include/navia/core/OrthographicCameraController.hpp)
 
 add_subdirectory(lib/imgui)
 add_subdirectory(lib/glad)

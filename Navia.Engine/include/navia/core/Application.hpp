@@ -31,11 +31,13 @@ private:
 
     Scope<Window> window;
     bool running{ true };
+    bool minimized{ false };
 
     ImGuiLayer* imGuiLayer;
     LayerStack layerStack;
     float lastFrameTime{ 0.0f };
 
+    bool onWindowResize(WindowResizeEvent& event);
     bool onWindowClose(WindowCloseEvent& event);
 };
 
