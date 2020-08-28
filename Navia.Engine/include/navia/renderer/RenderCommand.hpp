@@ -12,7 +12,7 @@ public:
     static void setViewport(size_t x, size_t y, size_t width, size_t height);
     static void setClearColor(const glm::vec4& color);
     static void clear();
-    static void drawIndexed(Ref<VertexArray> vertexArray);
+    static void drawIndexed(Ref<VertexArray> vertexArray, size_t indexCount = 0);
 
 public:
     static RendererAPI* rendererAPI;

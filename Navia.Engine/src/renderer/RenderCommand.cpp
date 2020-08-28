@@ -24,7 +24,7 @@ void RenderCommand::clear() {
     rendererAPI->clear();
 }
 
-void RenderCommand::drawIndexed(Ref<VertexArray> vertexArray) {
-    rendererAPI->drawIndexed(vertexArray);
+void RenderCommand::drawIndexed(Ref<VertexArray> vertexArray, size_t indexCount) {
+    rendererAPI->drawIndexed(vertexArray, indexCount);
 }
 }

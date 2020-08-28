@@ -11,7 +11,7 @@ public:
     void setViewport(size_t x, size_t y, size_t width, size_t height) override;
     void setClearColor(const glm::vec4& color) override;
     void clear() override;
-    void drawIndexed(Ref<VertexArray> vertexArray) override;
+    void drawIndexed(Ref<VertexArray> vertexArray, size_t indexCount) override;
 };
 }
 
