@@ -12,6 +12,7 @@ set(SOURCE_FILES
         src/core/OrthographicCameraController.cpp
         src/core/Timestep.cpp
         src/core/Window.cpp
+        src/debug/Instrumentor.cpp
         src/events/ApplicationEvent.cpp
         src/events/Event.cpp
         src/events/KeyEvent.cpp
@@ -54,6 +55,7 @@ set(INCLUDE_FILES
         include/navia/core/OrthographicCameraController.hpp
         include/navia/core/Timestep.hpp
         include/navia/core/Window.hpp
+        include/navia/debug/Instrumentor.hpp
         include/navia/events/ApplicationEvent.hpp
         include/navia/events/Event.hpp
         include/navia/events/KeyEvent.hpp
@@ -82,7 +84,7 @@ set(INCLUDE_FILES
         include/navia/renderer/Texture.hpp
         include/navia/renderer/VertexArray.hpp
         include/navia/renderer/VertexBuffer.hpp
-        PrecompiledHeaders.hpp src/core/OrthographicCameraController.cpp include/navia/core/OrthographicCameraController.hpp src/renderer/Renderer2D.cpp include/navia/renderer/Renderer2D.hpp)
+        PrecompiledHeaders.hpp src/core/OrthographicCameraController.cpp include/navia/core/OrthographicCameraController.hpp src/renderer/Renderer2D.cpp include/navia/renderer/Renderer2D.hpp src/debug/Instrumentor.cpp include/navia/debug/Instrumentor.hpp)
 
 add_subdirectory(lib/imgui)
 add_subdirectory(lib/glad)

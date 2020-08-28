@@ -7,6 +7,8 @@ OpenGLGraphicsContext::OpenGLGraphicsContext(GLFWwindow* window) : window(window
 }
 
 void OpenGLGraphicsContext::init() {
+    NAVIA_PROFILE_FUNCTION();
+
     glfwMakeContextCurrent(window);
     auto result = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     NAVIA_CORE_ASSERT(result, "Failed to initialize GLAD!");
@@ -27,6 +29,8 @@ void OpenGLGraphicsContext::init() {
 }
 
 void OpenGLGraphicsContext::swapBuffers() {
+    NAVIA_PROFILE_FUNCTION();
+
     glfwSwapBuffers(window);
 }
 }

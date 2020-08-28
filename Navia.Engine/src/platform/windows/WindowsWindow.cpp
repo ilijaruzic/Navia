@@ -15,6 +15,8 @@ Window* Window::create(const WindowProperties& properties) {
 }
 
 WindowsWindow::WindowsWindow(const WindowProperties& properties) {
+    NAVIA_PROFILE_FUNCTION();
+
     data.title = properties.title;
     data.width = properties.width;
     data.height = properties.height;
@@ -22,14 +24,19 @@ WindowsWindow::WindowsWindow(const WindowProperties& properties) {
     NAVIA_CORE_INFO("Creating window '{0}' ({1}x{2})...", properties.title, properties.width, properties.height);
 
     if (!glfwInitialized) {
+        NAVIA_PROFILE_SCOPE("Navia::WindowsWindow::WindowsWindow(const WindowProperties& properties) — initializing GLFW");
+
         auto result = glfwInit();
         NAVIA_CORE_ASSERT(result, "Failed to initialize GLFW!");
         glfwSetErrorCallback(glfwErrorCallback);
         glfwInitialized = true;
     }
 
-    window = glfwCreateWindow(properties.width, properties.height, data.title.c_str(), nullptr, nullptr);
+    {
+        NAVIA_PROFILE_SCOPE("Navia::WindowsWindow::WindowsWindow(const WindowProperties& properties) — creating GLFW window");
 
+        window = glfwCreateWindow(properties.width, properties.height, data.title.c_str(), nullptr, nullptr);
+    }
     context = new OpenGLGraphicsContext(window);
     context->init();
 
@@ -39,7 +46,10 @@ WindowsWindow::WindowsWindow(const WindowProperties& properties) {
 }
 
 WindowsWindow::~WindowsWindow() {
+    NAVIA_PROFILE_FUNCTION();
+
     glfwDestroyWindow(window);
+    glfwTerminate();
 }
 
 size_t WindowsWindow::getWidth() const {
@@ -55,6 +65,8 @@ void* WindowsWindow::getNativeWindow() const {
 }
 
 void WindowsWindow::onUpdate() {
+    NAVIA_PROFILE_FUNCTION();
+
     glfwPollEvents();
     context->swapBuffers();
 }
@@ -64,6 +76,8 @@ void WindowsWindow::setEventCallback(const EventCallbackType& callback) {
 }
 
 void WindowsWindow::setVSync(bool enabled) {
+    NAVIA_PROFILE_FUNCTION();
+
     if (enabled) {
         glfwSwapInterval(1);
     }

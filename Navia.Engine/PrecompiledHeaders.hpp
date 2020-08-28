@@ -24,6 +24,7 @@
 #include <unordered_set>
 
 #include "navia/core/Logger.hpp"
+#include "navia/debug/Instrumentor.hpp"
 
 #ifdef NAVIA_PLATFORM_WINDOWS
     #include <Windows.h>

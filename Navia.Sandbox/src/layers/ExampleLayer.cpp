@@ -82,7 +82,7 @@ ExampleLayer::ExampleLayer() : Navia::Layer("ExampleLayer") {
         triangleVertexArray->addVertexBuffer(triangleVertexBuffer);
 
         size_t triangleIndices[3]{
-                0, 1, 2
+            0, 1, 2
         };
         Navia::Ref<Navia::IndexBuffer> triangleIndexBuffer;
         triangleIndexBuffer = Navia::IndexBuffer::create(triangleIndices, sizeof(triangleIndices) / sizeof(size_t));

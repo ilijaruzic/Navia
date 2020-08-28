@@ -15,6 +15,8 @@ static GLenum getShaderTypeFromString(const std::string& type) {
 }
 
 OpenGLShader::OpenGLShader(const std::string& filepath) {
+    NAVIA_PROFILE_FUNCTION();
+
     auto source = getSourceFromFile(filepath);
     auto sources = preprocess(source);
     compileAndLink(sources);
@@ -26,6 +28,8 @@ OpenGLShader::OpenGLShader(const std::string& filepath) {
 }
 
 OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSource, const std::string& fragmentSource) : name(name) {
+    NAVIA_PROFILE_FUNCTION();
+
     std::unordered_map<GLenum, std::string> sources;
     sources[GL_VERTEX_SHADER] = vertexSource;
     sources[GL_FRAGMENT_SHADER] = fragmentSource;
@@ -33,6 +37,8 @@ OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSou
 }
 
 OpenGLShader::~OpenGLShader() {
+    NAVIA_PROFILE_FUNCTION();
+
     glDeleteProgram(rendererId);
 }
 
@@ -41,42 +47,62 @@ std::string OpenGLShader::getName() const {
 }
 
 void OpenGLShader::bind() const {
+    NAVIA_PROFILE_FUNCTION();
+
     glUseProgram(rendererId);
 }
 
 void OpenGLShader::unbind() const {
+    NAVIA_PROFILE_FUNCTION();
+
     glUseProgram(0);
 }
 
 void OpenGLShader::setInt(const std::string& name, int value) {
+    NAVIA_PROFILE_FUNCTION();
+
     uploadUniformInt(name, value);
 }
 
 void OpenGLShader::setFloat(const std::string& name, float value) {
+    NAVIA_PROFILE_FUNCTION();
+
     uploadUniformFloat(name, value);
 }
 
 void OpenGLShader::setFloat2(const std::string& name, const glm::vec2& vector) {
+    NAVIA_PROFILE_FUNCTION();
+
     uploadUniformFloat2(name, vector);
 }
 
 void OpenGLShader::setFloat3(const std::string& name, const glm::vec3& vector) {
+    NAVIA_PROFILE_FUNCTION();
+
     uploadUniformFloat3(name, vector);
 }
 
 void OpenGLShader::setFloat4(const std::string& name, const glm::vec4& vector) {
+    NAVIA_PROFILE_FUNCTION();
+
     uploadUniformFloat4(name, vector);
 }
 
 void OpenGLShader::setMat3(const std::string& name, const glm::mat3& matrix) {
+    NAVIA_PROFILE_FUNCTION();
+
     uploadUniformMat3(name, matrix);
 }
 
 void OpenGLShader::setMat4(const std::string& name, const glm::mat4& matrix) {
+    NAVIA_PROFILE_FUNCTION();
+
     uploadUniformMat4(name, matrix);
 }
 
 std::string OpenGLShader::getSourceFromFile(const std::string& filepath) const {
+    NAVIA_PROFILE_FUNCTION();
+
     std::string data;
     if (std::ifstream file(filepath, std::ios::in | std::ios::binary); file.is_open()) {
         file.seekg(0, std::ios::end);
@@ -92,6 +118,8 @@ std::string OpenGLShader::getSourceFromFile(const std::string& filepath) const {
 }
 
 std::unordered_map<GLenum, std::string> OpenGLShader::preprocess(const std::string& source) const {
+    NAVIA_PROFILE_FUNCTION();
+
     std::unordered_map<GLenum, std::string> sources;
     const char* typeToken = "#type";
     size_t typeTokenLength = strlen(typeToken);
@@ -112,6 +140,8 @@ std::unordered_map<GLenum, std::string> OpenGLShader::preprocess(const std::stri
 
 
 void OpenGLShader::compileAndLink(const std::unordered_map<GLenum, std::string>& sources) {
+    NAVIA_PROFILE_FUNCTION();
+
     auto programId = glCreateProgram();
     std::array<GLenum, 2> shaderIds;
     size_t index{ 0 };

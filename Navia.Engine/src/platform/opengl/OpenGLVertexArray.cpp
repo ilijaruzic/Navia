@@ -26,20 +26,28 @@ static GLenum convertShaderDatatypeToOpenGLBasetype(ShaderDatatype type) {
 }
 
 OpenGLVertexArray::OpenGLVertexArray() {
+    NAVIA_PROFILE_FUNCTION();
+
     glCreateVertexArrays(1, &rendererId);
 }
 
 OpenGLVertexArray::~OpenGLVertexArray() {
+    NAVIA_PROFILE_FUNCTION();
+
     glDeleteVertexArrays(1, &rendererId);
 }
 
 void Navia::OpenGLVertexArray::setIndexBuffer(Ref<IndexBuffer> indexBuffer) {
+    NAVIA_PROFILE_FUNCTION();
+
     glBindVertexArray(rendererId);
     indexBuffer->bind();
     this->indexBuffer = indexBuffer;
 }
 
 void Navia::OpenGLVertexArray::addVertexBuffer(Ref<VertexBuffer> vertexBuffer) {
+    NAVIA_PROFILE_FUNCTION();
+
     NAVIA_CORE_ASSERT(vertexBuffer->getLayout().getElements().size(), "Vertex buffer has no layout!");
     glBindVertexArray(rendererId);
     vertexBuffer->bind();
@@ -66,10 +74,14 @@ const std::vector<Ref<VertexBuffer>>& OpenGLVertexArray::getVertexBuffers() cons
 }
 
 void Navia::OpenGLVertexArray::bind() const {
+    NAVIA_PROFILE_FUNCTION();
+
     glBindVertexArray(rendererId);
 }
 
 void Navia::OpenGLVertexArray::unbind() const {
+    NAVIA_PROFILE_FUNCTION();
+
     glBindVertexArray(0);
 }
 }

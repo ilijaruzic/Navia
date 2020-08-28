@@ -22,6 +22,8 @@ const OrthographicCamera& OrthographicCameraController::getCamera() const {
 }
 
 void OrthographicCameraController::onUpdate(Timestep timestep) {
+    NAVIA_PROFILE_FUNCTION();
+
     if (Input::isKeyPressed(NAVIA_KEY_A)) {
         cameraPosition.x -= cameraTranslationSpeed * timestep;
     }
@@ -49,12 +51,16 @@ void OrthographicCameraController::onUpdate(Timestep timestep) {
 }
 
 void OrthographicCameraController::onEvent(Event& event) {
+    NAVIA_PROFILE_FUNCTION();
+
     EventDispatcher dispatcher{ event };
     dispatcher.dispatch<MouseScrolledEvent>(NAVIA_BIND_EVENT_CALLBACK(OrthographicCameraController::onMouseScrolled));
     dispatcher.dispatch<WindowResizeEvent>(NAVIA_BIND_EVENT_CALLBACK(OrthographicCameraController::onWindowResize));
 }
 
 bool OrthographicCameraController::onMouseScrolled(MouseScrolledEvent& event) {
+    NAVIA_PROFILE_FUNCTION();
+
     zoomLevel -= event.getYOffset() * 0.25f;
     zoomLevel = std::max(zoomLevel, 0.25f);
     camera.setProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
@@ -62,6 +68,8 @@ bool OrthographicCameraController::onMouseScrolled(MouseScrolledEvent& event) {
 }
 
 bool OrthographicCameraController::onWindowResize(WindowResizeEvent& event) {
+    NAVIA_PROFILE_FUNCTION();
+
     aspectRatio = static_cast<float>(event.getWidth()) / static_cast<float>(event.getHeight());
     camera.setProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
     return false;

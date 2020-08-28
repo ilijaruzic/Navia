@@ -20,6 +20,7 @@ void LayerStack::pushOverlay(Layer* overlay) {
 void LayerStack::popLayer(Layer* layer) {
     auto it = std::find(layers.begin(), layers.begin() + layerIndex, layer);
     if (it != layers.begin() + layerIndex) {
+        layer->onDetach();
         layers.erase(it);
         layerIndex--;
     }
@@ -28,6 +29,7 @@ void LayerStack::popLayer(Layer* layer) {
 void LayerStack::popOverlay(Layer* overlay) {
     auto it = std::find(layers.begin() + layerIndex, layers.end(), overlay);
     if (it != layers.end()) {
+        overlay->onDetach();
         layers.erase(it);
     }
 }

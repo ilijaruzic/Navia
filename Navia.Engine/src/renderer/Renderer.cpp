@@ -7,8 +7,17 @@ namespace Navia {
 Scope<Renderer::SceneData> Renderer::data = createScope<Renderer::SceneData>();
 
 void Renderer::init() {
+    NAVIA_PROFILE_FUNCTION();
+
     RenderCommand::init();
     Renderer2D::init();
+}
+
+void Renderer::shutdown() {
+    NAVIA_PROFILE_FUNCTION();
+
+    RenderCommand::shutdown();
+    Renderer2D::shutdown();
 }
 
 void Renderer::onWindowResize(size_t width, size_t height) {

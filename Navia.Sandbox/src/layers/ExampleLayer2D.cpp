@@ -6,14 +6,20 @@
 ExampleLayer2D::ExampleLayer2D() : Navia::Layer("ExampleLayer2D") {}
 
 void ExampleLayer2D::onAttach() {
+    NAVIA_PROFILE_FUNCTION();
+
     texture = Navia::Texture2D::create("assets/textures/checkerboard.png");
 }
 
 void ExampleLayer2D::onDetach() {
+    NAVIA_PROFILE_FUNCTION();
+
 
 }
 
 void ExampleLayer2D::onImGuiRender() {
+    NAVIA_PROFILE_FUNCTION();
+
     ImGui::Begin("Settings");
     ImGui::ColorEdit4("Square Color", glm::value_ptr(blue));
     ImGui::ColorEdit4("Rectangle Color", glm::value_ptr(red));
@@ -21,16 +27,26 @@ void ExampleLayer2D::onImGuiRender() {
 }
 
 void ExampleLayer2D::onUpdate(Navia::Timestep timestep) {
+    NAVIA_PROFILE_FUNCTION();
+
     cameraController.onUpdate(timestep);
 
-    Navia::RenderCommand::setClearColor(glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f });
-    Navia::RenderCommand::clear();
+    {
+        NAVIA_PROFILE_SCOPE("Navia::RenderCommand initial setup");
 
-    Navia::Renderer2D::beginScene(cameraController.getCamera());
-    Navia::Renderer2D::drawQuad(glm::vec2{ -1.0f,  0.0f }, glm::vec2{ 0.8f, 0.8f }, blue);
-    Navia::Renderer2D::drawQuad(glm::vec2{  0.5f, -0.5f }, glm::vec2{ 0.5f, 0.7f }, red);
-    Navia::Renderer2D::drawQuad(glm::vec3{  0.0f,  0.0f, -0.1f }, glm::vec2{ 10.0f, 10.0f }, texture);
-    Navia::Renderer2D::endScene();
+        Navia::RenderCommand::setClearColor(glm::vec4{0.0f, 0.0f, 0.0f, 1.0f});
+        Navia::RenderCommand::clear();
+    }
+
+    {
+        NAVIA_PROFILE_SCOPE("Navia::Renderere2D draws");
+
+        Navia::Renderer2D::beginScene(cameraController.getCamera());
+        Navia::Renderer2D::drawQuad(glm::vec2{-1.0f, 0.0f}, glm::vec2{0.8f, 0.8f}, blue);
+        Navia::Renderer2D::drawQuad(glm::vec2{0.5f, -0.5f}, glm::vec2{0.5f, 0.7f}, red);
+        Navia::Renderer2D::drawQuad(glm::vec3{0.0f, 0.0f, -0.1f}, glm::vec2{10.0f, 10.0f}, texture);
+        Navia::Renderer2D::endScene();
+    }
 }
 
 void ExampleLayer2D::onEvent(Navia::Event& event) {

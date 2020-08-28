@@ -14,7 +14,7 @@ namespace Navia {
 class Application {
 public:
     Application();
-    virtual ~Application() = default;
+    virtual ~Application();
 
     static Application& getInstance();
     Window& getWindow() const;

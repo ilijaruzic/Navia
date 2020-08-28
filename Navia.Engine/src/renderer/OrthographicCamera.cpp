@@ -2,9 +2,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Navia {
-OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top) : projectionMatrix(glm::ortho(left, right, bottom, top, -1.0f, 1.0f)), viewProjectionMatrix(projectionMatrix * viewMatrix) {}
+OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top) : projectionMatrix(glm::ortho(left, right, bottom, top, -1.0f, 1.0f)), viewProjectionMatrix(projectionMatrix * viewMatrix) {
+    NAVIA_PROFILE_FUNCTION();
+}
 
 void OrthographicCamera::setProjection(float left, float right, float bottom, float top) {
+    NAVIA_PROFILE_FUNCTION();
+
     projectionMatrix = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
     viewProjectionMatrix = projectionMatrix * viewMatrix;
 }
@@ -40,6 +44,8 @@ void OrthographicCamera::setRotation(float rotation) {
 }
 
 void OrthographicCamera::recalculateViewMatrix() {
+    NAVIA_PROFILE_FUNCTION();
+
     glm::mat4 transform =
             glm::translate(glm::mat4{ 1.0f }, position) *
             glm::rotate(glm::mat4{ 1.0f}, glm::radians(rotation), glm::vec3{ 0.0f, 0.0f, 1.0f });

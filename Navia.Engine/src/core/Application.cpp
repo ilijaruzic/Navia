@@ -5,6 +5,8 @@ namespace Navia {
 Application* Application::instance{ nullptr };
 
 Application::Application() : window(std::unique_ptr<Window>(Window::create())), imGuiLayer(new ImGuiLayer()) {
+    NAVIA_PROFILE_FUNCTION();
+
     NAVIA_CORE_ASSERT(!instance, "Application already initialized!");
     instance = this;
 
@@ -13,6 +15,12 @@ Application::Application() : window(std::unique_ptr<Window>(Window::create())), 
     Renderer::init();
 
     pushOverlay(imGuiLayer);
+}
+
+Application::~Application() {
+    NAVIA_PROFILE_FUNCTION();
+
+    Renderer::shutdown();
 }
 
 Application& Application::getInstance() {
@@ -24,20 +32,32 @@ Window& Application::getWindow() const {
 }
 
 void Application::run() {
+    NAVIA_PROFILE_FUNCTION();
+
     while (running) {
+        NAVIA_PROFILE_SCOPE("Navia::Application::run — main loop");
+
         float time = static_cast<float>(glfwGetTime()); // abstraction needed
         Timestep timestep{ time - lastFrameTime };
         lastFrameTime = time;
 
         if (!minimized) {
-            for (auto layer : layerStack) {
-                layer->onUpdate(timestep);
+            {
+                NAVIA_PROFILE_SCOPE("Navia::Application::run — layer stack onUpdate()");
+
+                for (auto layer : layerStack) {
+                    layer->onUpdate(timestep);
+                }
             }
         }
 
         imGuiLayer->begin();
-        for (auto layer : layerStack) {
-            layer->onImGuiRender();
+        {
+            NAVIA_PROFILE_SCOPE("Navia::Application::run — layer stack onImGuiRender()");
+
+            for (auto layer : layerStack) {
+                layer->onImGuiRender();
+            }
         }
         imGuiLayer->end();
 
@@ -46,6 +66,8 @@ void Application::run() {
 }
 
 void Application::onEvent(Event& event) {
+    NAVIA_PROFILE_FUNCTION();
+
     EventDispatcher dispatcher{ event };
     dispatcher.dispatch<WindowResizeEvent>(NAVIA_BIND_EVENT_CALLBACK(Application::onWindowResize));
     dispatcher.dispatch<WindowCloseEvent>(NAVIA_BIND_EVENT_CALLBACK(Application::onWindowClose));
@@ -59,16 +81,22 @@ void Application::onEvent(Event& event) {
 }
 
 void Application::pushLayer(Layer* layer) {
+    NAVIA_PROFILE_FUNCTION();
+
     layerStack.pushLayer(layer);
     layer->onAttach();
 }
 
 void Application::pushOverlay(Layer* overlay) {
+    NAVIA_PROFILE_FUNCTION();
+
     layerStack.pushOverlay(overlay);
     overlay->onAttach();
 }
 
 bool Application::onWindowResize(WindowResizeEvent& event) {
+    NAVIA_PROFILE_FUNCTION();
+
     if (event.getWidth() == 0 || event.getHeight() == 0) {
         minimized = true;
         return false;

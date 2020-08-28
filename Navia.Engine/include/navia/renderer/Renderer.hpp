@@ -11,6 +11,7 @@ namespace Navia {
 class Renderer {
 public:
     static void init();
+    static void shutdown();
 
     static RendererAPI::APIVendor getRendererAPI();
 

@@ -15,6 +15,8 @@ struct Renderer2DData {
 static Renderer2DData* data;
 
 void Renderer2D::init() {
+    NAVIA_PROFILE_FUNCTION();
+
     data = new Renderer2DData();
 
     data->vertexArray = VertexArray::create();
@@ -49,15 +51,21 @@ void Renderer2D::init() {
 }
 
 void Renderer2D::shutdown() {
+    NAVIA_PROFILE_FUNCTION();
+
     delete data;
 }
 
 void Renderer2D::beginScene(const OrthographicCamera& camera) {
+    NAVIA_PROFILE_FUNCTION();
+
     data->shader->bind();
     data->shader->setMat4("v_uViewProjection", camera.getViewProjectionMatrix());
 }
 
 void Renderer2D::endScene() {
+    NAVIA_PROFILE_FUNCTION();
+
 
 }
 
@@ -66,6 +74,8 @@ void Renderer2D::drawQuad(const glm::vec2& position, const glm::vec2& size, cons
 }
 
 void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color) {
+    NAVIA_PROFILE_FUNCTION();
+
     data->shader->setFloat4("f_uColor", color);
     data->whiteTexture->bind();
 
@@ -81,6 +91,8 @@ void Renderer2D::drawQuad(const glm::vec2& position, const glm::vec2& size, Ref<
 }
 
 void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, Ref<Texture2D> texture) {
+    NAVIA_PROFILE_FUNCTION();
+
     data->shader->setFloat4("f_uColor", glm::vec4{ 1.0f });
     texture->bind();
 

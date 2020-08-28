@@ -3,6 +3,7 @@
 
 #ifdef NAVIA_DEBUG
     #define NAVIA_ENABLE_ASSERTS
+    #define NAVIA_ENABLE_PROFILE
 #endif
 
 #ifdef NAVIA_ENABLE_ASSERTS

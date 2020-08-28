@@ -12,6 +12,8 @@ namespace Navia {
 ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer") {}
 
 void ImGuiLayer::onAttach() {
+    NAVIA_PROFILE_FUNCTION();
+
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
@@ -39,23 +41,24 @@ void ImGuiLayer::onAttach() {
 }
 
 void ImGuiLayer::onDetach() {
+    NAVIA_PROFILE_FUNCTION();
+
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 }
 
-void ImGuiLayer::onImGuiRender() {
-    static bool showing{ true };
-    ImGui::ShowDemoWindow(&showing);
-}
-
 void ImGuiLayer::begin() {
+    NAVIA_PROFILE_FUNCTION();
+
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 }
 
 void ImGuiLayer::end() {
+    NAVIA_PROFILE_FUNCTION();
+
     ImGuiIO& io = ImGui::GetIO();
     auto& application = Application::getInstance();
     io.DisplaySize = ImVec2(application.getWindow().getWidth(), application.getWindow().getHeight());

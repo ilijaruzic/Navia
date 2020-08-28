@@ -4,6 +4,8 @@
 
 namespace Navia {
 OpenGLTexture2D::OpenGLTexture2D(size_t width, size_t height) : width(width), height(height), internalFormat(GL_RGBA8), format(GL_RGBA) {
+    NAVIA_PROFILE_FUNCTION();
+
     glCreateTextures(GL_TEXTURE_2D, 1, &rendererId);
     glTextureStorage2D(rendererId, 1, internalFormat, width, height);
 
@@ -14,9 +16,16 @@ OpenGLTexture2D::OpenGLTexture2D(size_t width, size_t height) : width(width), he
 }
 
 OpenGLTexture2D::OpenGLTexture2D(const std::string& filepath) : filepath(filepath) {
+    NAVIA_PROFILE_FUNCTION();
+
     int width, height, channels;
     stbi_set_flip_vertically_on_load(1);
-    stbi_uc* data = stbi_load(filepath.c_str(), &width, &height, &channels, 0);
+    stbi_uc* data{ nullptr };
+    {
+        NAVIA_PROFILE_SCOPE("Navia::OpenGLTexture2D::OpenGLTexture2D(const std::string& filepath) — stbi_load");
+
+        data = stbi_load(filepath.c_str(), &width, &height, &channels, 0);
+    }
     NAVIA_CORE_ASSERT(data, "Failed to load image!");
     this->width = width;
     this->height = height;
@@ -49,6 +58,8 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& filepath) : filepath(filepat
 }
 
 OpenGLTexture2D::~OpenGLTexture2D() {
+    NAVIA_PROFILE_FUNCTION();
+
     glDeleteTextures(1, &rendererId);
 }
 
@@ -61,12 +72,16 @@ size_t OpenGLTexture2D::getHeight() const {
 }
 
 void OpenGLTexture2D::setData(void* data, size_t size) {
+    NAVIA_PROFILE_FUNCTION();
+
     size_t bytesPerPixel = format == GL_RGBA ? 4 : 3;
     NAVIA_CORE_ASSERT(size == width * height * bytesPerPixel, "Data have to be entire texture!");
     glTextureSubImage2D(rendererId, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, data);
 }
 
 void OpenGLTexture2D::bind(size_t slot) const {
+    NAVIA_PROFILE_FUNCTION();
+
     glBindTextureUnit(slot, rendererId);
 }
 }
