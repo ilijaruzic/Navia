@@ -8,7 +8,8 @@ ExampleLayer2D::ExampleLayer2D() : Navia::Layer("ExampleLayer2D") {}
 void ExampleLayer2D::onAttach() {
     NAVIA_PROFILE_FUNCTION();
 
-    texture = Navia::Texture2D::create("assets/textures/checkerboard.png");
+    checkerboardTexture = Navia::Texture2D::create("assets/textures/checkerboard.png");
+    googleTexture = Navia::Texture2D::create("assets/textures/google.png");
 }
 
 void ExampleLayer2D::onDetach() {
@@ -23,8 +24,8 @@ void ExampleLayer2D::onImGuiRender() {
     ImGui::Begin("Settings");
     ImGui::ColorEdit4("Square Color", glm::value_ptr(blue));
     ImGui::ColorEdit4("Rectangle Color", glm::value_ptr(red));
-    // ImGui::SliderFloat("Rectangle Rotation", &rotation, 0.0f, 360.0f);
-    ImGui::SliderFloat("Texture Resolution", &resolution, 1.0f, 10.0f);
+    ImGui::SliderFloat("Checkerboard Texture Resolution", &checkerboardTextureResolution, 1.0f, 10.0f);
+    ImGui::SliderFloat("Google Texture Rotation", &googleTextureRotation, 0.0f, 360.0f);
     ImGui::End();
 }
 
@@ -43,12 +44,14 @@ void ExampleLayer2D::onUpdate(Navia::Timestep timestep) {
     {
         NAVIA_PROFILE_SCOPE("Navia::Renderere2D draws");
 
+        static float rectangleRotation{ 0.0f };
+        rectangleRotation += timestep * 50.0f;
+
         Navia::Renderer2D::beginScene(cameraController.getCamera());
         Navia::Renderer2D::drawQuad(glm::vec2{ -1.0f,  0.0f }, glm::vec2{ 0.8f, 0.8f }, blue);
-        Navia::Renderer2D::drawQuad(glm::vec2{  0.5f, -0.5f }, glm::vec2{ 0.5f, 0.7f }, red);
-        // Navia::Renderer2D::drawRotatedQuad(glm::vec2{ 0.5f, -0.5f }, glm::vec2{ 0.5f, 0.7f }, glm::radians(rotation), red);
-        Navia::Renderer2D::drawQuad(glm::vec3{ -5.0f, -5.0f, -0.2f }, glm::vec2{ 10.0f, 10.0f }, texture, resolution);
-        Navia::Renderer2D::drawQuad(glm::vec3{ -0.5f, -0.5f, -0.1f }, glm::vec2{  1.0f,  1.0f }, texture, 2.0f);
+        Navia::Renderer2D::drawRotatedQuad(glm::vec2{ 0.5f, -0.5f }, glm::vec2{ 0.5f, 0.7f }, rectangleRotation, red);
+        Navia::Renderer2D::drawQuad(glm::vec3{ 0.0f, 0.0f, -0.1f }, glm::vec2{ 10.0f, 10.0f }, checkerboardTexture, checkerboardTextureResolution);
+        Navia::Renderer2D::drawRotatedQuad(glm::vec3{ -2.0f, 0.0f, 0.0f }, glm::vec2{  1.0f,  1.0f }, googleTextureRotation, googleTexture);
         Navia::Renderer2D::endScene();
     }
 }

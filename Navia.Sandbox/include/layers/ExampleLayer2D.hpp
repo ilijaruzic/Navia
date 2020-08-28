@@ -18,13 +18,14 @@ private:
 
     glm::vec4 blue{ 0.0f, 0.2f, 0.8f, 1.0f };
     glm::vec4 red{ 0.8f, 0.2f, 0.0f, 1.0f };
-    float rotation{ 45.0f };
-    float resolution{ 5.0f };
+    float checkerboardTextureResolution{ 5.0f };
+    float googleTextureRotation{ 0.0f };
 
     // Temporary
     Navia::Ref<Navia::Shader> shader;
     Navia::Ref<Navia::VertexArray> vertexArray;
-    Navia::Ref<Navia::Texture2D> texture;
+    Navia::Ref<Navia::Texture2D> checkerboardTexture;
+    Navia::Ref<Navia::Texture2D> googleTexture;
 };
 
 #endif
