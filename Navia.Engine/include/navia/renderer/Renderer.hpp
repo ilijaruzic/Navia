@@ -1,6 +1,7 @@
 #ifndef _RENDERER_HPP_
 #define _RENDERER_HPP_
 
+#include "navia/core/Core.hpp"
 #include "navia/renderer/OrthographicCamera.hpp"
 #include "navia/renderer/RendererAPI.hpp"
 #include "navia/renderer/VertexArray.hpp"
@@ -25,7 +26,7 @@ private:
     struct SceneData {
         glm::mat4 viewProjectionMatrix;
     };
-    static SceneData* data;
+    static Scope<SceneData> data;
 };
 }
 

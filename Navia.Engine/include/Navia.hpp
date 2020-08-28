@@ -13,6 +13,7 @@
 #include "navia/renderer/IndexBuffer.hpp"
 #include "navia/renderer/RenderCommand.hpp"
 #include "navia/renderer/Renderer.hpp"
+#include "navia/renderer/Renderer2D.hpp"
 #include "navia/renderer/Shader.hpp"
 #include "navia/renderer/ShaderLibrary.hpp"
 #include "navia/renderer/Texture.hpp"

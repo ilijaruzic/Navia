@@ -34,6 +34,7 @@ set(SOURCE_FILES
         src/renderer/OrthographicCamera.cpp
         src/renderer/RenderCommand.cpp
         src/renderer/Renderer.cpp
+        src/renderer/Renderer2D.cpp
         src/renderer/RendererAPI.cpp
         src/renderer/Shader.cpp
         src/renderer/ShaderLibrary.cpp
@@ -74,13 +75,14 @@ set(INCLUDE_FILES
         include/navia/renderer/OrthographicCamera.hpp
         include/navia/renderer/RenderCommand.hpp
         include/navia/renderer/Renderer.hpp
+        include/navia/renderer/Renderer2D.hpp
         include/navia/renderer/RendererAPI.hpp
         include/navia/renderer/Shader.hpp
         include/navia/renderer/ShaderLibrary.hpp
         include/navia/renderer/Texture.hpp
         include/navia/renderer/VertexArray.hpp
         include/navia/renderer/VertexBuffer.hpp
-        PrecompiledHeaders.hpp src/core/OrthographicCameraController.cpp include/navia/core/OrthographicCameraController.hpp)
+        PrecompiledHeaders.hpp src/core/OrthographicCameraController.cpp include/navia/core/OrthographicCameraController.hpp src/renderer/Renderer2D.cpp include/navia/renderer/Renderer2D.hpp)
 
 add_subdirectory(lib/imgui)
 add_subdirectory(lib/glad)

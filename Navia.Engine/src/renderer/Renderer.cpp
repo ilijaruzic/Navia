@@ -1,12 +1,14 @@
 #include "navia/renderer/RenderCommand.hpp"
 #include "navia/renderer/Renderer.hpp"
+#include "navia/renderer/Renderer2D.hpp"
 #include "navia/platform/opengl/OpenGLShader.hpp"
 
 namespace Navia {
-Renderer::SceneData* Renderer::data = new SceneData();
+Scope<Renderer::SceneData> Renderer::data = createScope<Renderer::SceneData>();
 
 void Renderer::init() {
     RenderCommand::init();
+    Renderer2D::init();
 }
 
 void Renderer::onWindowResize(size_t width, size_t height) {
