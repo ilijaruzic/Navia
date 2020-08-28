@@ -3,7 +3,7 @@
 #include "navia/renderer/RenderCommand.hpp"
 #include "navia/renderer/VertexArray.hpp"
 #include "navia/renderer/VertexBuffer.hpp"
-#include "navia/platform/opengl/OpenGLShader.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace Navia {
 struct Renderer2DData {
@@ -44,9 +44,8 @@ void Renderer2D::shutdown() {
 }
 
 void Renderer2D::beginScene(const OrthographicCamera& camera) {
-    std::dynamic_pointer_cast<Navia::OpenGLShader>(data->shader)->bind();
-    std::dynamic_pointer_cast<Navia::OpenGLShader>(data->shader)->uploadUniformMat4("v_uViewProjection", camera.getViewProjectionMatrix());
-    std::dynamic_pointer_cast<Navia::OpenGLShader>(data->shader)->uploadUniformMat4("v_uTransform", glm::mat4{ 1.0f });
+    data->shader->bind();
+    data->shader->setMat4("v_uViewProjection", camera.getViewProjectionMatrix());
 }
 
 void Renderer2D::endScene() {
@@ -58,8 +57,12 @@ void Renderer2D::drawQuad(const glm::vec2& position, const glm::vec2& size, cons
 }
 
 void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color) {
-    std::dynamic_pointer_cast<Navia::OpenGLShader>(data->shader)->bind();
-    std::dynamic_pointer_cast<Navia::OpenGLShader>(data->shader)->uploadUniformFloat4("f_uColor", color);
+    data->shader->bind();
+    data->shader->setFloat4("f_uColor", color);
+
+    glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) * glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
+    data->shader->setMat4("v_uTransform", transform);
+
     data->vertexArray->bind();
     RenderCommand::drawIndexed(data->vertexArray);
 }

@@ -1,5 +1,4 @@
 #include "layers/ExampleLayer.hpp"
-#include <navia/platform/opengl/OpenGLShader.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
@@ -24,7 +23,7 @@ ExampleLayer::ExampleLayer() : Navia::Layer("ExampleLayer") {
         squareVertexArray->addVertexBuffer(squareVertexBuffer);
 
         size_t squareIndices[6]{
-                0, 1, 2, 2, 3, 0
+            0, 1, 2, 2, 3, 0
         };
         Navia::Ref<Navia::IndexBuffer> squareIndexBuffer = Navia::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(size_t));
         squareVertexArray->setIndexBuffer(squareIndexBuffer);
@@ -61,8 +60,8 @@ ExampleLayer::ExampleLayer() : Navia::Layer("ExampleLayer") {
         auto squareTextureShader = shaderLibrary.load("assets/shaders/texture.glsl");
         checkerboardTexture = Navia::Texture2D::create("assets/textures/checkerboard.png");
         googleTexture = Navia::Texture2D::create("assets/textures/google.png");
-        std::dynamic_pointer_cast<Navia::OpenGLShader>(squareTextureShader)->bind();
-        std::dynamic_pointer_cast<Navia::OpenGLShader>(squareTextureShader)->uploadUniformInt("f_uTexture", 0);
+        squareTextureShader->bind();
+        squareTextureShader->setInt("f_uTexture", 0);
     }
     // Triangle
     {
@@ -139,8 +138,8 @@ void ExampleLayer::onUpdate(Navia::Timestep timestep) {
     Navia::Renderer::beginScene(cameraController.getCamera());
 
     glm::mat4 scale = glm::scale(glm::mat4{ 1.0f }, glm::vec3{ 0.1f });
-    std::dynamic_pointer_cast<Navia::OpenGLShader>(squareFlatColorShader)->bind();
-    std::dynamic_pointer_cast<Navia::OpenGLShader>(squareFlatColorShader)->uploadUniformFloat3("f_uColor", squareColor);
+    squareFlatColorShader->bind();
+    squareFlatColorShader->setFloat3("f_uColor", squareColor);
     for (size_t j = 0; j < 20; ++j) {
         for (size_t i = 0; i < 20; ++i) {
             glm::vec3 position{i * 0.11f, j * 0.11f, 0.0f};

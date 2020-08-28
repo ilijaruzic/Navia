@@ -16,7 +16,8 @@ public:
 private:
     Navia::OrthographicCameraController cameraController{ 1280.0f / 720.0f, true };
 
-    glm::vec4 squareColor{ 0.0f, 0.5f, 0.75f, 1.0f };
+    glm::vec4 blue{ 0.0f, 0.2f, 0.8f, 1.0f };
+    glm::vec4 red{ 0.8f, 0.2f, 0.0f, 1.0f };
 
     // Temporary
     Navia::Ref<Navia::Shader> shader;

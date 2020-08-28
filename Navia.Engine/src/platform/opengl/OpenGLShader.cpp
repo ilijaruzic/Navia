@@ -48,39 +48,32 @@ void OpenGLShader::unbind() const {
     glUseProgram(0);
 }
 
-void OpenGLShader::uploadUniformInt(const std::string& name, int value) {
-    auto location = glGetUniformLocation(rendererId, name.c_str());
-    glUniform1i(location, value);
+void OpenGLShader::setInt(const std::string& name, int value) {
+    uploadUniformInt(name, value);
 }
 
-void OpenGLShader::uploadUniformFloat(const std::string& name, float value) {
-    auto location = glGetUniformLocation(rendererId, name.c_str());
-    glUniform1f(location, value);
+void OpenGLShader::setFloat(const std::string& name, float value) {
+    uploadUniformFloat(name, value);
 }
 
-void OpenGLShader::uploadUniformFloat2(const std::string& name, const glm::vec2& vector) {
-    auto location = glGetUniformLocation(rendererId, name.c_str());
-    glUniform2f(location, vector.x, vector.y);
+void OpenGLShader::setFloat2(const std::string& name, const glm::vec2& vector) {
+    uploadUniformFloat2(name, vector);
 }
 
-void OpenGLShader::uploadUniformFloat3(const std::string& name, const glm::vec3& vector) {
-    auto location = glGetUniformLocation(rendererId, name.c_str());
-    glUniform3f(location, vector.x, vector.y, vector.z);
+void OpenGLShader::setFloat3(const std::string& name, const glm::vec3& vector) {
+    uploadUniformFloat3(name, vector);
 }
 
-void OpenGLShader::uploadUniformFloat4(const std::string& name, const glm::vec4& vector) {
-    auto location = glGetUniformLocation(rendererId, name.c_str());
-    glUniform4f(location, vector.x, vector.y, vector.z, vector.w);
+void OpenGLShader::setFloat4(const std::string& name, const glm::vec4& vector) {
+    uploadUniformFloat4(name, vector);
 }
 
-void OpenGLShader::uploadUniformMat3(const std::string& name, const glm::mat3& matrix) {
-    auto location = glGetUniformLocation(rendererId, name.c_str());
-    glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+void OpenGLShader::setMat3(const std::string& name, const glm::mat3& matrix) {
+    uploadUniformMat3(name, matrix);
 }
 
-void OpenGLShader::uploadUniformMat4(const std::string& name, const glm::mat4& matrix) {
-    auto location = glGetUniformLocation(rendererId, name.c_str());
-    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+void OpenGLShader::setMat4(const std::string& name, const glm::mat4& matrix) {
+    uploadUniformMat4(name, matrix);
 }
 
 std::string OpenGLShader::getSourceFromFile(const std::string& filepath) const {
@@ -162,5 +155,40 @@ void OpenGLShader::compileAndLink(const std::unordered_map<GLenum, std::string>&
         glDetachShader(programId, shaderId);
     }
     rendererId = programId;
+}
+
+void OpenGLShader::uploadUniformInt(const std::string& name, int value) {
+    auto location = glGetUniformLocation(rendererId, name.c_str());
+    glUniform1i(location, value);
+}
+
+void OpenGLShader::uploadUniformFloat(const std::string& name, float value) {
+    auto location = glGetUniformLocation(rendererId, name.c_str());
+    glUniform1f(location, value);
+}
+
+void OpenGLShader::uploadUniformFloat2(const std::string& name, const glm::vec2& vector) {
+    auto location = glGetUniformLocation(rendererId, name.c_str());
+    glUniform2f(location, vector.x, vector.y);
+}
+
+void OpenGLShader::uploadUniformFloat3(const std::string& name, const glm::vec3& vector) {
+    auto location = glGetUniformLocation(rendererId, name.c_str());
+    glUniform3f(location, vector.x, vector.y, vector.z);
+}
+
+void OpenGLShader::uploadUniformFloat4(const std::string& name, const glm::vec4& vector) {
+    auto location = glGetUniformLocation(rendererId, name.c_str());
+    glUniform4f(location, vector.x, vector.y, vector.z, vector.w);
+}
+
+void OpenGLShader::uploadUniformMat3(const std::string& name, const glm::mat3& matrix) {
+    auto location = glGetUniformLocation(rendererId, name.c_str());
+    glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+}
+
+void OpenGLShader::uploadUniformMat4(const std::string& name, const glm::mat4& matrix) {
+    auto location = glGetUniformLocation(rendererId, name.c_str());
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 }
