@@ -25,16 +25,20 @@ void OrthographicCameraController::onUpdate(Timestep timestep) {
     NAVIA_PROFILE_FUNCTION();
 
     if (Input::isKeyPressed(NAVIA_KEY_A)) {
-        cameraPosition.x -= cameraTranslationSpeed * timestep;
+        cameraPosition.x -= std::cos(glm::radians(cameraRotation)) * cameraTranslationSpeed * timestep;
+        cameraPosition.y -= std::sin(glm::radians(cameraRotation)) * cameraTranslationSpeed * timestep;
     }
     else if (Input::isKeyPressed(NAVIA_KEY_D)) {
-        cameraPosition.x += cameraTranslationSpeed * timestep;
+        cameraPosition.x += std::cos(glm::radians(cameraRotation)) * cameraTranslationSpeed * timestep;
+        cameraPosition.y += std::sin(glm::radians(cameraRotation)) * cameraTranslationSpeed * timestep;
     }
-    if (Input::isKeyPressed(NAVIA_KEY_S)) {
-        cameraPosition.y -= cameraTranslationSpeed * timestep;
+    if (Input::isKeyPressed(NAVIA_KEY_W)) {
+        cameraPosition.x += -std::sin(glm::radians(cameraRotation)) * cameraTranslationSpeed * timestep;
+        cameraPosition.y += std::cos(glm::radians(cameraRotation)) * cameraTranslationSpeed * timestep;
     }
-    else if (Input::isKeyPressed(NAVIA_KEY_W)) {
-        cameraPosition.y += cameraTranslationSpeed * timestep;
+    else if (Input::isKeyPressed(NAVIA_KEY_S)) {
+        cameraPosition.x -= -std::sin(glm::radians(cameraRotation)) * cameraTranslationSpeed * timestep;
+        cameraPosition.y -= std::cos(glm::radians(cameraRotation)) * cameraTranslationSpeed * timestep;
     }
     camera.setPosition(cameraPosition);
     cameraTranslationSpeed = zoomLevel;

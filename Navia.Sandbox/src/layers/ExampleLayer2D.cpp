@@ -9,7 +9,6 @@ void ExampleLayer2D::onAttach() {
     NAVIA_PROFILE_FUNCTION();
 
     checkerboardTexture = Navia::Texture2D::create("assets/textures/checkerboard.png");
-    googleTexture = Navia::Texture2D::create("assets/textures/google.png");
 }
 
 void ExampleLayer2D::onDetach() {
@@ -21,11 +20,23 @@ void ExampleLayer2D::onDetach() {
 void ExampleLayer2D::onImGuiRender() {
     NAVIA_PROFILE_FUNCTION();
 
+
     ImGui::Begin("Settings");
-    ImGui::ColorEdit4("Square Color", glm::value_ptr(blue));
-    ImGui::ColorEdit4("Rectangle Color", glm::value_ptr(red));
-    ImGui::SliderFloat("Checkerboard Texture Resolution", &checkerboardTextureResolution, 1.0f, 10.0f);
-    ImGui::SliderFloat("Google Texture Rotation", &googleTextureRotation, 0.0f, 360.0f);
+    ImGui::SetWindowSize(ImVec2(400.0f, 200.0f));
+    ImGui::ColorEdit4("S-Color", glm::value_ptr(blue));
+    ImGui::ColorEdit4("R-Color", glm::value_ptr(red));
+    ImGui::SliderFloat("BCT-Resolution", &bigCheckerboardTextureResolution, 1.0f, 10.0f);
+    ImGui::SliderFloat("SCT-Rotation", &smallCheckerboardTextureRotation, 0.0f, 360.0f);
+    ImGui::SliderFloat("SCT-Resolution", &smallCheckerboardTextureResolution, 10.0f, 20.0f);
+    ImGui::End();
+
+    auto statistics = Navia::Renderer2D::getStatistics();
+    ImGui::Begin("Statistics");
+    ImGui::SetWindowSize(ImVec2(200.0f, 200.0f));
+    ImGui::Text("Draw Calls: %d", statistics.drawCallCount);
+    ImGui::Text("Quads: %d", statistics.quadCount);
+    ImGui::Text("Vertices: %d", statistics.getVertexCount());
+    ImGui::Text("Indices: %d", statistics.getIndexCount());
     ImGui::End();
 }
 
@@ -34,6 +45,7 @@ void ExampleLayer2D::onUpdate(Navia::Timestep timestep) {
 
     cameraController.onUpdate(timestep);
 
+    Navia::Renderer2D::resetStatistics();
     {
         NAVIA_PROFILE_SCOPE("Navia::RenderCommand initial setup");
 
@@ -48,10 +60,20 @@ void ExampleLayer2D::onUpdate(Navia::Timestep timestep) {
         rectangleRotation += timestep * 50.0f;
 
         Navia::Renderer2D::beginScene(cameraController.getCamera());
-        Navia::Renderer2D::drawQuad(glm::vec2{ -1.0f,  0.0f }, glm::vec2{ 0.8f, 0.8f }, blue);
-        Navia::Renderer2D::drawRotatedQuad(glm::vec2{ 0.5f, -0.5f }, glm::vec2{ 0.5f, 0.7f }, rectangleRotation, red);
-        Navia::Renderer2D::drawQuad(glm::vec3{ 0.0f, 0.0f, -0.1f }, glm::vec2{ 10.0f, 10.0f }, checkerboardTexture, checkerboardTextureResolution);
-        Navia::Renderer2D::drawRotatedQuad(glm::vec3{ -2.0f, 0.0f, 0.0f }, glm::vec2{  1.0f,  1.0f }, googleTextureRotation, googleTexture);
+        Navia::Renderer2D::drawQuad(glm::vec2{ -1.0f, 0.0f }, glm::vec2{ 0.8f, 0.8f }, red);
+        Navia::Renderer2D::drawQuad(glm::vec2{  1.0f, 0.5f }, glm::vec2{ 0.8f, 0.4f }, green);
+        Navia::Renderer2D::drawRotatedQuad(glm::vec2{ 0.5f, -0.5f }, glm::vec2{ 0.5f, 0.7f }, rectangleRotation, blue);
+        Navia::Renderer2D::drawQuad(glm::vec3{ 0.0f, 0.0f, -0.1f }, glm::vec2{ 20.0f, 20.0f }, checkerboardTexture, bigCheckerboardTextureResolution);
+        Navia::Renderer2D::drawRotatedQuad(glm::vec3{ -2.0f, 0.0f, 0.0f }, glm::vec2{  1.0f,  1.0f }, smallCheckerboardTextureRotation, checkerboardTexture, smallCheckerboardTextureResolution);
+        Navia::Renderer2D::endScene();
+
+        Navia::Renderer2D::beginScene(cameraController.getCamera());
+        for (float y = -5.0f; y < 5.0f; y += 0.5f) {
+            for (float x = -5.0f; x < 5.0f; x += 0.5f) {
+                glm::vec4 color{ (x + 5.0f) / 10.0f, 0.5f, (y + 5.0f) / 10.0f, 0.75f };
+                Navia::Renderer2D::drawQuad(glm::vec2{ x, y }, glm::vec2{ 0.45f, 0.45f }, color);
+            }
+        }
         Navia::Renderer2D::endScene();
     }
 }

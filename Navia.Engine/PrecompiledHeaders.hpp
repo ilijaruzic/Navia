@@ -7,6 +7,7 @@
 #include <type_traits>
 
 #include <algorithm>
+#include <cmath>
 #include <functional>
 #include <memory>
 #include <utility>
