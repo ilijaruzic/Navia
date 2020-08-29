@@ -11,6 +11,10 @@
 namespace Navia {
 ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer") {}
 
+void ImGuiLayer::setBlockEvents(bool blockEvents) {
+    this->blockEvents = blockEvents;
+}
+
 void ImGuiLayer::onAttach() {
     NAVIA_PROFILE_FUNCTION();
 
@@ -46,6 +50,14 @@ void ImGuiLayer::onDetach() {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+}
+
+void ImGuiLayer::onEvent(Event& event) {
+    if (blockEvents) {
+        ImGuiIO& io = ImGui::GetIO();
+        event.handled |= event.isCategory(EventCategory::MouseEvents) & io.WantCaptureMouse;
+        event.handled |= event.isCategory(EventCategory::KeyboardEvents) & io.WantCaptureKeyboard;
+    }
 }
 
 void ImGuiLayer::begin() {

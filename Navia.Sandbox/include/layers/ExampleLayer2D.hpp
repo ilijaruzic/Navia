@@ -23,7 +23,6 @@ private:
     float smallCheckerboardTextureRotation{ 0.0f };
     float smallCheckerboardTextureResolution{ 15.0f };
 
-    // Temporary
     Navia::Ref<Navia::Shader> shader;
     Navia::Ref<Navia::VertexArray> vertexArray;
     Navia::Ref<Navia::Texture2D> checkerboardTexture;

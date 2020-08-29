@@ -1,7 +1,7 @@
 #ifndef _INDEX_BUFFER_HPP_
 #define _INDEX_BUFFER_HPP_
 
-#include "navia/core/Core.hpp"
+#include "navia/core/Base.hpp"
 
 namespace Navia {
 class IndexBuffer {

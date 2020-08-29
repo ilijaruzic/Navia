@@ -1,7 +1,7 @@
 #ifndef _ORTHOGRAPHIC_CAMERA_CONTROLLER_HPP_
 #define _ORTHOGRAPHIC_CAMERA_CONTROLLER_HPP_
 
-#include "navia/core/Core.hpp"
+#include "navia/core/Base.hpp"
 #include "navia/core/Timestep.hpp"
 #include "navia/events/Event.hpp"
 #include "navia/events/MouseEvent.hpp"
@@ -21,6 +21,7 @@ public:
 
     void onUpdate(Timestep timestep);
     void onEvent(Event& event);
+    void onResize(float width, float height);
 
 private:
     float aspectRatio;

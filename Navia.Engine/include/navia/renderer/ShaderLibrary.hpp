@@ -1,7 +1,7 @@
 #ifndef _SHADER_LIBRARY_HPP_
 #define _SHADER_LIBRARY_HPP_
 
-#include "navia/core/Core.hpp"
+#include "navia/core/Base.hpp"
 #include "navia/renderer/Shader.hpp"
 
 namespace Navia {

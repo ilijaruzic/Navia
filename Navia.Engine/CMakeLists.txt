@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)
 set(SOURCE_FILES
         src/core/Application.cpp
-        src/core/Input.cpp
         src/core/Layer.cpp
         src/core/LayerStack.cpp
         src/core/Logger.cpp
@@ -20,6 +19,7 @@ set(SOURCE_FILES
         src/events/WindowEvent.cpp
         src/imgui/ImGuiBuild.cpp
         src/imgui/ImGuiLayer.cpp
+        src/platform/opengl/OpenGLFramebuffer.cpp
         src/platform/opengl/OpenGLGraphicsContext.cpp
         src/platform/opengl/OpenGLIndexBuffer.cpp
         src/platform/opengl/OpenGLRendererAPI.cpp
@@ -30,6 +30,7 @@ set(SOURCE_FILES
         src/platform/windows/WindowsInput.cpp
         src/platform/windows/WindowsWindow.cpp
         src/renderer/BufferLayout.cpp
+        src/renderer/Framebuffer.cpp
         src/renderer/GraphicsContext.cpp
         src/renderer/IndexBuffer.cpp
         src/renderer/OrthographicCamera.cpp
@@ -39,19 +40,20 @@ set(SOURCE_FILES
         src/renderer/RendererAPI.cpp
         src/renderer/Shader.cpp
         src/renderer/ShaderLibrary.cpp
+        src/renderer/SubTexture.cpp
         src/renderer/Texture.cpp
         src/renderer/VertexArray.cpp
         src/renderer/VertexBuffer.cpp
         src/stb/STBImageBuild.cpp)
 set(INCLUDE_FILES
         include/navia/core/Application.hpp
-        include/navia/core/Core.hpp
+        include/navia/core/Base.hpp
         include/navia/core/Input.hpp
         include/navia/core/KeyCodes.hpp
         include/navia/core/Layer.hpp
         include/navia/core/LayerStack.hpp
         include/navia/core/Logger.hpp
-        include/navia/core/MouseButtons.hpp
+        include/navia/core/MouseCodes.hpp
         include/navia/core/OrthographicCameraController.hpp
         include/navia/core/Timestep.hpp
         include/navia/core/Window.hpp
@@ -62,6 +64,7 @@ set(INCLUDE_FILES
         include/navia/events/MouseEvent.hpp
         include/navia/events/WindowEvent.hpp
         include/navia/imgui/ImGuiLayer.hpp
+        include/navia/platform/opengl/OpenGLFramebuffer.hpp
         include/navia/platform/opengl/OpenGLGraphicsContext.hpp
         include/navia/platform/opengl/OpenGLIndexBuffer.hpp
         include/navia/platform/opengl/OpenGLRendererAPI.hpp
@@ -69,9 +72,9 @@ set(INCLUDE_FILES
         include/navia/platform/opengl/OpenGLTexture.hpp
         include/navia/platform/opengl/OpenGLVertexArray.hpp
         include/navia/platform/opengl/OpenGLVertexBuffer.hpp
-        include/navia/platform/windows/WindowsInput.hpp
         include/navia/platform/windows/WindowsWindow.hpp
         include/navia/renderer/BufferLayout.hpp
+        include/navia/renderer/Framebuffer.hpp
         include/navia/renderer/GraphicsContext.hpp
         include/navia/renderer/IndexBuffer.hpp
         include/navia/renderer/OrthographicCamera.hpp
@@ -81,10 +84,11 @@ set(INCLUDE_FILES
         include/navia/renderer/RendererAPI.hpp
         include/navia/renderer/Shader.hpp
         include/navia/renderer/ShaderLibrary.hpp
+        include/navia/renderer/SubTexture.hpp
         include/navia/renderer/Texture.hpp
         include/navia/renderer/VertexArray.hpp
         include/navia/renderer/VertexBuffer.hpp
-        PrecompiledHeaders.hpp src/core/OrthographicCameraController.cpp include/navia/core/OrthographicCameraController.hpp src/renderer/Renderer2D.cpp include/navia/renderer/Renderer2D.hpp src/debug/Instrumentor.cpp include/navia/debug/Instrumentor.hpp)
+        PrecompiledHeaders.hpp)
 
 add_subdirectory(lib/imgui)
 add_subdirectory(lib/glad)
@@ -105,11 +109,31 @@ target_include_directories(Navia.Engine
             lib/glad/include
             lib/glfw/include
             lib/stb)
-
+target_compile_definitions(Navia.Engine PUBLIC GLFW_INCLUDE_NONE)
 if(WIN32)
-    target_compile_definitions(Navia.Engine PUBLIC NAVIA_PLATFORM_WINDOWS GLFW_INCLUDE_NONE)
+    if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+        target_compile_definitions(Navia.Engine PUBLIC NAVIA_PLATFORM_WINDOWS)
+    elseif()
+        message(FATAL_ERROR "x86 builds are not supported!")
+    endif()
+elseif(APPLE)
+    target_compile_definitions(Navia.Engine PUBLIC NAVIA_PLATFORM_MACOS)
+    message(FATAL_ERROR "macOS is not supported!")
+    if(IOS)
+        target_compile_definitions(Navia.Engine PUBLIC NAVIA_PLATFORM_IOS)
+        message(FATAL_ERROR "iOS is not supported!")
+    endif()
+elseif(ANDROID)
+    target_compile_definitions(Navia.Engine PUBLIC NAVIA_PLATFORM_ANDROID)
+    message(FATAL_ERROR "Android is not supported!")
+elseif(UNIX AND NOT APPLE)
+    set(LINUX TRUE)
+    if (LINUX)
+        target_compile_definitions(Navia.Engine PUBLIC NAVIA_PLATFORM_LINUX)
+        message(FATAL_ERROR "Linux is not supported!")
+    endif()
 else()
-    message("Unsuported platform")
+    message(FATAL_ERROR "Unsuported platform!")
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")

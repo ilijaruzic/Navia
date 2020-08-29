@@ -1,7 +1,7 @@
 #ifndef _OPENGL_GRAPHICS_CONTEXT_HPP_
 #define _OPENGL_GRAPHICS_CONTEXT_HPP_
 
-#include "navia/core/Core.hpp"
+#include "navia/core/Base.hpp"
 #include "navia/renderer/GraphicsContext.hpp"
 #include <GLFW/glfw3.h>
 

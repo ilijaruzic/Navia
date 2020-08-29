@@ -1,7 +1,7 @@
 #ifndef _VERTEX_ARRAY_HPP_
 #define _VERTEX_ARRAY_HPP_
 
-#include "navia/core/Core.hpp"
+#include "navia/core/Base.hpp"
 #include "navia/renderer/IndexBuffer.hpp"
 #include "navia/renderer/VertexBuffer.hpp"
 

@@ -4,7 +4,7 @@
 namespace Navia {
 Application* Application::instance{ nullptr };
 
-Application::Application() : window(std::unique_ptr<Window>(Window::create())), imGuiLayer(new ImGuiLayer()) {
+Application::Application(const std::string& name) : window(std::unique_ptr<Window>(Window::create(WindowProperties{ name }))), imGuiLayer(new ImGuiLayer()) {
     NAVIA_PROFILE_FUNCTION();
 
     NAVIA_CORE_ASSERT(!instance, "Application already initialized!");
@@ -29,6 +29,10 @@ Application& Application::getInstance() {
 
 Window& Application::getWindow() const {
     return *window;
+}
+
+ImGuiLayer* Application::getImGuiLayer() {
+    return imGuiLayer;
 }
 
 void Application::run() {
@@ -78,6 +82,10 @@ void Application::onEvent(Event& event) {
             break;
         }
     }
+}
+
+void Application::close() {
+    running = false;
 }
 
 void Application::pushLayer(Layer* layer) {

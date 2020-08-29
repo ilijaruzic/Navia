@@ -6,10 +6,12 @@ set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)
 set(SOURCE_FILES
         src/layers/ExampleLayer.cpp
         src/layers/ExampleLayer2D.cpp
+        src/layers/SpriteLayer.cpp
         src/SandboxApplication.cpp)
 set(INCLUDE_FILES
         include/layers/ExampleLayer.hpp
         include/layers/ExampleLayer2D.hpp
+        include/layers/SpriteLayer.hpp
         include/SandboxApplication.hpp)
 
 add_executable(Navia.Sandbox ${SOURCE_FILES} ${INCLUDE_FILES})

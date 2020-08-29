@@ -1,7 +1,7 @@
 #ifndef _EVENT_HPP_
 #define _EVENT_HPP_
 
-#include "navia/core/Core.hpp"
+#include "navia/core/Base.hpp"
 
 namespace Navia {
 enum class EventType {

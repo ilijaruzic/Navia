@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <vector>
-#include "navia/core/Core.hpp"
+#include "navia/core/Base.hpp"
 #include "navia/renderer/VertexArray.hpp"
 
 namespace Navia {
@@ -23,6 +23,7 @@ public:
 
 private:
     size_t rendererId{ 0 };
+    size_t vertexBufferIndex{ 0 };
     Ref<IndexBuffer> indexBuffer;
     std::vector<Ref<VertexBuffer>> vertexBuffers;
 };

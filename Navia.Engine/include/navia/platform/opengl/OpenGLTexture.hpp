@@ -13,6 +13,8 @@ public:
 
     size_t getWidth() const override;
     size_t getHeight() const override;
+    size_t getRendererId() const override;
+
     void setData(void* data, size_t size) override;
 
     void bind(size_t slot) const override;

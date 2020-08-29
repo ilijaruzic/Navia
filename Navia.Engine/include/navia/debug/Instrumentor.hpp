@@ -1,7 +1,7 @@
 #ifndef _INSTRUMENTOR_HPP_
 #define _INSTRUMENTOR_HPP_
 
-#include "navia/core/Core.hpp"
+#include "navia/core/Base.hpp"
 
 namespace Navia {
 struct ProfileResult {

@@ -1,7 +1,7 @@
 #ifndef _VERTEX_BUFFER_HPP_
 #define _VERTEX_BUFFER_HPP_
 
-#include "navia/core/Core.hpp"
+#include "navia/core/Base.hpp"
 #include "navia/renderer/BufferLayout.hpp"
 
 namespace Navia {

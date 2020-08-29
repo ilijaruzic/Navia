@@ -71,6 +71,10 @@ size_t OpenGLTexture2D::getHeight() const {
     return height;
 }
 
+size_t OpenGLTexture2D::getRendererId() const {
+    return rendererId;
+}
+
 void OpenGLTexture2D::setData(void* data, size_t size) {
     NAVIA_PROFILE_FUNCTION();
 

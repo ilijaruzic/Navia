@@ -2,7 +2,7 @@
 #define _OPENGL_SHADER_HPP_
 
 #include <string>
-#include "navia/core/Core.hpp"
+#include "navia/core/Base.hpp"
 #include "navia/renderer/Shader.hpp"
 
 typedef unsigned int GLenum;

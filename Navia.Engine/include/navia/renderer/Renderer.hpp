@@ -1,7 +1,7 @@
 #ifndef _RENDERER_HPP_
 #define _RENDERER_HPP_
 
-#include "navia/core/Core.hpp"
+#include "navia/core/Base.hpp"
 #include "navia/renderer/OrthographicCamera.hpp"
 #include "navia/renderer/RendererAPI.hpp"
 #include "navia/renderer/VertexArray.hpp"

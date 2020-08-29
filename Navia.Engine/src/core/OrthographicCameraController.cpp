@@ -3,14 +3,16 @@
 #include "navia/core/OrthographicCameraController.hpp"
 
 namespace Navia {
-OrthographicCameraController::OrthographicCameraController(float aspectRatio, bool rotation) : aspectRatio(aspectRatio), rotation(rotation), camera(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel) {}
+OrthographicCameraController::OrthographicCameraController(float aspectRatio, bool rotation)
+    : aspectRatio(aspectRatio), rotation(rotation),
+      camera(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel) {}
 
 float OrthographicCameraController::getZoomLevel() const {
     return zoomLevel;
 }
 
 void OrthographicCameraController::setZoomLevel(float zoomLevel) {
-    OrthographicCameraController::zoomLevel = zoomLevel;
+    this->zoomLevel = zoomLevel;
 }
 
 OrthographicCamera& OrthographicCameraController::getCamera() {
@@ -24,19 +26,19 @@ const OrthographicCamera& OrthographicCameraController::getCamera() const {
 void OrthographicCameraController::onUpdate(Timestep timestep) {
     NAVIA_PROFILE_FUNCTION();
 
-    if (Input::isKeyPressed(NAVIA_KEY_A)) {
+    if (Input::isKeyPressed(Key::A)) {
         cameraPosition.x -= std::cos(glm::radians(cameraRotation)) * cameraTranslationSpeed * timestep;
         cameraPosition.y -= std::sin(glm::radians(cameraRotation)) * cameraTranslationSpeed * timestep;
     }
-    else if (Input::isKeyPressed(NAVIA_KEY_D)) {
+    else if (Input::isKeyPressed(Key::D)) {
         cameraPosition.x += std::cos(glm::radians(cameraRotation)) * cameraTranslationSpeed * timestep;
         cameraPosition.y += std::sin(glm::radians(cameraRotation)) * cameraTranslationSpeed * timestep;
     }
-    if (Input::isKeyPressed(NAVIA_KEY_W)) {
+    if (Input::isKeyPressed(Key::W)) {
         cameraPosition.x += -std::sin(glm::radians(cameraRotation)) * cameraTranslationSpeed * timestep;
         cameraPosition.y += std::cos(glm::radians(cameraRotation)) * cameraTranslationSpeed * timestep;
     }
-    else if (Input::isKeyPressed(NAVIA_KEY_S)) {
+    else if (Input::isKeyPressed(Key::S)) {
         cameraPosition.x -= -std::sin(glm::radians(cameraRotation)) * cameraTranslationSpeed * timestep;
         cameraPosition.y -= std::cos(glm::radians(cameraRotation)) * cameraTranslationSpeed * timestep;
     }
@@ -44,9 +46,9 @@ void OrthographicCameraController::onUpdate(Timestep timestep) {
     cameraTranslationSpeed = zoomLevel;
 
     if (rotation) {
-        if (Input::isKeyPressed(NAVIA_KEY_Q)) {
+        if (Input::isKeyPressed(Key::Q)) {
             cameraRotation += cameraRotationSpeed * timestep;
-        } else if (Input::isKeyPressed(NAVIA_KEY_E)) {
+        } else if (Input::isKeyPressed(Key::E)) {
             cameraRotation -= cameraRotationSpeed * timestep;
         }
         camera.setRotation(cameraRotation);
@@ -62,6 +64,11 @@ void OrthographicCameraController::onEvent(Event& event) {
     dispatcher.dispatch<WindowResizeEvent>(NAVIA_BIND_EVENT_CALLBACK(OrthographicCameraController::onWindowResize));
 }
 
+void OrthographicCameraController::onResize(float width, float height) {
+    aspectRatio = width / height;
+    camera.setProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
+}
+
 bool OrthographicCameraController::onMouseScrolled(MouseScrolledEvent& event) {
     NAVIA_PROFILE_FUNCTION();
 
@@ -74,8 +81,7 @@ bool OrthographicCameraController::onMouseScrolled(MouseScrolledEvent& event) {
 bool OrthographicCameraController::onWindowResize(WindowResizeEvent& event) {
     NAVIA_PROFILE_FUNCTION();
 
-    aspectRatio = static_cast<float>(event.getWidth()) / static_cast<float>(event.getHeight());
-    camera.setProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
+    onResize(static_cast<float>(event.getWidth()), static_cast<float>(event.getHeight()));
     return false;
 }
 }

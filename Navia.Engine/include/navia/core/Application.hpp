@@ -1,7 +1,7 @@
 #ifndef _APPLICATION_HPP_
 #define _APPLICATION_HPP_
 
-#include "navia/core/Core.hpp"
+#include "navia/core/Base.hpp"
 #include "navia/core/LayerStack.hpp"
 #include "navia/core/Timestep.hpp"
 #include "navia/core/Window.hpp"
@@ -13,13 +13,15 @@
 namespace Navia {
 class Application {
 public:
-    Application();
+    Application(const std::string& name = "Navia Application");
     virtual ~Application();
 
     static Application& getInstance();
     Window& getWindow() const;
+    ImGuiLayer* getImGuiLayer();
 
     void run();
+    void close();
 
     void onEvent(Event& event);
 

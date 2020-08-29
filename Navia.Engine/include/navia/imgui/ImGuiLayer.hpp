@@ -11,11 +11,17 @@ class ImGuiLayer : public Layer {
 public:
     ImGuiLayer();
 
+    void setBlockEvents(bool blockEvents);
+
     void onAttach() override;
     void onDetach() override;
+    void onEvent(Event& event) override;
 
     void begin();
     void end();
+
+private:
+    bool blockEvents{ true };
 };
 }
 
