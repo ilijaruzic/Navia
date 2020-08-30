@@ -23,11 +23,36 @@ void EditorLayer::onAttach() {
     primaryCameraEntity = scene->createEntity("Primary Camera");
     primaryCameraEntity.addComponent<CameraComponent>();
 
-    {
-        secondaryCameraEntity = scene->createEntity("Secondary Camera");
-        auto& camera = secondaryCameraEntity.addComponent<CameraComponent>();
-        camera.primary = false;
-    }
+    secondaryCameraEntity = scene->createEntity("Secondary Camera");
+    auto& camera = secondaryCameraEntity.addComponent<CameraComponent>();
+    camera.primary = false;
+
+    class CameraController : public ScriptableEntity {
+    public:
+        void onCreate() override {
+            auto& transform = getComponent<TransformComponent>().transform;
+            transform[3][0] = std::rand() % 10 - 5.0f;
+        }
+
+        void onUpdate(Timestep timestep) override {
+            auto& transform = getComponent<TransformComponent>().transform;
+            float cameraSpeed = 5.0f;
+            if (Input::isKeyPressed(Key::A)) {
+                transform[3][0] -= cameraSpeed * timestep;
+            }
+            if (Input::isKeyPressed(Key::D)) {
+                transform[3][0] += cameraSpeed * timestep;
+            }
+            if (Input::isKeyPressed(Key::W)) {
+                transform[3][1] += cameraSpeed * timestep;
+            }
+            if (Input::isKeyPressed(Key::S)) {
+                transform[3][1] -= cameraSpeed * timestep;
+            }
+        }
+    };
+    primaryCameraEntity.addComponent<NativeScriptComponent>().bind<CameraController>();
+    secondaryCameraEntity.addComponent<NativeScriptComponent>().bind<CameraController>();
 }
 
 void EditorLayer::onDetach() {
@@ -115,6 +140,13 @@ void EditorLayer::onImGuiRender() {
     ImGui::Text("Quads: %d", statistics.quadCount);
     ImGui::Text("Vertices: %d", statistics.getVertexCount());
     ImGui::Text("Indices: %d", statistics.getIndexCount());
+    ImGui::End();
+
+    auto info = Renderer2D::getInfo();
+    ImGui::Begin("OpenGL Information");
+    ImGui::Text("Vendor: %s",   info.vendor);
+    ImGui::Text("Renderer: %s", info.renderer);
+    ImGui::Text("Version: %s",  info.version);
     ImGui::End();
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });

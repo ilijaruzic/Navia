@@ -23,5 +23,6 @@
 #include "navia/scene/Components.hpp"
 #include "navia/scene/Entity.hpp"
 #include "navia/scene/Scene.hpp"
+#include "navia/scene/ScriptableEntity.hpp"
 
 #endif

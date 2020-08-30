@@ -47,6 +47,7 @@ set(SOURCE_FILES
         src/scene/Components.cpp
         src/scene/Entity.cpp
         src/scene/Scene.cpp
+        src/scene/ScriptableEntity.cpp
         src/scene/SceneCamera.cpp)
 set(INCLUDE_FILES
         include/navia/core/Application.hpp
@@ -95,6 +96,7 @@ set(INCLUDE_FILES
         include/navia/scene/Entity.hpp
         include/navia/scene/Scene.hpp
         include/navia/scene/SceneCamera.hpp
+        include/navia/scene/ScriptableEntity.hpp
         PrecompiledHeaders.hpp)
 
 add_subdirectory(lib/entt)

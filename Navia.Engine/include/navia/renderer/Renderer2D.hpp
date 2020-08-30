@@ -43,6 +43,13 @@ public:
     static Renderer2DStatistics getStatistics();
     static void resetStatistics();
 
+    struct Renderer2DInfo {
+        const unsigned char* vendor;
+        const unsigned char* renderer;
+        const unsigned char* version;
+    };
+    static Renderer2DInfo getInfo();
+
 private:
     static void flushAndReset();
 };

@@ -1,6 +1,6 @@
-#include "navia/renderer/Renderer2D.hpp"
 #include "navia/scene/Components.hpp"
 #include "navia/scene/Entity.hpp"
+#include "navia/renderer/Renderer2D.hpp"
 #include "navia/scene/Scene.hpp"
 #include <glm/glm.hpp>
 
@@ -14,6 +14,17 @@ Scene::~Scene() {
 }
 
 void Scene::onUpdate(Timestep timestep) {
+    {
+        registry.view<NativeScriptComponent>().each([=](auto handle, auto& script) {
+            if (!script.entity) {
+                script.entity = script.createScript();
+                script.entity->entity = Entity{ handle, this };
+                script.entity->onCreate();
+            }
+            script.entity->onUpdate(timestep);
+        });
+    }
+
     Camera* mainCamera = nullptr;
     glm::mat4* mainCameraTransform = nullptr;
     {

@@ -2,6 +2,7 @@
 #define _COMPONENTS_HPP_
 
 #include "navia/scene/SceneCamera.hpp"
+#include "navia/scene/ScriptableEntity.hpp"
 #include <glm/glm.hpp>
 
 namespace Navia {
@@ -9,6 +10,19 @@ struct CameraComponent {
     SceneCamera camera;
     bool primary = true;
     bool fixedAspectRatio = false;
+};
+
+struct NativeScriptComponent {
+    ScriptableEntity* entity = nullptr;
+
+    ScriptableEntity*(*createScript)();
+    void(*destroyScript)(NativeScriptComponent*);
+
+    template <typename Script>
+    void bind() {
+        createScript = []() { return static_cast<ScriptableEntity*>(new Script()); };
+        destroyScript = [](NativeScriptComponent* script) { delete script->entity; script->entity = nullptr; };
+    }
 };
 
 struct TagComponent {
