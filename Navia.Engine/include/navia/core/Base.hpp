@@ -26,7 +26,7 @@
 
 #define BIT(x) (1 << x)
 
-#define NAVIA_BIND_EVENT_CALLBACK(callback) std::bind(&callback, this, std::placeholders::_1)
+#define NAVIA_BIND_EVENT_CALLBACK(callback) [this](auto&& ... args) -> decltype(auto) { return this->callback(std::forward<decltype(args)>(args)...); }
 
 namespace Navia {
 template <typename T>
