@@ -13,3 +13,6 @@
 [submodule "Navia.Engine/lib/stb"]
 	path = Navia.Engine/lib/stb
 	url = https://github.com/ilijaruzic/stb.git
+[submodule "Navia.Engine/lib/entt"]
+	path = Navia.Engine/lib/entt
+	url = https://github.com/skypjack/entt

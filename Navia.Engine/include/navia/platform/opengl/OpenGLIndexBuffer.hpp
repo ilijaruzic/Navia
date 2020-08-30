@@ -6,17 +6,17 @@
 namespace Navia {
 class OpenGLIndexBuffer : public IndexBuffer {
 public:
-    OpenGLIndexBuffer(size_t* indices, size_t count);
+    OpenGLIndexBuffer(uint32_t* indices, uint32_t count);
     ~OpenGLIndexBuffer();
 
-    size_t getCount() const override;
+    uint32_t getCount() const override;
 
     void bind() const override;
     void unbind() const override;
 
 private:
-    size_t rendererId{ 0 };
-    size_t count;
+    uint32_t rendererId = 0;
+    uint32_t count;
 };
 }
 

@@ -25,13 +25,13 @@ public:
 
 private:
     float aspectRatio;
-    float zoomLevel{ 1.0f };
+    float zoomLevel = 1.0f;
     OrthographicCamera camera;
 
     glm::vec3 cameraPosition{ 0.0f };
-    float cameraTranslationSpeed{ 5.0f };
-    float cameraRotation{ 0.0f };
-    float cameraRotationSpeed{ 180.0f };
+    float cameraTranslationSpeed = 5.0f;
+    float cameraRotation = 0.0f;
+    float cameraRotationSpeed = 180.0f;
     bool rotation;
 
     bool onMouseScrolled(MouseScrolledEvent& event);

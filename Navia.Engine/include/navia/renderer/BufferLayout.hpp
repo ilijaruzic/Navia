@@ -7,14 +7,14 @@ namespace Navia {
 struct BufferElement {
     std::string name;
     ShaderDatatype type;
-    size_t size;
-    size_t offset{ 0 };
+    uint32_t size;
+    uint32_t offset{ 0 };
     bool normalized;
 
     BufferElement() = default;
     BufferElement(ShaderDatatype type, const std::string& name, bool normalized = false);
 
-    size_t getComponentCount() const;
+    uint32_t getComponentCount() const;
 };
 
 class BufferLayout {
@@ -24,7 +24,7 @@ public:
 
     const std::vector<BufferElement>& getElements() const;
 
-    size_t getStride() const;
+    uint32_t getStride() const;
 
     std::vector<BufferElement>::iterator begin();
     std::vector<BufferElement>::iterator end();
@@ -37,7 +37,7 @@ public:
 
 private:
     std::vector<BufferElement> elements;
-    size_t stride{ 0 };
+    uint32_t stride{ 0 };
 
     void calculateOffsetAndStride();
 };

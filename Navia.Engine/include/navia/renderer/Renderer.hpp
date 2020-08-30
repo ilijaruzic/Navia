@@ -15,7 +15,7 @@ public:
 
     static RendererAPI::APIVendor getRendererAPI();
 
-    static void onWindowResize(size_t width, size_t height);
+    static void onWindowResize(uint32_t width, uint32_t height);
 
     static void beginScene(OrthographicCamera& camera);
     static void endScene();

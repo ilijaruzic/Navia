@@ -57,7 +57,7 @@ void ExampleLayer2D::onUpdate(Navia::Timestep timestep) {
     {
         NAVIA_PROFILE_SCOPE("Navia::Renderere2D draws");
 
-        static float rectangleRotation{ 0.0f };
+        static float rectangleRotation = 0.0f;
         rectangleRotation += timestep * 50.0f;
 
         Navia::Renderer2D::beginScene(cameraController.getCamera());

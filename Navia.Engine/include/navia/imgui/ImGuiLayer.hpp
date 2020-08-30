@@ -21,7 +21,7 @@ public:
     void end();
 
 private:
-    bool blockEvents{ true };
+    bool blockEvents = true;
 };
 }
 

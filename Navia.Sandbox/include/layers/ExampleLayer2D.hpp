@@ -19,9 +19,9 @@ private:
     glm::vec4 red{ 0.8f, 0.2f, 0.0f, 1.0f };
     glm::vec4 green{ 0.2f, 0.8f, 0.2f, 1.0f };
     glm::vec4 blue{ 0.0f, 0.2f, 0.8f, 1.0f };
-    float bigCheckerboardTextureResolution{ 5.0f };
-    float smallCheckerboardTextureRotation{ 0.0f };
-    float smallCheckerboardTextureResolution{ 15.0f };
+    float bigCheckerboardTextureResolution = 5.0f;
+    float smallCheckerboardTextureRotation = 0.0f;
+    float smallCheckerboardTextureResolution = 15.0f;
 
     Navia::Ref<Navia::Shader> shader;
     Navia::Ref<Navia::VertexArray> vertexArray;

@@ -3,7 +3,7 @@
 #include <stb_image.h>
 
 namespace Navia {
-OpenGLTexture2D::OpenGLTexture2D(size_t width, size_t height) : width(width), height(height), internalFormat(GL_RGBA8), format(GL_RGBA) {
+OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height) : width(width), height(height), internalFormat(GL_RGBA8), format(GL_RGBA) {
     NAVIA_PROFILE_FUNCTION();
 
     glCreateTextures(GL_TEXTURE_2D, 1, &rendererId);
@@ -63,27 +63,27 @@ OpenGLTexture2D::~OpenGLTexture2D() {
     glDeleteTextures(1, &rendererId);
 }
 
-size_t OpenGLTexture2D::getWidth() const {
+uint32_t OpenGLTexture2D::getWidth() const {
     return width;
 }
 
-size_t OpenGLTexture2D::getHeight() const {
+uint32_t OpenGLTexture2D::getHeight() const {
     return height;
 }
 
-size_t OpenGLTexture2D::getRendererId() const {
+uint32_t OpenGLTexture2D::getRendererId() const {
     return rendererId;
 }
 
-void OpenGLTexture2D::setData(void* data, size_t size) {
+void OpenGLTexture2D::setData(void* data, uint32_t size) {
     NAVIA_PROFILE_FUNCTION();
 
-    size_t bytesPerPixel = format == GL_RGBA ? 4 : 3;
+    uint32_t bytesPerPixel = format == GL_RGBA ? 4 : 3;
     NAVIA_CORE_ASSERT(size == width * height * bytesPerPixel, "Data have to be entire texture!");
     glTextureSubImage2D(rendererId, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, data);
 }
 
-void OpenGLTexture2D::bind(size_t slot) const {
+void OpenGLTexture2D::bind(uint32_t slot) const {
     NAVIA_PROFILE_FUNCTION();
 
     glBindTextureUnit(slot, rendererId);

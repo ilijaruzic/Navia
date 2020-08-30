@@ -17,20 +17,14 @@ public:
 private:
     OrthographicCameraController cameraController{ 1280.0f / 720.0f, true };
 
-    glm::vec4 red{ 0.8f, 0.2f, 0.0f, 1.0f };
-    glm::vec4 green{ 0.2f, 0.8f, 0.2f, 1.0f };
-    glm::vec4 blue{ 0.0f, 0.2f, 0.8f, 1.0f };
-    float bigCheckerboardTextureResolution{ 5.0f };
-    float smallCheckerboardTextureRotation{ 0.0f };
-    float smallCheckerboardTextureResolution{ 15.0f };
-
     Ref<Framebuffer> framebuffer;
     Ref<Shader> shader;
     Ref<VertexArray> vertexArray;
-    Ref<Texture2D> checkerboardTexture;
+    Ref<Scene> scene;
+    Entity squareEntity;
 
-    bool viewportFocused{ false };
-    bool viewportHovered{ false };
+    bool viewportFocused = false;
+    bool viewportHovered = false;
     glm::vec2 viewportSize{ 0.0f };
 };
 }

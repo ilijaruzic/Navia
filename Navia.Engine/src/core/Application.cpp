@@ -2,7 +2,7 @@
 #include <GLFW/glfw3.h>
 
 namespace Navia {
-Application* Application::instance{ nullptr };
+Application* Application::instance = nullptr;
 
 Application::Application(const std::string& name) : window(std::unique_ptr<Window>(Window::create(WindowProperties{ name }))), imGuiLayer(new ImGuiLayer()) {
     NAVIA_PROFILE_FUNCTION();

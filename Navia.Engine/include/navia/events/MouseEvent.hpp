@@ -40,19 +40,19 @@ private:
 
 class MouseButtonEvent : public Event {
 public:
-    size_t getMouseButton() const;
+    uint32_t getMouseButton() const;
 
     EVENT_CLASS_CATEGORY(EventCategory::MouseEvents | EventCategory::InputEvents)
 
 protected:
-    size_t mouseButton;
+    uint32_t mouseButton;
 
-    MouseButtonEvent(size_t mouseButton);
+    MouseButtonEvent(uint32_t mouseButton);
 };
 
 class MouseButtonPressedEvent : public MouseButtonEvent {
 public:
-    MouseButtonPressedEvent(size_t mouseButton);
+    MouseButtonPressedEvent(uint32_t mouseButton);
 
     std::string toString() const override;
 
@@ -61,7 +61,7 @@ public:
 
 class MouseButtonReleasedEvent : public MouseButtonEvent {
 public:
-    MouseButtonReleasedEvent(size_t mouseButton);
+    MouseButtonReleasedEvent(uint32_t mouseButton);
 
     std::string toString() const override;
 

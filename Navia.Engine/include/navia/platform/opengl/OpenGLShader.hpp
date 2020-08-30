@@ -20,7 +20,7 @@ public:
     void unbind() const override;
 
     void setInt(const std::string& name, int value) override;
-    void setIntArray(const std::string& name, int* array, size_t count) override;
+    void setIntArray(const std::string& name, int* array, uint32_t count) override;
 
     void setFloat(const std::string& name, float value) override;
     void setFloat2(const std::string& name, const glm::vec2& vector) override;
@@ -31,7 +31,7 @@ public:
     void setMat4(const std::string& name, const glm::mat4& matrix) override;
 
 private:
-    size_t rendererId{ 0 };
+    uint32_t rendererId = 0;
     std::string name;
 
     std::string getSourceFromFile(const std::string& filepath) const;
@@ -39,7 +39,7 @@ private:
     void compileAndLink(const std::unordered_map<GLenum, std::string>& sources);
 
     void uploadUniformInt(const std::string& name, int value);
-    void uploadUniformIntArray(const std::string& name, int* array, size_t count);
+    void uploadUniformIntArray(const std::string& name, int* array, uint32_t count);
 
     void uploadUniformFloat(const std::string& name, float value);
     void uploadUniformFloat2(const std::string& name, const glm::vec2& vector);

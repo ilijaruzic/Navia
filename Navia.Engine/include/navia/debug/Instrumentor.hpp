@@ -6,9 +6,9 @@
 namespace Navia {
 struct ProfileResult {
     std::string name;
-    size_t start;
-    size_t end;
-    size_t threadId;
+    uint32_t start;
+    uint32_t end;
+    uint32_t threadId;
 };
 
 struct InstrumentorSession {
@@ -25,7 +25,7 @@ public:
 private:
     InstrumentorSession* currentSession{ nullptr };
     std::ofstream stream;
-    size_t profileCount{ 0 };
+    uint32_t profileCount = 0;
 
     friend class InstrumentationTimer;
     Instrumentor() = default;

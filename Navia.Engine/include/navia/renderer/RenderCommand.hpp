@@ -9,13 +9,13 @@ class RenderCommand {
 public:
     static void init();
     static void shutdown();
-    static void setViewport(size_t x, size_t y, size_t width, size_t height);
+    static void setViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height);
     static void setClearColor(const glm::vec4& color);
     static void clear();
-    static void drawIndexed(Ref<VertexArray> vertexArray, size_t indexCount = 0);
+    static void drawIndexed(Ref<VertexArray> vertexArray, uint32_t indexCount = 0);
 
 public:
-    static RendererAPI* rendererAPI;
+    static Scope<RendererAPI> rendererAPI;
 };
 }
 

@@ -2,7 +2,7 @@
 #include "navia/platform/opengl/OpenGLRendererAPI.hpp"
 
 namespace Navia {
-RendererAPI* RenderCommand::rendererAPI = new OpenGLRendererAPI();
+Scope<RendererAPI> RenderCommand::rendererAPI = createScope<OpenGLRendererAPI>();
 
 void RenderCommand::init() {
     rendererAPI->init();
@@ -12,7 +12,7 @@ void RenderCommand::shutdown() {
     rendererAPI->shutdown();
 }
 
-void RenderCommand::setViewport(size_t x, size_t y, size_t width, size_t height) {
+void RenderCommand::setViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
     rendererAPI->setViewport(x, y, width, height);
 }
 
@@ -24,7 +24,7 @@ void RenderCommand::clear() {
     rendererAPI->clear();
 }
 
-void RenderCommand::drawIndexed(Ref<VertexArray> vertexArray, size_t indexCount) {
+void RenderCommand::drawIndexed(Ref<VertexArray> vertexArray, uint32_t indexCount) {
     rendererAPI->drawIndexed(vertexArray, indexCount);
 }
 }

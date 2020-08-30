@@ -40,11 +40,12 @@ set(SOURCE_FILES
         src/renderer/RendererAPI.cpp
         src/renderer/Shader.cpp
         src/renderer/ShaderLibrary.cpp
-        src/renderer/SubTexture.cpp
         src/renderer/Texture.cpp
         src/renderer/VertexArray.cpp
         src/renderer/VertexBuffer.cpp
-        src/stb/STBImageBuild.cpp)
+        src/scene/Components.cpp
+        src/scene/Entity.cpp
+        src/scene/Scene.cpp)
 set(INCLUDE_FILES
         include/navia/core/Application.hpp
         include/navia/core/Base.hpp
@@ -84,12 +85,15 @@ set(INCLUDE_FILES
         include/navia/renderer/RendererAPI.hpp
         include/navia/renderer/Shader.hpp
         include/navia/renderer/ShaderLibrary.hpp
-        include/navia/renderer/SubTexture.hpp
         include/navia/renderer/Texture.hpp
         include/navia/renderer/VertexArray.hpp
         include/navia/renderer/VertexBuffer.hpp
+        include/navia/scene/Components.hpp
+        include/navia/scene/Entity.hpp
+        include/navia/scene/Scene.hpp
         PrecompiledHeaders.hpp)
 
+add_subdirectory(lib/entt)
 add_subdirectory(lib/imgui)
 add_subdirectory(lib/glad)
 add_subdirectory(lib/glfw)
@@ -97,11 +101,12 @@ add_subdirectory(lib/glm)
 add_subdirectory(lib/stb)
 
 add_library(Navia.Engine STATIC ${SOURCE_FILES} ${INCLUDE_FILES})
-target_link_libraries(Navia.Engine PRIVATE imgui opengl32 glad glfw stb)
+target_link_libraries(Navia.Engine PUBLIC imgui PRIVATE opengl32 glad glfw)
 target_precompile_headers(Navia.Engine PUBLIC PrecompiledHeaders.hpp)
 target_include_directories(Navia.Engine
         PUBLIC
             include
+            lib/entt/single_include
             lib/glm
             lib/imgui
             lib/spdlog/include
@@ -109,7 +114,7 @@ target_include_directories(Navia.Engine
             lib/glad/include
             lib/glfw/include
             lib/stb)
-target_compile_definitions(Navia.Engine PUBLIC GLFW_INCLUDE_NONE)
+
 if(WIN32)
     if(CMAKE_SIZEOF_VOID_P EQUAL 4)
         target_compile_definitions(Navia.Engine PUBLIC NAVIA_PLATFORM_WINDOWS)
@@ -143,4 +148,9 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
 endif()
 
 target_compile_options(Navia.Engine PUBLIC /EHsc)
-target_compile_definitions(Navia.Engine PUBLIC GLM_FORCE_SILENT_WARNINGS)
+target_compile_definitions(Navia.Engine
+        PUBLIC
+            GLM_FORCE_SILENT_WARNINGS
+            STB_IMAGE_IMPLEMENTATION
+        PRIVATE
+            GLFW_INCLUDE_NONE)

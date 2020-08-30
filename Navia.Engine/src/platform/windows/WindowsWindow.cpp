@@ -5,13 +5,14 @@
 #include "navia/platform/windows/WindowsWindow.hpp"
 
 namespace Navia {
-static bool glfwInitialized{ false };
+static bool glfwInitialized = false;
+
 static void glfwErrorCallback(int errorCode, const char* description) {
     NAVIA_CORE_ERROR("GLFW_ERROR_{0}: {1}", errorCode, description);
 }
 
-Window* Window::create(const WindowProperties& properties) {
-    return new WindowsWindow(properties);
+Scope<Window> Window::create(const WindowProperties& properties) {
+    return createScope<WindowsWindow>(properties);
 }
 
 WindowsWindow::WindowsWindow(const WindowProperties& properties) {
@@ -52,11 +53,11 @@ WindowsWindow::~WindowsWindow() {
     glfwTerminate();
 }
 
-size_t WindowsWindow::getWidth() const {
+uint32_t WindowsWindow::getWidth() const {
     return data.width;
 }
 
-size_t WindowsWindow::getHeight() const {
+uint32_t WindowsWindow::getHeight() const {
     return data.height;
 }
 
@@ -97,7 +98,7 @@ void WindowsWindow::setEventCallbacks() const {
         data.width = width;
         data.height = height;
 
-        WindowResizeEvent event{ static_cast<size_t>(width), static_cast<size_t>(height) };
+        WindowResizeEvent event{ static_cast<uint32_t>(width), static_cast<uint32_t>(height) };
         data.callback(event);
     });
 
@@ -114,19 +115,19 @@ void WindowsWindow::setEventCallbacks() const {
         switch (action) {
             case GLFW_PRESS:
             {
-                KeyPressedEvent event{ static_cast<size_t>(key), 0 };
+                KeyPressedEvent event{ static_cast<uint32_t>(key), 0 };
                 data.callback(event);
                 break;
             }
             case GLFW_RELEASE:
             {
-                KeyReleasedEvent event{ static_cast<size_t>(key) };
+                KeyReleasedEvent event{ static_cast<uint32_t>(key) };
                 data.callback(event);
                 break;
             }
             case GLFW_REPEAT:
             {
-                KeyPressedEvent event{ static_cast<size_t>(key), 1 };
+                KeyPressedEvent event{ static_cast<uint32_t>(key), 1 };
                 data.callback(event);
                 break;
             }
@@ -160,13 +161,13 @@ void WindowsWindow::setEventCallbacks() const {
         switch (action) {
             case GLFW_PRESS:
             {
-                MouseButtonPressedEvent event{ static_cast<size_t>(button) };
+                MouseButtonPressedEvent event{ static_cast<uint32_t>(button) };
                 data.callback(event);
                 break;
             }
             case GLFW_RELEASE:
             {
-                MouseButtonReleasedEvent event{ static_cast<size_t>(button) };
+                MouseButtonReleasedEvent event{ static_cast<uint32_t>(button) };
                 data.callback(event);
                 break;
             }

@@ -6,10 +6,10 @@
 namespace Navia {
 class WindowResizeEvent : public Event {
 public:
-    WindowResizeEvent(size_t width, size_t height);
+    WindowResizeEvent(uint32_t width, uint32_t height);
 
-    size_t getWidth() const;
-    size_t getHeight() const;
+    uint32_t getWidth() const;
+    uint32_t getHeight() const;
 
     std::string toString() const override;
 
@@ -17,8 +17,8 @@ public:
     EVENT_CLASS_TYPE(EventType::WindowResize)
 
 private:
-    size_t width;
-    size_t height;
+    uint32_t width;
+    uint32_t height;
 };
 
 class WindowCloseEvent : public Event {

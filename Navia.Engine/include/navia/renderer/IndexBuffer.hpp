@@ -6,10 +6,10 @@
 namespace Navia {
 class IndexBuffer {
 public:
-    static Ref<IndexBuffer> create(size_t* indices, size_t count);
+    static Ref<IndexBuffer> create(uint32_t* indices, uint32_t count);
     virtual ~IndexBuffer() = default;
 
-    virtual size_t getCount() const = 0;
+    virtual uint32_t getCount() const = 0;
 
     virtual void bind() const = 0;
     virtual void unbind() const = 0;

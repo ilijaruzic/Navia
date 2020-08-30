@@ -11,18 +11,18 @@ public:
     ~OpenGLFramebuffer();
 
     const FramebufferProperties& getProperties() const override;
-    size_t getColorAttachment() const override;
+    uint32_t getColorAttachment() const override;
 
     void bind() override;
     void unbind() override;
 
-    void resize(size_t width, size_t height) override;
+    void resize(uint32_t width, uint32_t height) override;
     void invalidate();
 
 private:
-    size_t rendererId{ 0 };
-    size_t colorAttachment{ 0 };
-    size_t depthAttachment{ 0 };
+    uint32_t rendererId = 0;
+    uint32_t colorAttachment = 0;
+    uint32_t depthAttachment = 0;
     FramebufferProperties properties;
 };
 }

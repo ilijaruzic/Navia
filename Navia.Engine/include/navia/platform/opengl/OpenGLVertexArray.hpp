@@ -22,8 +22,8 @@ public:
     void unbind() const override;
 
 private:
-    size_t rendererId{ 0 };
-    size_t vertexBufferIndex{ 0 };
+    uint32_t rendererId = 0;
+    uint32_t vertexBufferIndex = 0;
     Ref<IndexBuffer> indexBuffer;
     std::vector<Ref<VertexBuffer>> vertexBuffers;
 };

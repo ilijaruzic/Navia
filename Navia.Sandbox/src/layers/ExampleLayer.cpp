@@ -22,10 +22,10 @@ ExampleLayer::ExampleLayer() : Navia::Layer("ExampleLayer") {
         squareVertexBuffer->setLayout(squareLayout);
         squareVertexArray->addVertexBuffer(squareVertexBuffer);
 
-        size_t squareIndices[6]{
+        uint32_t squareIndices[6]{
             0, 1, 2, 2, 3, 0
         };
-        Navia::Ref<Navia::IndexBuffer> squareIndexBuffer = Navia::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(size_t));
+        Navia::Ref<Navia::IndexBuffer> squareIndexBuffer = Navia::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
         squareVertexArray->setIndexBuffer(squareIndexBuffer);
 
         std::string squareFlatColorVertexSource{R"(
@@ -81,11 +81,11 @@ ExampleLayer::ExampleLayer() : Navia::Layer("ExampleLayer") {
         triangleVertexBuffer->setLayout(triangleLayout);
         triangleVertexArray->addVertexBuffer(triangleVertexBuffer);
 
-        size_t triangleIndices[3]{
+        uint32_t triangleIndices[3]{
             0, 1, 2
         };
         Navia::Ref<Navia::IndexBuffer> triangleIndexBuffer;
-        triangleIndexBuffer = Navia::IndexBuffer::create(triangleIndices, sizeof(triangleIndices) / sizeof(size_t));
+        triangleIndexBuffer = Navia::IndexBuffer::create(triangleIndices, sizeof(triangleIndices) / sizeof(uint32_t));
         triangleVertexArray->setIndexBuffer(triangleIndexBuffer);
 
         std::string triangleVertexSource{R"(
@@ -140,8 +140,8 @@ void ExampleLayer::onUpdate(Navia::Timestep timestep) {
     glm::mat4 scale = glm::scale(glm::mat4{ 1.0f }, glm::vec3{ 0.1f });
     squareFlatColorShader->bind();
     squareFlatColorShader->setFloat3("f_uColor", squareColor);
-    for (size_t j = 0; j < 20; ++j) {
-        for (size_t i = 0; i < 20; ++i) {
+    for (uint32_t j = 0; j < 20; ++j) {
+        for (uint32_t i = 0; i < 20; ++i) {
             glm::vec3 position{i * 0.11f, j * 0.11f, 0.0f};
             glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) * scale;
             Navia::Renderer::submit(squareFlatColorShader, squareVertexArray, transform);

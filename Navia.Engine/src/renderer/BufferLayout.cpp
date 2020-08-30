@@ -1,7 +1,7 @@
 #include "navia/renderer/BufferLayout.hpp"
 
 namespace Navia {
-static size_t getShaderDatatypeSize(ShaderDatatype type) {
+static uint32_t getShaderDatatypeSize(ShaderDatatype type) {
     switch (type) {
         case ShaderDatatype::None:
             return 0;
@@ -30,7 +30,7 @@ static size_t getShaderDatatypeSize(ShaderDatatype type) {
 
 BufferElement::BufferElement(ShaderDatatype type, const std::string& name, bool normalized) : name(name), type(type), size(getShaderDatatypeSize(type)), normalized(normalized) {}
 
-size_t BufferElement::getComponentCount() const {
+uint32_t BufferElement::getComponentCount() const {
     switch (type) {
         case ShaderDatatype::None:
             return 0;
@@ -64,7 +64,7 @@ const std::vector<BufferElement>& BufferLayout::getElements() const {
     return elements;
 }
 
-size_t BufferLayout::getStride() const {
+uint32_t BufferLayout::getStride() const {
     return stride;
 }
 
@@ -101,7 +101,7 @@ std::vector<BufferElement>::const_reverse_iterator BufferLayout::rend() const {
 }
 
 void BufferLayout::calculateOffsetAndStride() {
-    size_t offset{ 0 };
+    uint32_t offset{ 0 };
     stride = 0;
     for (auto& element : elements) {
         element.offset = offset;

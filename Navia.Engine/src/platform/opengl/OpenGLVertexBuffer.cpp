@@ -2,7 +2,7 @@
 #include <glad/glad.h>
 
 namespace Navia {
-OpenGLVertexBuffer::OpenGLVertexBuffer(size_t size) {
+OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size) {
     NAVIA_PROFILE_FUNCTION();
 
     glCreateBuffers(1, &rendererId);
@@ -10,7 +10,7 @@ OpenGLVertexBuffer::OpenGLVertexBuffer(size_t size) {
     glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 }
 
-OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, size_t size) {
+OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size) {
     NAVIA_PROFILE_FUNCTION();
 
     glCreateBuffers(1, &rendererId);
@@ -32,7 +32,7 @@ void OpenGLVertexBuffer::setLayout(const BufferLayout& layout) {
     this->layout = layout;
 }
 
-void OpenGLVertexBuffer::setData(const void* data, size_t size) {
+void OpenGLVertexBuffer::setData(const void* data, uint32_t size) {
     NAVIA_PROFILE_FUNCTION();
 
     glBindBuffer(GL_ARRAY_BUFFER, rendererId);

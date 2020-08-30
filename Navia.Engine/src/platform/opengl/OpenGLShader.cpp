@@ -65,7 +65,7 @@ void OpenGLShader::setInt(const std::string& name, int value) {
 }
 
 
-void OpenGLShader::setIntArray(const std::string& name, int* array, size_t count) {
+void OpenGLShader::setIntArray(const std::string& name, int* array, uint32_t count) {
     NAVIA_PROFILE_FUNCTION();
 
     uploadUniformIntArray(name, array, count);
@@ -129,15 +129,15 @@ std::unordered_map<GLenum, std::string> OpenGLShader::preprocess(const std::stri
 
     std::unordered_map<GLenum, std::string> sources;
     const char* typeToken = "#type";
-    size_t typeTokenLength = strlen(typeToken);
-    size_t position = source.find(typeToken, 0);
+    uint32_t typeTokenLength = strlen(typeToken);
+    uint32_t position = source.find(typeToken, 0);
     while (position != std::string::npos) {
-        size_t end = source.find_first_of("\r\n", position);
+        uint32_t end = source.find_first_of("\r\n", position);
         NAVIA_CORE_ASSERT(end != std::string::npos, "Syntax error!");
-        size_t begin = position + typeTokenLength + 1;
+        uint32_t begin = position + typeTokenLength + 1;
         std::string type = source.substr(begin, end - begin);
         NAVIA_CORE_ASSERT(getShaderTypeFromString(type), "Invalid shader type specifier!");
-        size_t next = source.find_first_not_of("\r\n", end);
+        uint32_t next = source.find_first_not_of("\r\n", end);
         NAVIA_CORE_ASSERT(next != std::string::npos, "Syntax error!");
         position = source.find(typeToken, next);
         sources[getShaderTypeFromString(type)] = (position == std::string::npos) ? source.substr(next) : source.substr(next, position - next);
@@ -151,7 +151,7 @@ void OpenGLShader::compileAndLink(const std::unordered_map<GLenum, std::string>&
 
     auto programId = glCreateProgram();
     std::array<GLenum, 2> shaderIds;
-    size_t index{ 0 };
+    uint32_t index{ 0 };
     for (const auto& [shaderType, shaderSource] : sources) {
         GLuint shader = glCreateShader(shaderType);
         const GLchar* source = static_cast<const GLchar*>(shaderSource.c_str());
@@ -199,7 +199,7 @@ void OpenGLShader::uploadUniformInt(const std::string& name, int value) {
     glUniform1i(location, value);
 }
 
-void OpenGLShader::uploadUniformIntArray(const std::string& name, int* array, size_t count) {
+void OpenGLShader::uploadUniformIntArray(const std::string& name, int* array, uint32_t count) {
     auto location = glGetUniformLocation(rendererId, name.c_str());
     glUniform1iv(location, count, array);
 }

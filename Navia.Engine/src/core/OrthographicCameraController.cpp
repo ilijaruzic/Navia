@@ -20,7 +20,7 @@ OrthographicCamera& OrthographicCameraController::getCamera() {
 }
 
 const OrthographicCamera& OrthographicCameraController::getCamera() const {
-    return const_cast<OrthographicCameraController&>(*this).getCamera();
+    return camera;
 }
 
 void OrthographicCameraController::onUpdate(Timestep timestep) {
@@ -53,7 +53,6 @@ void OrthographicCameraController::onUpdate(Timestep timestep) {
         }
         camera.setRotation(cameraRotation);
     }
-
 }
 
 void OrthographicCameraController::onEvent(Event& event) {

@@ -5,9 +5,9 @@
 
 namespace Navia {
 struct FramebufferProperties {
-    size_t width;
-    size_t height;
-    size_t samples{ 1 };
+    uint32_t width;
+    uint32_t height;
+    uint32_t samples{ 1 };
 
     bool swapChainTarget{ false };
 
@@ -19,12 +19,12 @@ public:
     virtual ~Framebuffer() = default;
 
     virtual const FramebufferProperties& getProperties() const = 0;
-    virtual size_t getColorAttachment() const = 0;
+    virtual uint32_t getColorAttachment() const = 0;
 
     virtual void bind() = 0;
     virtual void unbind() = 0;
 
-    virtual void resize(size_t width, size_t height) = 0;
+    virtual void resize(uint32_t width, uint32_t height) = 0;
 };
 }
 

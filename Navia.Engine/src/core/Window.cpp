@@ -1,5 +1,5 @@
 #include "navia/core/Window.hpp"
 
 namespace Navia {
-WindowProperties::WindowProperties(const std::string& title, size_t width, size_t height) : title(title), width(width), height(height) {}
+WindowProperties::WindowProperties(const std::string& title, uint32_t width, uint32_t height) : title(title), width(width), height(height) {}
 }

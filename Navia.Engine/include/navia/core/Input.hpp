@@ -8,12 +8,12 @@
 namespace Navia {
 class Input {
 public:
-    static bool isMouseButtonPressed(size_t button);
+    static bool isMouseButtonPressed(uint32_t button);
     static std::pair<float, float> getMousePosition();
     static float getMouseX();
     static float getMouseY();
 
-    static bool isKeyPressed(size_t keyCode);
+    static bool isKeyPressed(uint32_t keyCode);
 };
 }
 

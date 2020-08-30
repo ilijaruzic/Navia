@@ -78,8 +78,8 @@ void Navia::OpenGLVertexArray::addVertexBuffer(Ref<VertexBuffer> vertexBuffer) {
             case ShaderDatatype::Mat3:
             case ShaderDatatype::Mat4:
             {
-                size_t count = element.getComponentCount();
-                for (size_t i = 0; i < count; ++i)
+                uint32_t count = element.getComponentCount();
+                for (uint32_t i = 0; i < count; ++i)
                 {
                     glEnableVertexAttribArray(vertexBufferIndex);
                     glVertexAttribPointer(vertexBufferIndex,

@@ -3,7 +3,7 @@
 #include <GLFW/glfw3.h>
 
 namespace Navia {
-bool Input::isMouseButtonPressed(size_t button) {
+bool Input::isMouseButtonPressed(uint32_t button) {
     auto window = static_cast<GLFWwindow*>(Application::getInstance().getWindow().getNativeWindow());
     auto result = glfwGetMouseButton(window, button);
     return result == GLFW_PRESS;
@@ -26,7 +26,7 @@ float Input::getMouseY() {
     return y;
 }
 
-bool Input::isKeyPressed(size_t keyCode) {
+bool Input::isKeyPressed(uint32_t keyCode) {
     auto window = static_cast<GLFWwindow*>(Application::getInstance().getWindow().getNativeWindow());
     auto result = glfwGetKey(window, keyCode);
     return result == GLFW_PRESS || result == GLFW_REPEAT;

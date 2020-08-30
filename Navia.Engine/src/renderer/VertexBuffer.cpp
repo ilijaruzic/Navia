@@ -3,7 +3,7 @@
 #include "navia/renderer/VertexBuffer.hpp"
 
 namespace Navia {
-Ref<VertexBuffer> VertexBuffer::create(size_t size) {
+Ref<VertexBuffer> VertexBuffer::create(uint32_t size) {
     switch (Renderer::getRendererAPI()) {
         case RendererAPI::APIVendor::None:
             NAVIA_CORE_ASSERT(false, "API not supported yet!");
@@ -24,7 +24,7 @@ Ref<VertexBuffer> VertexBuffer::create(size_t size) {
     return nullptr;
 }
 
-Ref<VertexBuffer> VertexBuffer::create(float* vertices, size_t size) {
+Ref<VertexBuffer> VertexBuffer::create(float* vertices, uint32_t size) {
     switch (Renderer::getRendererAPI()) {
         case RendererAPI::APIVendor::None:
             NAVIA_CORE_ASSERT(false, "API not supported yet!");

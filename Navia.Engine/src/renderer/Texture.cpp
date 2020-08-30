@@ -3,7 +3,7 @@
 #include "navia/platform/opengl/OpenGLTexture.hpp"
 
 namespace Navia {
-Ref<Texture2D> Texture2D::create(size_t width, size_t height) {
+Ref<Texture2D> Texture2D::create(uint32_t width, uint32_t height) {
     switch (Renderer::getRendererAPI()) {
         case RendererAPI::APIVendor::None:
             NAVIA_CORE_ASSERT(false, "API not supported yet!");

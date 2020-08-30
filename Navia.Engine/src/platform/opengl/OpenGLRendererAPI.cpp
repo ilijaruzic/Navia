@@ -16,7 +16,7 @@ void OpenGLRendererAPI::shutdown() {
 
 }
 
-void OpenGLRendererAPI::setViewport(size_t x, size_t y, size_t width, size_t height) {
+void OpenGLRendererAPI::setViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
     glViewport(x, y, width, height);
 }
 
@@ -28,8 +28,8 @@ void OpenGLRendererAPI::clear() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void OpenGLRendererAPI::drawIndexed(Ref<VertexArray> vertexArray, size_t indexCount) {
-    size_t count = indexCount ? vertexArray->getIndexBuffer()->getCount() : indexCount;
+void OpenGLRendererAPI::drawIndexed(Ref<VertexArray> vertexArray, uint32_t indexCount) {
+    uint32_t count = indexCount ? vertexArray->getIndexBuffer()->getCount() : indexCount;
     glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 }
 }

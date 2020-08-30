@@ -20,7 +20,7 @@ void Renderer::shutdown() {
     Renderer2D::shutdown();
 }
 
-void Renderer::onWindowResize(size_t width, size_t height) {
+void Renderer::onWindowResize(uint32_t width, uint32_t height) {
     RenderCommand::setViewport(0, 0, width, height);
 }
 

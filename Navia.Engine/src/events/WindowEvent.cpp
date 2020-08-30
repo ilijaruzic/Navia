@@ -1,13 +1,13 @@
 #include "navia/events/WindowEvent.hpp"
 
 namespace Navia {
-WindowResizeEvent::WindowResizeEvent(size_t width, size_t height) : width(width), height(height) {}
+WindowResizeEvent::WindowResizeEvent(uint32_t width, uint32_t height) : width(width), height(height) {}
 
-size_t WindowResizeEvent::getWidth() const {
+uint32_t WindowResizeEvent::getWidth() const {
     return width;
 }
 
-size_t WindowResizeEvent::getHeight() const {
+uint32_t WindowResizeEvent::getHeight() const {
     return height;
 }
 

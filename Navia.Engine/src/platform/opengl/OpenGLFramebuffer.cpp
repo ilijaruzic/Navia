@@ -2,8 +2,8 @@
 #include <glad/glad.h>
 
 namespace Navia {
-static constexpr size_t MaxFrameBufferWidth = 7680;
-static constexpr size_t MaxFrameBufferHeight = 4320;
+static constexpr uint32_t MaxFrameBufferWidth = 7680;
+static constexpr uint32_t MaxFrameBufferHeight = 4320;
 
 OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferProperties& properties) : properties(properties) {
     invalidate();
@@ -19,7 +19,7 @@ const FramebufferProperties& OpenGLFramebuffer::getProperties() const {
     return properties;
 }
 
-size_t OpenGLFramebuffer::getColorAttachment() const {
+uint32_t OpenGLFramebuffer::getColorAttachment() const {
     return colorAttachment;
 }
 
@@ -32,7 +32,7 @@ void OpenGLFramebuffer::unbind() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void OpenGLFramebuffer::resize(size_t width, size_t height) {
+void OpenGLFramebuffer::resize(uint32_t width, uint32_t height) {
     if (width == 0 || height == 0 || width > MaxFrameBufferWidth || height > MaxFrameBufferHeight) {
         NAVIA_CORE_WARN("Attempt to resize framebuffer to {0}x{1} failed!", width, height);
         return;

@@ -16,22 +16,22 @@ struct QuadVertex {
 };
 
 struct Renderer2DData {
-    static constexpr size_t MaxQuadsCount{ 20000 };
-    static constexpr size_t MaxVerticesCount{ MaxQuadsCount * 4 };
-    static constexpr size_t MaxIndicesCount{ MaxQuadsCount * 6 };
-    static constexpr size_t MaxTextureSlotsCount{ 32 };
+    static constexpr uint32_t MaxQuadsCount = 20000;
+    static constexpr uint32_t MaxVerticesCount = MaxQuadsCount * 4;
+    static constexpr uint32_t MaxIndicesCount = MaxQuadsCount * 6;
+    static constexpr uint32_t MaxTextureSlotsCount = 32;
 
     Ref<VertexArray> quadVertexArray;
     Ref<VertexBuffer> quadVertexBuffer;
     Ref<Shader> shader;
     Ref<Texture2D> whiteTexture;
 
-    size_t quadIndexCount{ 0 };
-    QuadVertex* quadVertexBufferBase{ nullptr };
-    QuadVertex* quadVertexBufferPtr{ nullptr };
+    uint32_t quadIndexCount = 0;
+    QuadVertex* quadVertexBufferBase = nullptr;
+    QuadVertex* quadVertexBufferPtr = nullptr;
 
     std::array<Ref<Texture2D>, MaxTextureSlotsCount> textureSlots;
-    size_t textureSlotIndex{ 1 };
+    uint32_t textureSlotIndex = 1;
 
     glm::vec4 quadVertexPositions[4];
 
@@ -57,9 +57,9 @@ void Renderer2D::init() {
 
     data.quadVertexBufferBase = new QuadVertex[Renderer2DData::MaxVerticesCount];
 
-    size_t* quadIndices = new size_t[Renderer2DData::MaxIndicesCount];
-    size_t offset{ 0 };
-    for (size_t i = 0; i < Renderer2DData::MaxIndicesCount; i += 6) {
+    uint32_t* quadIndices = new uint32_t[Renderer2DData::MaxIndicesCount];
+    uint32_t offset{ 0 };
+    for (uint32_t i = 0; i < Renderer2DData::MaxIndicesCount; i += 6) {
         quadIndices[i + 0] = offset + 0;
         quadIndices[i + 1] = offset + 1;
         quadIndices[i + 2] = offset + 2;
@@ -73,11 +73,11 @@ void Renderer2D::init() {
     delete[] quadIndices;
 
     data.whiteTexture = Texture2D::create(1, 1);
-    size_t whiteTextureData = 0xffffffff;
-    data.whiteTexture->setData(&whiteTextureData, sizeof(size_t));
+    uint32_t whiteTextureData = 0xffffffff;
+    data.whiteTexture->setData(&whiteTextureData, sizeof(uint32_t));
 
     int samplers[Renderer2DData::MaxTextureSlotsCount];
-    for (size_t i = 0; i < Renderer2DData::MaxTextureSlotsCount; ++i) {
+    for (uint32_t i = 0; i < Renderer2DData::MaxTextureSlotsCount; ++i) {
         samplers[i] = i;
     }
     data.shader = Shader::create("assets/shaders/shader.glsl");
@@ -113,7 +113,7 @@ void Renderer2D::beginScene(const OrthographicCamera& camera) {
 void Renderer2D::endScene() {
     NAVIA_PROFILE_FUNCTION();
 
-    size_t dataSize = (uint8_t*)data.quadVertexBufferPtr - (uint8_t*)data.quadVertexBufferBase;
+    uint32_t dataSize = (uint8_t*)data.quadVertexBufferPtr - (uint8_t*)data.quadVertexBufferBase;
     data.quadVertexBuffer->setData(data.quadVertexBufferBase, dataSize);
     flush();
 }
@@ -121,7 +121,7 @@ void Renderer2D::endScene() {
 void Renderer2D::flush() {
     NAVIA_PROFILE_FUNCTION();
 
-    for (size_t i = 0; i < data.textureSlotIndex; ++i) {
+    for (uint32_t i = 0; i < data.textureSlotIndex; ++i) {
         data.textureSlots[i]->bind(i);
     }
     RenderCommand::drawIndexed(data.quadVertexArray, data.quadIndexCount);
@@ -136,25 +136,31 @@ void Renderer2D::drawQuad(const glm::vec2& position, const glm::vec2& size, cons
 void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color) {
     NAVIA_PROFILE_FUNCTION();
 
-    if (data.quadIndexCount >= Renderer2DData::MaxIndicesCount) {
-        flushAndReset();
-    }
-
-    constexpr size_t quadVertexCount{ 4 };
-    constexpr glm::vec2 textureCoords[]{
-        glm::vec2{ 0.0f, 0.0f },
-        glm::vec2{ 1.0f, 0.0f },
-        glm::vec2{ 1.0f, 1.0f },
-        glm::vec2{ 0.0f, 1.0f }
-    };
-    constexpr float textureIndex{ 0.0f };
-    constexpr float tilingFactor{ 1.0f };
-
     glm::mat4 transform =
             glm::translate(glm::mat4{ 1.0f }, position) *
             glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
 
-    for (size_t i = 0; i < quadVertexCount; ++i) {
+   drawQuad(transform, color);
+}
+
+void Renderer2D::drawQuad(const glm::mat4& transform, const glm::vec4& color) {
+    NAVIA_PROFILE_FUNCTION();
+
+    if (data.quadIndexCount >= Renderer2DData::MaxIndicesCount) {
+        flushAndReset();
+    }
+
+    constexpr uint32_t quadVertexCount = 4;
+    constexpr glm::vec2 textureCoords[]{
+            glm::vec2{ 0.0f, 0.0f },
+            glm::vec2{ 1.0f, 0.0f },
+            glm::vec2{ 1.0f, 1.0f },
+            glm::vec2{ 0.0f, 1.0f }
+    };
+    constexpr float textureIndex = 0.0f;
+    constexpr float tilingFactor = 1.0f;
+
+    for (uint32_t i = 0; i < quadVertexCount; ++i) {
         data.quadVertexBufferPtr->position = transform * data.quadVertexPositions[i];
         data.quadVertexBufferPtr->color = color;
         data.quadVertexBufferPtr->textureCoords = textureCoords[i];
@@ -175,67 +181,31 @@ void Renderer2D::drawQuad(const glm::vec2& position, const glm::vec2& size, Ref<
 void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, Ref<Texture2D> texture, float tilingFactor, const glm::vec4& tintColor) {
     NAVIA_PROFILE_FUNCTION();
 
-    if (data.quadIndexCount >= Renderer2DData::MaxIndicesCount) {
-        flushAndReset();
-    }
-
-    constexpr size_t quadVertexCount{ 4 };
-    constexpr glm::vec2 textureCoords[]{
-        glm::vec2{ 0.0f, 0.0f },
-        glm::vec2{ 1.0f, 0.0f },
-        glm::vec2{ 1.0f, 1.0f },
-        glm::vec2{ 0.0f, 1.0f }
-    };
-    constexpr glm::vec4 color{ 1.0f };
-
-    float textureIndex{ 0.0f };
-    for (size_t i = 1; i < data.textureSlotIndex; ++i) {
-        if (*data.textureSlots[i] == *texture)  {
-            textureIndex = static_cast<float>(i);
-            break;
-        }
-    }
-    if (textureIndex == 0.0f) {
-        textureIndex = static_cast<float>(data.textureSlotIndex);
-        data.textureSlots[data.textureSlotIndex++] = texture;
-    }
-
     glm::mat4 transform =
             glm::translate(glm::mat4{ 1.0f }, position) *
             glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
 
-    for (size_t i = 0; i < quadVertexCount; ++i) {
-        data.quadVertexBufferPtr->position = transform * data.quadVertexPositions[i];
-        data.quadVertexBufferPtr->color = color;
-        data.quadVertexBufferPtr->textureCoords = textureCoords[i];
-        data.quadVertexBufferPtr->textureIndex = textureIndex;
-        data.quadVertexBufferPtr->tilingFactor = tilingFactor;
-        ++data.quadVertexBufferPtr;
-    }
-
-    data.quadIndexCount += 6;
-
-    ++data.statistics.quadCount;
+    drawQuad(transform, texture, tilingFactor, tintColor);
 }
 
-void Renderer2D::drawQuad(const glm::vec2& position, const glm::vec2& size, Ref<SubTexture2D> subTexture, float tilingFactor, const glm::vec4& tintColor) {
-    drawQuad(glm::vec3{ position.x, position.y, 0.0f }, size, subTexture, tilingFactor, tintColor);
-}
-
-void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, Ref<SubTexture2D> subTexture, float tilingFactor, const glm::vec4& tintColor) {
+void Renderer2D::drawQuad(const glm::mat4& transform, Ref<Texture2D> texture, float tilingFactor, const glm::vec4& tintColor) {
     NAVIA_PROFILE_FUNCTION();
 
     if (data.quadIndexCount >= Renderer2DData::MaxIndicesCount) {
         flushAndReset();
     }
 
-    constexpr size_t quadVertexCount{ 4 };
-    const glm::vec2* textureCoords = subTexture->getTextureCoords();
-    const Ref<Texture2D> texture = subTexture->getTexture();
+    constexpr uint32_t quadVertexCount = 4;
+    constexpr glm::vec2 textureCoords[]{
+            glm::vec2{ 0.0f, 0.0f },
+            glm::vec2{ 1.0f, 0.0f },
+            glm::vec2{ 1.0f, 1.0f },
+            glm::vec2{ 0.0f, 1.0f }
+    };
     constexpr glm::vec4 color{ 1.0f };
 
-    float textureIndex{ 0.0f };
-    for (size_t i = 1; i < data.textureSlotIndex; ++i) {
+    float textureIndex = 0.0f;
+    for (uint32_t i = 1; i < data.textureSlotIndex; ++i) {
         if (*data.textureSlots[i] == *texture)  {
             textureIndex = static_cast<float>(i);
             break;
@@ -246,11 +216,7 @@ void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, Ref<
         data.textureSlots[data.textureSlotIndex++] = texture;
     }
 
-    glm::mat4 transform =
-            glm::translate(glm::mat4{ 1.0f }, position) *
-            glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
-
-    for (size_t i = 0; i < quadVertexCount; ++i) {
+    for (uint32_t i = 0; i < quadVertexCount; ++i) {
         data.quadVertexBufferPtr->position = transform * data.quadVertexPositions[i];
         data.quadVertexBufferPtr->color = color;
         data.quadVertexBufferPtr->textureCoords = textureCoords[i];
@@ -271,26 +237,32 @@ void Renderer2D::drawRotatedQuad(const glm::vec2& position, const glm::vec2& siz
 void Renderer2D::drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color) {
     NAVIA_PROFILE_FUNCTION();
 
-    if (data.quadIndexCount >= Renderer2DData::MaxIndicesCount) {
-        flushAndReset();
-    }
-
-    constexpr size_t quadVertexCount{ 4 };
-    constexpr glm::vec2 textureCoords[]{
-        glm::vec2{ 0.0f, 0.0f },
-        glm::vec2{ 1.0f, 0.0f },
-        glm::vec2{ 1.0f, 1.0f },
-        glm::vec2{ 0.0f, 1.0f }
-    };
-    constexpr float textureIndex{ 0.0f };
-    constexpr float tilingFactor{ 1.0f };
-
     glm::mat4 transform =
             glm::translate(glm::mat4{ 1.0f }, position) *
             glm::rotate(glm::mat4{ 1.0f }, rotation, glm::vec3{ 0.0f, 0.0f, 1.0f }) *
             glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
 
-    for (size_t i = 0; i < quadVertexCount; ++i) {
+    drawRotatedQuad(transform, rotation, color);
+}
+
+void Renderer2D::drawRotatedQuad(const glm::mat4& transform, float rotation, const glm::vec4& color) {
+    NAVIA_PROFILE_FUNCTION();
+
+    if (data.quadIndexCount >= Renderer2DData::MaxIndicesCount) {
+        flushAndReset();
+    }
+
+    constexpr uint32_t quadVertexCount = 4;
+    constexpr glm::vec2 textureCoords[]{
+            glm::vec2{ 0.0f, 0.0f },
+            glm::vec2{ 1.0f, 0.0f },
+            glm::vec2{ 1.0f, 1.0f },
+            glm::vec2{ 0.0f, 1.0f }
+    };
+    constexpr float textureIndex = 0.0f;
+    constexpr float tilingFactor = 1.0f;
+
+    for (uint32_t i = 0; i < quadVertexCount; ++i) {
         data.quadVertexBufferPtr->position = transform * data.quadVertexPositions[i];
         data.quadVertexBufferPtr->color = color;
         data.quadVertexBufferPtr->textureCoords = textureCoords[i];
@@ -311,68 +283,32 @@ void Renderer2D::drawRotatedQuad(const glm::vec2& position, const glm::vec2& siz
 void Renderer2D::drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, Ref<Texture2D> texture, float tilingFactor, const glm::vec4& tintColor) {
     NAVIA_PROFILE_FUNCTION();
 
-    if (data.quadIndexCount >= Renderer2DData::MaxIndicesCount) {
-        flushAndReset();
-    }
-
-    constexpr size_t quadVertexCount{ 4 };
-    constexpr glm::vec2 textureCoords[]{
-        glm::vec2{ 0.0f, 0.0f },
-        glm::vec2{ 1.0f, 0.0f },
-        glm::vec2{ 1.0f, 1.0f },
-        glm::vec2{ 0.0f, 1.0f }
-    };
-    constexpr glm::vec4 color{ 1.0f };
-
-    float textureIndex{ 0.0f };
-    for (size_t i = 1; i < data.textureSlotIndex; ++i) {
-        if (*data.textureSlots[i] == *texture)  {
-            textureIndex = static_cast<float>(i);
-            break;
-        }
-    }
-    if (textureIndex == 0.0f) {
-        textureIndex = static_cast<float>(data.textureSlotIndex);
-        data.textureSlots[data.textureSlotIndex++] = texture;
-    }
-
     glm::mat4 transform =
             glm::translate(glm::mat4{ 1.0f }, position) *
             glm::rotate(glm::mat4{ 1.0f }, rotation, glm::vec3{ 0.0f, 0.0f, 1.0f }) *
             glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
 
-    for (size_t i = 0; i < quadVertexCount; ++i) {
-        data.quadVertexBufferPtr->position = transform * data.quadVertexPositions[i];
-        data.quadVertexBufferPtr->color = color;
-        data.quadVertexBufferPtr->textureCoords = textureCoords[i];
-        data.quadVertexBufferPtr->textureIndex = textureIndex;
-        data.quadVertexBufferPtr->tilingFactor = tilingFactor;
-        ++data.quadVertexBufferPtr;
-    }
-
-    data.quadIndexCount += 6;
-
-    ++data.statistics.quadCount;
+    drawRotatedQuad(transform, rotation, texture, tilingFactor, tintColor);
 }
 
-void Renderer2D::drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, Ref<SubTexture2D> subTexture, float tilingFactor, const glm::vec4& tintColor) {
-    drawRotatedQuad(glm::vec3{ position.x, position.y, 0.0f }, size, rotation, subTexture, tilingFactor, tintColor);
-}
-
-void Renderer2D::drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, Ref<SubTexture2D> subTexture, float tilingFactor, const glm::vec4& tintColor) {
+void Renderer2D::drawRotatedQuad(const glm::mat4& transform, float rotation, Ref<Texture2D> texture, float tilingFactor, const glm::vec4& tintColor) {
     NAVIA_PROFILE_FUNCTION();
 
     if (data.quadIndexCount >= Renderer2DData::MaxIndicesCount) {
         flushAndReset();
     }
 
-    constexpr size_t quadVertexCount{ 4 };
-    const glm::vec2* textureCoords = subTexture->getTextureCoords();
-    const Ref<Texture2D> texture = subTexture->getTexture();
+    constexpr uint32_t quadVertexCount = 4;
+    constexpr glm::vec2 textureCoords[]{
+            glm::vec2{ 0.0f, 0.0f },
+            glm::vec2{ 1.0f, 0.0f },
+            glm::vec2{ 1.0f, 1.0f },
+            glm::vec2{ 0.0f, 1.0f }
+    };
     constexpr glm::vec4 color{ 1.0f };
 
-    float textureIndex{ 0.0f };
-    for (size_t i = 1; i < data.textureSlotIndex; ++i) {
+    float textureIndex = 0.0f;
+    for (uint32_t i = 1; i < data.textureSlotIndex; ++i) {
         if (*data.textureSlots[i] == *texture)  {
             textureIndex = static_cast<float>(i);
             break;
@@ -383,12 +319,7 @@ void Renderer2D::drawRotatedQuad(const glm::vec3& position, const glm::vec2& siz
         data.textureSlots[data.textureSlotIndex++] = texture;
     }
 
-    glm::mat4 transform =
-            glm::translate(glm::mat4{ 1.0f }, position) *
-            glm::rotate(glm::mat4{ 1.0f }, rotation, glm::vec3{ 0.0f, 0.0f, 1.0f }) *
-            glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
-
-    for (size_t i = 0; i < quadVertexCount; ++i) {
+    for (uint32_t i = 0; i < quadVertexCount; ++i) {
         data.quadVertexBufferPtr->position = transform * data.quadVertexPositions[i];
         data.quadVertexBufferPtr->color = color;
         data.quadVertexBufferPtr->textureCoords = textureCoords[i];
@@ -402,11 +333,11 @@ void Renderer2D::drawRotatedQuad(const glm::vec3& position, const glm::vec2& siz
     ++data.statistics.quadCount;
 }
 
-size_t Renderer2D::Renderer2DStatistics::getVertexCount() const {
+uint32_t Renderer2D::Renderer2DStatistics::getVertexCount() const {
     return quadCount * 4;
 }
 
-size_t Renderer2D::Renderer2DStatistics::getIndexCount() const {
+uint32_t Renderer2D::Renderer2DStatistics::getIndexCount() const {
     return quadCount * 6;
 }
 

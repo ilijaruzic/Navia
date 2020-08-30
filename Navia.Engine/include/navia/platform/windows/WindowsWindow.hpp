@@ -11,8 +11,8 @@ public:
     WindowsWindow(const WindowProperties& properties);
     ~WindowsWindow();
 
-    size_t getWidth() const override;
-    size_t getHeight() const override;
+    uint32_t getWidth() const override;
+    uint32_t getHeight() const override;
     void* getNativeWindow() const override;
 
     void onUpdate() override;
@@ -27,8 +27,8 @@ private:
 
     struct WindowData {
         std::string title;
-        size_t width;
-        size_t height;
+        uint32_t width;
+        uint32_t height;
         bool vsync;
         EventCallbackType callback;
     };

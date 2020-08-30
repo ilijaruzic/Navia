@@ -6,33 +6,33 @@
 namespace Navia {
 class KeyEvent : public Event {
 public:
-    size_t getKeyCode() const;
+    uint32_t getKeyCode() const;
 
     EVENT_CLASS_CATEGORY(EventCategory::KeyboardEvents | EventCategory::InputEvents)
 
 protected:
-    size_t keyCode;
+    uint32_t keyCode;
 
-    KeyEvent(size_t keyCode);
+    KeyEvent(uint32_t keyCode);
 };
 
 class KeyPressedEvent : public KeyEvent {
 public:
-    KeyPressedEvent(size_t keyCode, size_t repeatCount);
+    KeyPressedEvent(uint32_t keyCode, uint32_t repeatCount);
 
-    size_t getRepeatCount() const;
+    uint32_t getRepeatCount() const;
 
     std::string toString() const override;
 
     EVENT_CLASS_TYPE(EventType::KeyPressed)
 
 private:
-    size_t repeatCount;
+    uint32_t repeatCount;
 };
 
 class KeyReleasedEvent : public KeyEvent {
 public:
-    KeyReleasedEvent(size_t keyCode);
+    KeyReleasedEvent(uint32_t keyCode);
 
     std::string toString() const override;
 
@@ -41,7 +41,7 @@ public:
 
 class KeyTypedEvent : public KeyEvent {
 public:
-    KeyTypedEvent(size_t keyCode);
+    KeyTypedEvent(uint32_t keyCode);
 
     std::string toString() const override;
 

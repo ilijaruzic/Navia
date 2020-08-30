@@ -14,9 +14,11 @@ void EditorLayer::onAttach() {
         .height = 720
     };
     framebuffer = Framebuffer::create(properties);
-    checkerboardTexture = Texture2D::create("assets/textures/checkerboard.png");
 
-    cameraController.setZoomLevel(5.0f);
+    scene = createRef<Scene>();
+
+    squareEntity = scene->createEntity("Square");
+    squareEntity.addComponent<SpriteComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
 }
 
 void EditorLayer::onDetach() {
@@ -75,17 +77,15 @@ void EditorLayer::onImGuiRender() {
     }
 
     ImGui::Begin("Settings");
-    ImGui::SetWindowSize(ImVec2{ 400.0f, 200.0f });
-    ImGui::ColorEdit4("S-Color", glm::value_ptr(blue));
-    ImGui::ColorEdit4("R-Color", glm::value_ptr(red));
-    ImGui::SliderFloat("BCT-Resolution", &bigCheckerboardTextureResolution, 1.0f, 10.0f);
-    ImGui::SliderFloat("SCT-Rotation", &smallCheckerboardTextureRotation, 0.0f, 360.0f);
-    ImGui::SliderFloat("SCT-Resolution", &smallCheckerboardTextureResolution, 10.0f, 20.0f);
+    auto& tag = squareEntity.getComponent<TagComponent>().tag;
+    ImGui::Text("%s", tag.c_str());
+    auto& squareColor = squareEntity.getComponent<SpriteComponent>().color;
+    ImGui::ColorPicker4("Color", glm::value_ptr(squareColor));
+    ImGui::Separator();
     ImGui::End();
 
     auto statistics = Renderer2D::getStatistics();
     ImGui::Begin("Statistics");
-    ImGui::SetWindowSize(ImVec2(200.0f, 200.0f));
     ImGui::Text("Draw Calls: %d", statistics.drawCallCount);
     ImGui::Text("Quads: %d", statistics.quadCount);
     ImGui::Text("Vertices: %d", statistics.getVertexCount());
@@ -99,12 +99,12 @@ void EditorLayer::onImGuiRender() {
     Application::getInstance().getImGuiLayer()->setBlockEvents(!(viewportFocused && viewportHovered));
     ImVec2 viewportRegion = ImGui::GetContentRegionAvail();
     if (viewportSize != *((glm::vec2*)&viewportRegion) && !(viewportRegion.x <= 0 || viewportRegion.y <= 0)) {
-        framebuffer->resize(static_cast<size_t>(viewportRegion.x), static_cast<size_t>(viewportRegion.y));
+        framebuffer->resize(static_cast<uint32_t>(viewportRegion.x), static_cast<uint32_t>(viewportRegion.y));
         viewportSize = glm::vec2{ viewportRegion.x, viewportRegion.y };
 
         cameraController.onResize(viewportRegion.x, viewportRegion.y);
     }
-    size_t colorAttachment = framebuffer->getColorAttachment();
+    uint32_t colorAttachment = framebuffer->getColorAttachment();
     ImGui::Image((void*)colorAttachment, ImVec2{ viewportSize.x, viewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
     ImGui::End();
     ImGui::PopStyleVar();
@@ -120,40 +120,18 @@ void EditorLayer::onUpdate(Timestep timestep) {
     }
 
     Renderer2D::resetStatistics();
-    {
-        NAVIA_PROFILE_SCOPE("RenderCommand initial setup");
 
-        framebuffer->bind();
-        RenderCommand::setClearColor(glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f });
-        RenderCommand::clear();
-    }
+    framebuffer->bind();
 
-    {
-        NAVIA_PROFILE_SCOPE("Renderere2D draws");
+    RenderCommand::setClearColor(glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f });
+    RenderCommand::clear();
 
-        static float rectangleRotation{ 0.0f };
-        rectangleRotation += timestep * 50.0f;
-
-        Renderer2D::beginScene(cameraController.getCamera());
-        Renderer2D::drawQuad(glm::vec2{ -1.0f, 0.0f }, glm::vec2{ 0.8f, 0.8f }, red);
-        Renderer2D::drawQuad(glm::vec2{  1.0f, 0.5f }, glm::vec2{ 0.8f, 0.4f }, green);
-        Renderer2D::drawRotatedQuad(glm::vec2{ 0.5f, -0.5f }, glm::vec2{ 0.5f, 0.7f }, glm::radians(rectangleRotation), blue);
-        Renderer2D::drawQuad(glm::vec3{ 0.0f, 0.0f, -0.1f }, glm::vec2{ 20.0f, 20.0f }, checkerboardTexture, bigCheckerboardTextureResolution);
-        Renderer2D::drawRotatedQuad(glm::vec3{ -2.0f, 0.0f, 0.0f }, glm::vec2{  1.0f,  1.0f }, glm::radians(smallCheckerboardTextureRotation), checkerboardTexture, smallCheckerboardTextureResolution);
-        Renderer2D::endScene();
-
-        Renderer2D::beginScene(cameraController.getCamera());
-        for (float y = -5.0f; y < 5.0f; y += 0.5f) {
-            for (float x = -5.0f; x < 5.0f; x += 0.5f) {
-                glm::vec4 color{ (x + 5.0f) / 10.0f, 0.5f, (y + 5.0f) / 10.0f, 0.75f };
-                Renderer2D::drawQuad(glm::vec2{ x, y }, glm::vec2{ 0.45f, 0.45f }, color);
-            }
-        }
-        Renderer2D::endScene();
-        framebuffer->unbind();
-    }
+    Renderer2D::beginScene(cameraController.getCamera());
+    scene->onUpdate(timestep);
 
     Renderer2D::endScene();
+
+    framebuffer->unbind();
 }
 
 void EditorLayer::onEvent(Event& event) {

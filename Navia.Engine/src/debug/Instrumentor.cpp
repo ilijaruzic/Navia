@@ -58,9 +58,9 @@ InstrumentationTimer::~InstrumentationTimer() {
 
 void InstrumentationTimer::stop() {
     auto endTimePoint = std::chrono::high_resolution_clock::now();
-    size_t start = std::chrono::time_point_cast<std::chrono::microseconds>(startTimePoint).time_since_epoch().count();
-    size_t end = std::chrono::time_point_cast<std::chrono::microseconds>(endTimePoint).time_since_epoch().count();
-    size_t threadId = std::hash<std::thread::id>{}(std::this_thread::get_id());
+    uint32_t start = std::chrono::time_point_cast<std::chrono::microseconds>(startTimePoint).time_since_epoch().count();
+    uint32_t end = std::chrono::time_point_cast<std::chrono::microseconds>(endTimePoint).time_since_epoch().count();
+    uint32_t threadId = std::hash<std::thread::id>{}(std::this_thread::get_id());
     Instrumentor::getInstance().writeProfile(ProfileResult{ name, start, end, threadId });
     stopped = true;
 }

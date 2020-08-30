@@ -3,7 +3,7 @@
 #include "navia/renderer/Renderer.hpp"
 
 namespace Navia {
-Ref<IndexBuffer> IndexBuffer::create(size_t* indices, size_t size) {
+Ref<IndexBuffer> IndexBuffer::create(uint32_t* indices, uint32_t size) {
     switch (Renderer::getRendererAPI()) {
         case RendererAPI::APIVendor::None:
             NAVIA_CORE_ASSERT(false, "API not supported yet!");

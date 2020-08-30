@@ -33,13 +33,13 @@ std::string MouseScrolledEvent::toString() const {
     return stream.str();
 }
 
-MouseButtonEvent::MouseButtonEvent(size_t mouseButton) : mouseButton(mouseButton) {}
+MouseButtonEvent::MouseButtonEvent(uint32_t mouseButton) : mouseButton(mouseButton) {}
 
-size_t MouseButtonEvent::getMouseButton() const {
+uint32_t MouseButtonEvent::getMouseButton() const {
     return mouseButton;
 }
 
-MouseButtonPressedEvent::MouseButtonPressedEvent(size_t mouseButton) : MouseButtonEvent(mouseButton) {}
+MouseButtonPressedEvent::MouseButtonPressedEvent(uint32_t mouseButton) : MouseButtonEvent(mouseButton) {}
 
 std::string MouseButtonPressedEvent::toString() const {
     std::stringstream stream;
@@ -47,7 +47,7 @@ std::string MouseButtonPressedEvent::toString() const {
     return stream.str();
 }
 
-MouseButtonReleasedEvent::MouseButtonReleasedEvent(size_t mouseButton) : MouseButtonEvent(mouseButton) {}
+MouseButtonReleasedEvent::MouseButtonReleasedEvent(uint32_t mouseButton) : MouseButtonEvent(mouseButton) {}
 
 std::string MouseButtonReleasedEvent::toString() const {
     std::stringstream stream;
