@@ -69,7 +69,7 @@ void Scene::onViewportResize(uint32_t width, uint32_t height) {
 Entity Scene::createEntity(const std::string& name) {
     Entity entity{ registry.create(), this };
     auto& tag = entity.addComponent<TagComponent>(name);
-    tag.tag = name.empty() ? "Entity" : name;
+    tag.tag = name.empty() ? "Untitled Entity" : name;
     entity.addComponent<TransformComponent>();
     return entity;
 }

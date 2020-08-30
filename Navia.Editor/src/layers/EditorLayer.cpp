@@ -53,6 +53,8 @@ void EditorLayer::onAttach() {
     };
     primaryCameraEntity.addComponent<NativeScriptComponent>().bind<CameraController>();
     secondaryCameraEntity.addComponent<NativeScriptComponent>().bind<CameraController>();
+
+    sceneHierarchyPanel.setContext(scene);
 }
 
 void EditorLayer::onDetach() {
@@ -100,6 +102,8 @@ void EditorLayer::onImGuiRender() {
         ImGuiID dockspaceId = ImGui::GetID("Dockspace");
         ImGui::DockSpace(dockspaceId, ImVec2{ 0.0f, 0.0f }, dockspaceFlags);
     }
+    bool openInfo = false;
+    bool openStats = false;
     if (ImGui::BeginMenuBar()) {
         if (ImGui::BeginMenu("File")) {
             if (ImGui::MenuItem("Exit")) {
@@ -107,8 +111,40 @@ void EditorLayer::onImGuiRender() {
             }
             ImGui::EndMenu();
         }
+        if (ImGui::BeginMenu("About")) {
+            if (ImGui::MenuItem("OpenGL Information")) {
+                openInfo = true;
+            }
+            if (ImGui::MenuItem("Statistics")) {
+                openStats = true;
+            }
+            ImGui::EndMenu();
+        }
         ImGui::EndMenuBar();
     }
+    auto info = Renderer2D::getInfo();
+    if (openInfo) {
+        ImGui::OpenPopup("OpenGL Information");
+    }
+    if (ImGui::BeginPopup("OpenGL Information")) {
+        ImGui::Text("Vendor: %s", info.vendor);
+        ImGui::Text("Renderer: %s", info.renderer);
+        ImGui::Text("Version: %s", info.version);
+        ImGui::EndPopup();
+    }
+    auto statistics = Renderer2D::getStatistics();
+    if (openStats) {
+        ImGui::OpenPopup("Statistics");
+    }
+    if (ImGui::BeginPopup("Statistics")) {
+        ImGui::Text("Draw Calls: %d", statistics.drawCallCount);
+        ImGui::Text("Quads: %d", statistics.quadCount);
+        ImGui::Text("Vertices: %d", statistics.getVertexCount());
+        ImGui::Text("Indices: %d", statistics.getIndexCount());
+        ImGui::EndPopup();
+    }
+
+    sceneHierarchyPanel.onImGuiRender();
 
     ImGui::Begin("Settings");
     {
@@ -132,21 +168,6 @@ void EditorLayer::onImGuiRender() {
         auto& squareColor = squareEntity.getComponent<SpriteComponent>().color;
         ImGui::ColorPicker4("Color", glm::value_ptr(squareColor));
     }
-    ImGui::End();
-
-    auto statistics = Renderer2D::getStatistics();
-    ImGui::Begin("Statistics");
-    ImGui::Text("Draw Calls: %d", statistics.drawCallCount);
-    ImGui::Text("Quads: %d", statistics.quadCount);
-    ImGui::Text("Vertices: %d", statistics.getVertexCount());
-    ImGui::Text("Indices: %d", statistics.getIndexCount());
-    ImGui::End();
-
-    auto info = Renderer2D::getInfo();
-    ImGui::Begin("OpenGL Information");
-    ImGui::Text("Vendor: %s",   info.vendor);
-    ImGui::Text("Renderer: %s", info.renderer);
-    ImGui::Text("Version: %s",  info.version);
     ImGui::End();
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });

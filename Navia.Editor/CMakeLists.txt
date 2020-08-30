@@ -5,9 +5,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)
 set(SOURCE_FILES
         src/layers/EditorLayer.cpp
+        src/panels/SceneHierarchyPanel.cpp
         src/EditorApplication.cpp)
 set(INCLUDE_FILES
         include/layers/EditorLayer.hpp
+        include/panels/SceneHierarchyPanel.hpp
         include/EditorApplication.hpp)
 
 add_executable(Navia.Editor ${SOURCE_FILES} ${INCLUDE_FILES})

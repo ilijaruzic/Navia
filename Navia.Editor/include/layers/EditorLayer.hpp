@@ -1,6 +1,7 @@
 #ifndef _EDITOR_LAYER_HPP_
 #define _EDITOR_LAYER_HPP_
 
+#include "panels/SceneHierarchyPanel.hpp"
 #include <Navia.hpp>
 
 namespace Navia {
@@ -29,6 +30,8 @@ private:
     bool viewportFocused = false;
     bool viewportHovered = false;
     glm::vec2 viewportSize{ 0.0f };
+
+    SceneHierarchyPanel sceneHierarchyPanel;
 };
 }
 

@@ -11,6 +11,11 @@ public:
     Entity(entt::entity handle, Scene* scene);
 
     operator bool() const;
+    operator uint32_t() const;
+
+    friend bool operator==(const Entity& lhs, const Entity& rhs);
+    friend bool operator!=(const Entity& lhs, const Entity& rhs);
+
 
     template <typename Component, typename ... Args>
     Component& addComponent(Args&& ... args) {

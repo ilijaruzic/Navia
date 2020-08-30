@@ -24,6 +24,7 @@ private:
     uint32_t viewportHeight = 0;
 
     friend class Entity;
+    friend class SceneHierarchyPanel;
 };
 }
 
