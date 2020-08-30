@@ -14,10 +14,44 @@ Scene::~Scene() {
 }
 
 void Scene::onUpdate(Timestep timestep) {
-    auto group = registry.group<TransformComponent>(entt::get<SpriteComponent>);
-    for (auto entity : group) {
-        const auto&[transform, sprite] = group.get<TransformComponent, SpriteComponent>(entity);
-        Renderer2D::drawQuad(transform, sprite.color);
+    Camera* mainCamera = nullptr;
+    glm::mat4* mainCameraTransform = nullptr;
+    {
+        auto view = registry.view<TransformComponent, CameraComponent>();
+        for (auto entity : view) {
+            auto[transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
+            if (camera.primary) {
+                mainCamera = &camera.camera;
+                mainCameraTransform = &transform.transform;
+                break;
+            }
+        }
+    }
+
+    if (mainCamera) {
+        Renderer2D::beginScene(mainCamera->getProjection(), *mainCameraTransform);
+
+        auto group = registry.group<TransformComponent>(entt::get<SpriteComponent>);
+        for (auto entity : group) {
+            auto[transform, sprite] = group.get<TransformComponent, SpriteComponent>(entity);
+            Renderer2D::drawQuad(transform, sprite.color);
+        }
+
+        Renderer2D::endScene();
+    }
+}
+
+
+void Scene::onViewportResize(uint32_t width, uint32_t height) {
+    viewportWidth = width;
+    viewportHeight = height;
+
+    auto view = registry.view<CameraComponent>();
+    for (auto entity : view) {
+        auto& camera = view.get<CameraComponent>(entity);
+        if (!camera.fixedAspectRatio) {
+            camera.camera.setViewportSize(width, height);
+        }
     }
 }
 

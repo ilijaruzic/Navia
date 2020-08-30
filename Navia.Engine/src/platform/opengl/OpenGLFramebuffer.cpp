@@ -2,8 +2,7 @@
 #include <glad/glad.h>
 
 namespace Navia {
-static constexpr uint32_t MaxFrameBufferWidth = 7680;
-static constexpr uint32_t MaxFrameBufferHeight = 4320;
+static constexpr uint32_t MaxFramebufferSize = 8192;
 
 OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferProperties& properties) : properties(properties) {
     invalidate();
@@ -33,7 +32,7 @@ void OpenGLFramebuffer::unbind() {
 }
 
 void OpenGLFramebuffer::resize(uint32_t width, uint32_t height) {
-    if (width == 0 || height == 0 || width > MaxFrameBufferWidth || height > MaxFrameBufferHeight) {
+    if (width == 0 || height == 0 || width > MaxFramebufferSize || height > MaxFramebufferSize) {
         NAVIA_CORE_WARN("Attempt to resize framebuffer to {0}x{1} failed!", width, height);
         return;
     }

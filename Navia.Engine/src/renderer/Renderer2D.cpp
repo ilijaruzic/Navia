@@ -98,6 +98,20 @@ void Renderer2D::shutdown() {
 
 }
 
+void Renderer2D::beginScene(const Camera& camera, const glm::mat4& transform) {
+    NAVIA_PROFILE_FUNCTION();
+
+    glm::mat4 viewProjectionMatrix = camera.getProjection() * glm::inverse(transform);
+
+    data.shader->bind();
+    data.shader->setMat4("v_uViewProjection", viewProjectionMatrix);
+
+    data.quadIndexCount = 0;
+    data.quadVertexBufferPtr = data.quadVertexBufferBase;
+
+    data.textureSlotIndex = 1;
+}
+
 void Renderer2D::beginScene(const OrthographicCamera& camera) {
     NAVIA_PROFILE_FUNCTION();
 
@@ -113,7 +127,7 @@ void Renderer2D::beginScene(const OrthographicCamera& camera) {
 void Renderer2D::endScene() {
     NAVIA_PROFILE_FUNCTION();
 
-    uint32_t dataSize = (uint8_t*)data.quadVertexBufferPtr - (uint8_t*)data.quadVertexBufferBase;
+    uint32_t dataSize = reinterpret_cast<uint8_t*>(data.quadVertexBufferPtr) - reinterpret_cast<uint8_t*>(data.quadVertexBufferBase);
     data.quadVertexBuffer->setData(data.quadVertexBufferBase, dataSize);
     flush();
 }

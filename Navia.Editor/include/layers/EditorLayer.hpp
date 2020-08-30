@@ -22,6 +22,9 @@ private:
     Ref<VertexArray> vertexArray;
     Ref<Scene> scene;
     Entity squareEntity;
+    Entity primaryCameraEntity;
+    Entity secondaryCameraEntity;
+    bool primary = true;
 
     bool viewportFocused = false;
     bool viewportHovered = false;

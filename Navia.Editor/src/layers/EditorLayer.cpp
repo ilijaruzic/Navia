@@ -19,6 +19,15 @@ void EditorLayer::onAttach() {
 
     squareEntity = scene->createEntity("Square");
     squareEntity.addComponent<SpriteComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
+
+    primaryCameraEntity = scene->createEntity("Primary Camera");
+    primaryCameraEntity.addComponent<CameraComponent>();
+
+    {
+        secondaryCameraEntity = scene->createEntity("Secondary Camera");
+        auto& camera = secondaryCameraEntity.addComponent<CameraComponent>();
+        camera.primary = false;
+    }
 }
 
 void EditorLayer::onDetach() {
@@ -77,11 +86,27 @@ void EditorLayer::onImGuiRender() {
     }
 
     ImGui::Begin("Settings");
-    auto& tag = squareEntity.getComponent<TagComponent>().tag;
-    ImGui::Text("%s", tag.c_str());
-    auto& squareColor = squareEntity.getComponent<SpriteComponent>().color;
-    ImGui::ColorPicker4("Color", glm::value_ptr(squareColor));
-    ImGui::Separator();
+    {
+        ImGui::Text("Cameras");
+        auto& transform = primaryCameraEntity.getComponent<TransformComponent>().transform[3];
+        ImGui::DragFloat3("Primary Camera Transform", glm::value_ptr(transform));
+        if (ImGui::Checkbox("Switch Camera", &primary)) {
+            primaryCameraEntity.getComponent<CameraComponent>().primary = primary;
+            secondaryCameraEntity.getComponent<CameraComponent>().primary = !primary;
+        }
+        auto& camera = secondaryCameraEntity.getComponent<CameraComponent>().camera;
+        float size = camera.getOrthographicSize();
+        if (ImGui::DragFloat("Secondary Camera Orthographic Size", &size)) {
+            camera.setOrthographicSize(size);
+        }
+    }
+    if (squareEntity) {
+        ImGui::Separator();
+        auto& tag = squareEntity.getComponent<TagComponent>().tag;
+        ImGui::Text("%s", tag.c_str());
+        auto& squareColor = squareEntity.getComponent<SpriteComponent>().color;
+        ImGui::ColorPicker4("Color", glm::value_ptr(squareColor));
+    }
     ImGui::End();
 
     auto statistics = Renderer2D::getStatistics();
@@ -98,14 +123,9 @@ void EditorLayer::onImGuiRender() {
     viewportHovered = ImGui::IsWindowHovered();
     Application::getInstance().getImGuiLayer()->setBlockEvents(!(viewportFocused && viewportHovered));
     ImVec2 viewportRegion = ImGui::GetContentRegionAvail();
-    if (viewportSize != *((glm::vec2*)&viewportRegion) && !(viewportRegion.x <= 0 || viewportRegion.y <= 0)) {
-        framebuffer->resize(static_cast<uint32_t>(viewportRegion.x), static_cast<uint32_t>(viewportRegion.y));
-        viewportSize = glm::vec2{ viewportRegion.x, viewportRegion.y };
-
-        cameraController.onResize(viewportRegion.x, viewportRegion.y);
-    }
+    viewportSize = glm::vec2{ viewportRegion.x, viewportRegion.y };
     uint32_t colorAttachment = framebuffer->getColorAttachment();
-    ImGui::Image((void*)colorAttachment, ImVec2{ viewportSize.x, viewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+    ImGui::Image(reinterpret_cast<void*>(colorAttachment), ImVec2{ viewportSize.x, viewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
     ImGui::End();
     ImGui::PopStyleVar();
 
@@ -115,6 +135,14 @@ void EditorLayer::onImGuiRender() {
 void EditorLayer::onUpdate(Timestep timestep) {
     NAVIA_PROFILE_FUNCTION();
 
+    if (auto properties = framebuffer->getProperties();
+        viewportSize.x > 0.0f && viewportSize.y > 0.0f &&
+        (properties.width != viewportSize.x || properties.height != viewportSize.y)) {
+        framebuffer->resize(static_cast<uint32_t>(viewportSize.x), static_cast<uint32_t>(viewportSize.y));
+        cameraController.onResize(viewportSize.x, viewportSize.y);
+        scene->onViewportResize(static_cast<uint32_t>(viewportSize.x), static_cast<uint32_t>(viewportSize.y));
+    }
+
     if (viewportFocused) {
         cameraController.onUpdate(timestep);
     }
@@ -123,13 +151,10 @@ void EditorLayer::onUpdate(Timestep timestep) {
 
     framebuffer->bind();
 
-    RenderCommand::setClearColor(glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f });
+    RenderCommand::setClearColor(glm::vec4{ 0.1f, 0.1f, 0.1f, 1.0f });
     RenderCommand::clear();
 
-    Renderer2D::beginScene(cameraController.getCamera());
     scene->onUpdate(timestep);
-
-    Renderer2D::endScene();
 
     framebuffer->unbind();
 }

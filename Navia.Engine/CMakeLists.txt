@@ -30,6 +30,7 @@ set(SOURCE_FILES
         src/platform/windows/WindowsInput.cpp
         src/platform/windows/WindowsWindow.cpp
         src/renderer/BufferLayout.cpp
+        src/renderer/Camera.cpp
         src/renderer/Framebuffer.cpp
         src/renderer/GraphicsContext.cpp
         src/renderer/IndexBuffer.cpp
@@ -45,7 +46,8 @@ set(SOURCE_FILES
         src/renderer/VertexBuffer.cpp
         src/scene/Components.cpp
         src/scene/Entity.cpp
-        src/scene/Scene.cpp)
+        src/scene/Scene.cpp
+        src/scene/SceneCamera.cpp)
 set(INCLUDE_FILES
         include/navia/core/Application.hpp
         include/navia/core/Base.hpp
@@ -75,6 +77,7 @@ set(INCLUDE_FILES
         include/navia/platform/opengl/OpenGLVertexBuffer.hpp
         include/navia/platform/windows/WindowsWindow.hpp
         include/navia/renderer/BufferLayout.hpp
+        include/navia/renderer/Camera.hpp
         include/navia/renderer/Framebuffer.hpp
         include/navia/renderer/GraphicsContext.hpp
         include/navia/renderer/IndexBuffer.hpp
@@ -91,6 +94,7 @@ set(INCLUDE_FILES
         include/navia/scene/Components.hpp
         include/navia/scene/Entity.hpp
         include/navia/scene/Scene.hpp
+        include/navia/scene/SceneCamera.hpp
         PrecompiledHeaders.hpp)
 
 add_subdirectory(lib/entt)

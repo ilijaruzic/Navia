@@ -1,9 +1,16 @@
 #ifndef _COMPONENTS_HPP_
 #define _COMPONENTS_HPP_
 
+#include "navia/scene/SceneCamera.hpp"
 #include <glm/glm.hpp>
 
 namespace Navia {
+struct CameraComponent {
+    SceneCamera camera;
+    bool primary = true;
+    bool fixedAspectRatio = false;
+};
+
 struct TagComponent {
     std::string tag;
 
@@ -16,8 +23,6 @@ struct TransformComponent {
 
     TransformComponent() = default;
     TransformComponent(const glm::mat4& transform);
-
-    TransformComponent& operator=(const TransformComponent& rhs) = default;
 
     operator glm::mat4&();
     operator const glm::mat4&() const;

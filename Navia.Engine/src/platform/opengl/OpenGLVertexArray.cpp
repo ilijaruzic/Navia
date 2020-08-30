@@ -71,7 +71,7 @@ void Navia::OpenGLVertexArray::addVertexBuffer(Ref<VertexBuffer> vertexBuffer) {
                                       convertShaderDatatypeToOpenGLBasetype(element.type),
                                       element.normalized ? GL_TRUE : GL_FALSE,
                                       layout.getStride(),
-                                      (const void*)element.offset);
+                                      reinterpret_cast<const void*>(element.offset));
                 vertexBufferIndex++;
                 break;
             }
@@ -87,7 +87,7 @@ void Navia::OpenGLVertexArray::addVertexBuffer(Ref<VertexBuffer> vertexBuffer) {
                                           convertShaderDatatypeToOpenGLBasetype(element.type),
                                           element.normalized ? GL_TRUE : GL_FALSE,
                                           layout.getStride(),
-                                          (const void*)(element.offset + sizeof(float) * count * i));
+                                          reinterpret_cast<const void*>(element.offset + sizeof(float) * count * i));
                     glVertexAttribDivisor(vertexBufferIndex, 1);
                     vertexBufferIndex++;
                 }

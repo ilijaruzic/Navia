@@ -2,6 +2,7 @@
 #define _RENDERER_2D_HPP_
 
 #include "navia/core/Base.hpp"
+#include "navia/renderer/Camera.hpp"
 #include "navia/renderer/OrthographicCamera.hpp"
 #include "navia/renderer/Texture.hpp"
 #include <glm/glm.hpp>
@@ -12,7 +13,8 @@ public:
     static void init();
     static void shutdown();
 
-    static void beginScene(const OrthographicCamera& camera);
+    static void beginScene(const Camera& camera, const glm::mat4& transform);
+    static void beginScene(const OrthographicCamera& camera); // TODO: Remove
     static void endScene();
 
     static void flush();
