@@ -147,9 +147,11 @@ else()
     message(FATAL_ERROR "Unsuported platform!")
 endif()
 
+set(CMAKE_CXX_FLAGS "/Wall")
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_compile_definitions(Navia.Engine PUBLIC NAVIA_DEBUG)
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(CMAKE_CXX_FLAGS_RELEASE "/Ox")
     target_compile_definitions(Navia.Engine PUBLIC NAVIA_RELEASE)
 endif()
 
@@ -158,5 +160,6 @@ target_compile_definitions(Navia.Engine
         PUBLIC
             GLM_FORCE_SILENT_WARNINGS
             STB_IMAGE_IMPLEMENTATION
+            NOMINMAX
         PRIVATE
             GLFW_INCLUDE_NONE)

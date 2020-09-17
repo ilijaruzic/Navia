@@ -19,6 +19,7 @@ private:
     Entity selectedEntity;
 
     void drawEntityNode(Entity entity);
+    void drawEntityComponents(Entity entity);
 };
 }
 

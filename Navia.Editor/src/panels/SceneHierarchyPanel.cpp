@@ -1,9 +1,10 @@
 #include "panels/SceneHierarchyPanel.hpp"
 #include "navia/scene/Components.hpp"
 #include <imgui.h>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Navia {
-SceneHierarchyPanel::SceneHierarchyPanel(Ref<Scene> scene) {
+SceneHierarchyPanel:: SceneHierarchyPanel(Ref<Scene> scene) {
     setContext(scene);
 }
 
@@ -17,6 +18,15 @@ void SceneHierarchyPanel::onImGuiRender() {
         Entity entity{ handle, scene.get() };
         drawEntityNode(entity);
     });
+    if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsWindowHovered()) {
+        selectedEntity = Entity{};
+    }
+    ImGui::End();
+
+    ImGui::Begin("Properties");
+    if (selectedEntity) {
+        drawEntityComponents(selectedEntity);
+    }
     ImGui::End();
 }
 
@@ -34,6 +44,25 @@ void SceneHierarchyPanel::drawEntityNode(Entity entity) {
             ImGui::TreePop();
         }
         ImGui::TreePop();
+    }
+}
+
+void SceneHierarchyPanel::drawEntityComponents(Entity entity) {
+    if (entity.hasComponent<TagComponent>()) {
+        auto& tag = entity.getComponent<TagComponent>().tag;
+        char buffer[256];
+        std::memset(buffer, 0, sizeof(buffer));
+        std::memcpy(buffer, tag.c_str(), sizeof(buffer));
+        if (ImGui::InputText("Tag", buffer, sizeof(buffer))) {
+            tag = std::string{ buffer };
+        }
+    }
+    if (entity.hasComponent<TransformComponent>()) {
+        if (ImGui::TreeNodeEx(reinterpret_cast<void*>(typeid(TransformComponent).hash_code()), ImGuiTreeNodeFlags_DefaultOpen, "Transform")) {
+            auto& transform = entity.getComponent<TransformComponent>().transform;
+            ImGui::DragFloat3("Position", glm::value_ptr(transform[3]), 0.1f);
+            ImGui::TreePop();
+        }
     }
 }
 }
