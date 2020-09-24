@@ -22,7 +22,8 @@ private:
     Ref<Shader> shader;
     Ref<VertexArray> vertexArray;
     Ref<Scene> scene;
-    Entity squareEntity;
+    Entity greenSquareEntity;
+    Entity redSquareEntity;
     Entity primaryCameraEntity;
     Entity secondaryCameraEntity;
     bool primary = true;

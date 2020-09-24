@@ -4,7 +4,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Navia {
-SceneHierarchyPanel:: SceneHierarchyPanel(Ref<Scene> scene) {
+SceneHierarchyPanel::SceneHierarchyPanel(Ref<Scene> scene) {
     setContext(scene);
 }
 
@@ -61,6 +61,64 @@ void SceneHierarchyPanel::drawEntityComponents(Entity entity) {
         if (ImGui::TreeNodeEx(reinterpret_cast<void*>(typeid(TransformComponent).hash_code()), ImGuiTreeNodeFlags_DefaultOpen, "Transform")) {
             auto& transform = entity.getComponent<TransformComponent>().transform;
             ImGui::DragFloat3("Position", glm::value_ptr(transform[3]), 0.1f);
+            ImGui::TreePop();
+        }
+    }
+    if (entity.hasComponent<CameraComponent>()) {
+        if (ImGui::TreeNodeEx(reinterpret_cast<void*>(typeid(CameraComponent).hash_code()), ImGuiTreeNodeFlags_DefaultOpen, "Camera")) {
+            auto& component = entity.getComponent<CameraComponent>();
+            auto& camera = component.camera;
+            ImGui::Checkbox("Primary", &component.primary);
+            const char* projectionTypes[] = { "Perspective", "Orthographic" };
+            const char* currentProjectionType = projectionTypes[static_cast<int>(camera.getProjectionType())];
+            if (ImGui::BeginCombo("Projection", currentProjectionType)) {
+                for (int i = 0; i < 2; ++i) {
+                    bool selected = currentProjectionType == projectionTypes[i];
+                    if (ImGui::Selectable(projectionTypes[i], selected)) {
+                        currentProjectionType = projectionTypes[i];
+                        camera.setProjectionType(static_cast<SceneCamera::ProjectionType>(i));
+                    }
+                    if (selected) {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+            }
+            switch (camera.getProjectionType()) {
+                case SceneCamera::ProjectionType::Perspective:
+                {
+                    float verticalFOV = glm::degrees(camera.getPerspectiveVerticalFOV());
+                    if (ImGui::DragFloat("Vertical FOV", &verticalFOV)) {
+                        camera.setPerspectiveVerticalFOV(glm::radians(verticalFOV));
+                    }
+                    float nearClip = camera.getPerspectiveNearClip();
+                    if (ImGui::DragFloat("Near Clip", &nearClip)) {
+                        camera.setPerspectiveNearClip(nearClip);
+                    }
+                    float farClip = camera.getPerspectiveFarClip();
+                    if (ImGui::DragFloat("Far Clip", &farClip)) {
+                        camera.setPerspectiveFarClip(farClip);
+                    }
+                    break;
+                }
+                case SceneCamera::ProjectionType::Orthographic:
+                {
+                    float size = camera.getOrthographicSize();
+                    if (ImGui::DragFloat("Size", &size)) {
+                        camera.setOrthographicSize(size);
+                    }
+                    float nearClip = camera.getOrthographicNearClip();
+                    if (ImGui::DragFloat("Near Clip", &nearClip)) {
+                        camera.setOrthographicNearClip(nearClip);
+                    }
+                    float farClip = camera.getOrthographicFarClip();
+                    if (ImGui::DragFloat("Far Clip", &farClip)) {
+                        camera.setOrthographicFarClip(farClip);
+                    }
+                    ImGui::Checkbox("Fixed Aspect Ratio", &component.fixedAspectRatio);
+                    break;
+                }
+            }
             ImGui::TreePop();
         }
     }

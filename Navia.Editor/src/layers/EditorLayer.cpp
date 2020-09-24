@@ -17,8 +17,11 @@ void EditorLayer::onAttach() {
 
     scene = createRef<Scene>();
 
-    squareEntity = scene->createEntity("Square");
-    squareEntity.addComponent<SpriteComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
+    greenSquareEntity = scene->createEntity("Green Square");
+    greenSquareEntity.addComponent<SpriteComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
+
+    redSquareEntity = scene->createEntity("Red Square");
+    redSquareEntity.addComponent<SpriteComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
 
     primaryCameraEntity = scene->createEntity("Primary Camera");
     primaryCameraEntity.addComponent<CameraComponent>();
@@ -161,11 +164,18 @@ void EditorLayer::onImGuiRender() {
             camera.setOrthographicSize(size);
         }
     }
-    if (squareEntity) {
+    if (greenSquareEntity) {
         ImGui::Separator();
-        auto& tag = squareEntity.getComponent<TagComponent>().tag;
+        auto& tag = greenSquareEntity.getComponent<TagComponent>().tag;
         ImGui::Text("%s", tag.c_str());
-        auto& squareColor = squareEntity.getComponent<SpriteComponent>().color;
+        auto& squareColor = greenSquareEntity.getComponent<SpriteComponent>().color;
+        ImGui::ColorPicker4("Color", glm::value_ptr(squareColor));
+    }
+    if (redSquareEntity) {
+        ImGui::Separator();
+        auto& tag = redSquareEntity.getComponent<TagComponent>().tag;
+        ImGui::Text("%s", tag.c_str());
+        auto& squareColor = redSquareEntity.getComponent<SpriteComponent>().color;
         ImGui::ColorPicker4("Color", glm::value_ptr(squareColor));
     }
     ImGui::End();
