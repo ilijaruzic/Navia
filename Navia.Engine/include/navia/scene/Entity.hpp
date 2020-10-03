@@ -3,6 +3,7 @@
 
 #include "navia/scene/Scene.hpp"
 #include <entt/entt.hpp>
+#include <imgui.h>
 
 namespace Navia {
 class Entity {
@@ -38,6 +39,16 @@ public:
     void removeComponent() {
         NAVIA_CORE_ASSERT(hasComponent<Component>(), "Entity does not have given component!");
         scene->registry.remove<Component>(handle);
+    }
+
+    template <typename Component, typename Functor>
+    void drawComponent(const std::string& name, Functor functor) {
+        if (hasComponent<Component>()) {
+            if (ImGui::TreeNodeEx(reinterpret_cast<void*>(typeid(Component).hash_code()), ImGuiTreeNodeFlags_DefaultOpen, name.c_str())) {
+                functor();
+                ImGui::TreePop();
+            }
+        }
     }
 
 private:

@@ -23,10 +23,10 @@ void EditorLayer::onAttach() {
     redSquareEntity = scene->createEntity("Red Square");
     redSquareEntity.addComponent<SpriteComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
 
-    primaryCameraEntity = scene->createEntity("Primary Camera");
+    primaryCameraEntity = scene->createEntity("Camera A");
     primaryCameraEntity.addComponent<CameraComponent>();
 
-    secondaryCameraEntity = scene->createEntity("Secondary Camera");
+    secondaryCameraEntity = scene->createEntity("Camera B");
     auto& camera = secondaryCameraEntity.addComponent<CameraComponent>();
     camera.primary = false;
 
@@ -148,37 +148,6 @@ void EditorLayer::onImGuiRender() {
     }
 
     sceneHierarchyPanel.onImGuiRender();
-
-    ImGui::Begin("Settings");
-    {
-        ImGui::Text("Cameras");
-        auto& transform = primaryCameraEntity.getComponent<TransformComponent>().transform[3];
-        ImGui::DragFloat3("Primary Camera Transform", glm::value_ptr(transform));
-        if (ImGui::Checkbox("Switch Camera", &primary)) {
-            primaryCameraEntity.getComponent<CameraComponent>().primary = primary;
-            secondaryCameraEntity.getComponent<CameraComponent>().primary = !primary;
-        }
-        auto& camera = secondaryCameraEntity.getComponent<CameraComponent>().camera;
-        float size = camera.getOrthographicSize();
-        if (ImGui::DragFloat("Secondary Camera Orthographic Size", &size)) {
-            camera.setOrthographicSize(size);
-        }
-    }
-    if (greenSquareEntity) {
-        ImGui::Separator();
-        auto& tag = greenSquareEntity.getComponent<TagComponent>().tag;
-        ImGui::Text("%s", tag.c_str());
-        auto& squareColor = greenSquareEntity.getComponent<SpriteComponent>().color;
-        ImGui::ColorPicker4("Color", glm::value_ptr(squareColor));
-    }
-    if (redSquareEntity) {
-        ImGui::Separator();
-        auto& tag = redSquareEntity.getComponent<TagComponent>().tag;
-        ImGui::Text("%s", tag.c_str());
-        auto& squareColor = redSquareEntity.getComponent<SpriteComponent>().color;
-        ImGui::ColorPicker4("Color", glm::value_ptr(squareColor));
-    }
-    ImGui::End();
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });
     ImGui::Begin("Viewport");
