@@ -5,13 +5,9 @@
 #include <glm/glm.hpp>
 
 namespace Navia {
-Scene::Scene() {
+Scene::Scene() {}
 
-}
-
-Scene::~Scene() {
-
-}
+Scene::~Scene() {}
 
 void Scene::onUpdate(Timestep timestep) {
     {
@@ -26,26 +22,26 @@ void Scene::onUpdate(Timestep timestep) {
     }
 
     Camera* mainCamera = nullptr;
-    glm::mat4* mainCameraTransform = nullptr;
+    glm::mat4 mainCameraTransform;
     {
         auto view = registry.view<TransformComponent, CameraComponent>();
         for (auto entity : view) {
             auto[transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
             if (camera.primary) {
                 mainCamera = &camera.camera;
-                mainCameraTransform = &transform.transform;
+                mainCameraTransform = transform.getTransform();
                 break;
             }
         }
     }
 
     if (mainCamera) {
-        Renderer2D::beginScene(mainCamera->getProjection(), *mainCameraTransform);
+        Renderer2D::beginScene(mainCamera->getProjection(), mainCameraTransform);
 
         auto group = registry.group<TransformComponent>(entt::get<SpriteComponent>);
         for (auto entity : group) {
             auto[transform, sprite] = group.get<TransformComponent, SpriteComponent>(entity);
-            Renderer2D::drawQuad(transform, sprite.color);
+            Renderer2D::drawQuad(transform.getTransform(), sprite.color);
         }
 
         Renderer2D::endScene();

@@ -33,13 +33,14 @@ struct TagComponent {
 };
 
 struct TransformComponent {
-    glm::mat4 transform{ 1.0f };
+    glm::vec3 translation{ 0.0f };
+    glm::vec3 rotation{ 0.0f };
+    glm::vec3 scale{ 1.0f };
 
     TransformComponent() = default;
-    TransformComponent(const glm::mat4& transform);
+    TransformComponent(const glm::vec3& translation);
 
-    operator glm::mat4&();
-    operator const glm::mat4&() const;
+    glm::mat4 getTransform() const;
 };
 
 struct SpriteComponent {
