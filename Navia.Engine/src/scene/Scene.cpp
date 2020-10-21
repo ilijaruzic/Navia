@@ -1,6 +1,5 @@
-#include "navia/scene/Components.hpp"
-#include "navia/scene/Entity.hpp"
 #include "navia/renderer/Renderer2D.hpp"
+#include "navia/scene/Components.hpp"
 #include "navia/scene/Scene.hpp"
 #include <glm/glm.hpp>
 
@@ -69,4 +68,30 @@ Entity Scene::createEntity(const std::string& name) {
     entity.addComponent<TransformComponent>();
     return entity;
 }
+
+void Scene::destroyEntity(Entity entity) {
+    registry.destroy(entity);
+}
+
+template <typename Component>
+void Scene::onComponentAdded(Entity entity, Component& component) {
+    static_assert(false);
+}
+
+template <>
+void Scene::onComponentAdded<CameraComponent>(Entity entity, CameraComponent& component) {
+    component.camera.setViewportSize(viewportWidth, viewportHeight);
+}
+
+template <>
+void Scene::onComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent& component) {}
+
+template <>
+void Scene::onComponentAdded<TagComponent>(Entity entity, TagComponent& component) {}
+
+template <>
+void Scene::onComponentAdded<TransformComponent>(Entity entity, TransformComponent& component) {}
+
+template <>
+void Scene::onComponentAdded<SpriteComponent>(Entity entity, SpriteComponent& component) {}
 }

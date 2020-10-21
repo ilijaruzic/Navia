@@ -22,11 +22,31 @@ void SceneHierarchyPanel::onImGuiRender() {
     if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsWindowHovered()) {
         selectedEntity = Entity{};
     }
+    if (ImGui::BeginPopupContextWindow(0, 1, false)) {
+        if (ImGui::MenuItem("Create empty entity")) {
+            scene->createEntity("Empty entity");
+        }
+        ImGui::EndPopup();
+    }
     ImGui::End();
 
     ImGui::Begin("Properties");
     if (selectedEntity) {
         drawEntityComponents(selectedEntity);
+        if (ImGui::Button("Add component")) {
+            ImGui::OpenPopup("##AddComponent");
+        }
+        if (ImGui::BeginPopup("##AddComponent")) {
+            if (ImGui::MenuItem("Camera")) {
+                selectedEntity.addComponent<CameraComponent>();
+                ImGui::CloseCurrentPopup();
+            }
+            if (ImGui::MenuItem("Sprite")) {
+                selectedEntity.addComponent<SpriteComponent>();
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
     }
     ImGui::End();
 }
@@ -38,6 +58,13 @@ void SceneHierarchyPanel::drawEntityNode(Entity entity) {
     if (ImGui::IsItemClicked()) {
         selectedEntity = entity;
     }
+    bool deleted = false;
+    if (ImGui::BeginPopupContextItem()) {
+        if (ImGui::MenuItem("Delete entity")) {
+            deleted = true;
+        }
+        ImGui::EndPopup();
+    }
     if (opened) {
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
         bool opened = ImGui::TreeNodeEx(reinterpret_cast<void*>(9817239), flags, "%s", tag.c_str());
@@ -45,6 +72,12 @@ void SceneHierarchyPanel::drawEntityNode(Entity entity) {
             ImGui::TreePop();
         }
         ImGui::TreePop();
+    }
+    if (deleted) {
+        scene->destroyEntity(entity);
+        if (selectedEntity == entity) {
+            selectedEntity = Entity{};
+        }
     }
 }
 
@@ -107,7 +140,7 @@ static void drawVec3Control(const std::string& label, glm::vec3& values, float i
 }
 
 void SceneHierarchyPanel::drawEntityComponents(Entity entity) {
-    entity.drawComponent<TagComponent>("Tag", [&]() {
+    entity.drawComponent<TagComponent, false>("Tag", [&]() {
         auto& tag = entity.getComponent<TagComponent>().tag;
         char buffer[256];
         std::memset(buffer, 0, sizeof(buffer));
@@ -116,7 +149,7 @@ void SceneHierarchyPanel::drawEntityComponents(Entity entity) {
             tag = std::string{ buffer };
         }
     });
-    entity.drawComponent<TransformComponent>("Transform", [&]() {
+    entity.drawComponent<TransformComponent, false>("Transform", [&]() {
         auto& transform = entity.getComponent<TransformComponent>();
         drawVec3Control("Translation", transform.translation);
         glm::vec3 rotation = glm::degrees(transform.rotation);
@@ -124,7 +157,7 @@ void SceneHierarchyPanel::drawEntityComponents(Entity entity) {
         transform.rotation = glm::radians(rotation);
         drawVec3Control("Scale", transform.scale, 1.0f);
     });
-    entity.drawComponent<CameraComponent>("Camera", [&]() {
+    entity.drawComponent<CameraComponent, true>("Camera", [&]() {
         auto& component = entity.getComponent<CameraComponent>();
         auto& camera = component.camera;
         ImGui::Checkbox("Primary", &component.primary);
@@ -179,7 +212,7 @@ void SceneHierarchyPanel::drawEntityComponents(Entity entity) {
             }
         }
     });
-    entity.drawComponent<SpriteComponent>("Sprite", [&]() {
+    entity.drawComponent<SpriteComponent, true>("Sprite", [&]() {
         auto& color = entity.getComponent<SpriteComponent>().color;
         ImGui::ColorEdit4("Color", glm::value_ptr(color));
     });

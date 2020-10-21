@@ -11,6 +11,10 @@ Entity::operator uint32_t() const {
     return static_cast<uint32_t>(handle);
 }
 
+Entity::operator entt::entity() const {
+    return handle;
+}
+
 bool operator==(const Entity& lhs, const Entity& rhs) {
     return lhs.handle == rhs.handle && lhs.scene == rhs.scene;
 }
