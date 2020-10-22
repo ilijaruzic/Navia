@@ -13,6 +13,8 @@ public:
 
     void setBlockEvents(bool blockEvents);
 
+    void setDarkThemeColors();
+
     void onAttach() override;
     void onDetach() override;
     void onEvent(Event& event) override;

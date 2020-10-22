@@ -44,28 +44,34 @@ public:
         scene->registry.remove<Component>(handle);
     }
 
-    template <typename Component, bool removable, typename Functor>
+    template <typename Component, typename Functor>
     void drawComponent(const std::string& name, Functor functor) {
-        const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
+        const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen |
+                                                 ImGuiTreeNodeFlags_Framed |
+                                                 ImGuiTreeNodeFlags_SpanAvailWidth |
+                                                 ImGuiTreeNodeFlags_AllowItemOverlap |
+                                                 ImGuiTreeNodeFlags_FramePadding;
         if (hasComponent<Component>()) {
+            auto& component = getComponent<Component>();
+            ImVec2 contentRegionAvail = ImGui::GetContentRegionAvail();
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4.0f, 4.0f });
+            float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+            ImGui::Separator();
             bool opened = ImGui::TreeNodeEx(reinterpret_cast<void*>(typeid(Component).hash_code()), treeNodeFlags, name.c_str());
+            ImGui::PopStyleVar();
+            ImGui::SameLine(contentRegionAvail.x - lineHeight * 0.5f);
+            if (ImGui::Button("+", ImVec2{ lineHeight, lineHeight })) {
+                ImGui::OpenPopup("##ComponentSettings");
+            }
             bool removed = false;
-            if (removable) {
-                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4.0f, 4.0f} );
-                ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
-                if (ImGui::Button("+", ImVec2{ 20.0f, 20.0f })) {
-                    ImGui::OpenPopup("##ComponentSettings");
+            if (ImGui::BeginPopup("##ComponentSettings")) {
+                if (ImGui::MenuItem("Remove component")) {
+                    removed = true;
                 }
-                ImGui::PopStyleVar();
-                if (ImGui::BeginPopup("##ComponentSettings")) {
-                    if (ImGui::MenuItem("Remove component")) {
-                        removed = true;
-                    }
-                    ImGui::EndPopup();
-                }
+                ImGui::EndPopup();
             }
             if (opened) {
-                functor();
+                functor(component);
                 ImGui::TreePop();
             }
             if (removed) {

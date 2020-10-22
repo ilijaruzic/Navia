@@ -33,27 +33,13 @@ void SceneHierarchyPanel::onImGuiRender() {
     ImGui::Begin("Properties");
     if (selectedEntity) {
         drawEntityComponents(selectedEntity);
-        if (ImGui::Button("Add component")) {
-            ImGui::OpenPopup("##AddComponent");
-        }
-        if (ImGui::BeginPopup("##AddComponent")) {
-            if (ImGui::MenuItem("Camera")) {
-                selectedEntity.addComponent<CameraComponent>();
-                ImGui::CloseCurrentPopup();
-            }
-            if (ImGui::MenuItem("Sprite")) {
-                selectedEntity.addComponent<SpriteComponent>();
-                ImGui::CloseCurrentPopup();
-            }
-            ImGui::EndPopup();
-        }
     }
     ImGui::End();
 }
 
 void SceneHierarchyPanel::drawEntityNode(Entity entity) {
     auto& tag = entity.getComponent<TagComponent>().tag;
-    ImGuiTreeNodeFlags flags = (selectedEntity == entity ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
+    ImGuiTreeNodeFlags flags = (selectedEntity == entity ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
     bool opened = ImGui::TreeNodeEx(reinterpret_cast<void*>(static_cast<uint64_t>(static_cast<uint32_t>(entity))), flags, "%s", tag.c_str());
     if (ImGui::IsItemClicked()) {
         selectedEntity = entity;
@@ -66,7 +52,7 @@ void SceneHierarchyPanel::drawEntityNode(Entity entity) {
         ImGui::EndPopup();
     }
     if (opened) {
-        ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
+        ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth ;
         bool opened = ImGui::TreeNodeEx(reinterpret_cast<void*>(9817239), flags, "%s", tag.c_str());
         if (opened) {
             ImGui::TreePop();
@@ -82,6 +68,9 @@ void SceneHierarchyPanel::drawEntityNode(Entity entity) {
 }
 
 static void drawVec3Control(const std::string& label, glm::vec3& values, float initialValue = 0.0f, float columnWidth = 100.0f) {
+    ImGuiIO& io = ImGui::GetIO();
+    auto boldFont = io.Fonts->Fonts[0];
+
     ImGui::PushID(label.c_str());
 
     ImGui::Columns(2);
@@ -98,9 +87,11 @@ static void drawVec3Control(const std::string& label, glm::vec3& values, float i
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.8f, 0.1f, 0.2f, 1.0f });
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.9f, 0.2f, 0.3f, 1.0f });
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.8f, 0.1f, 0.2f, 1.0f });
+    ImGui::PushFont(boldFont);
     if (ImGui::Button("X", buttonSize)) {
         values.x = initialValue;
     }
+    ImGui::PopFont();
     ImGui::PopStyleColor(3);
     ImGui::SameLine();
     ImGui::DragFloat("##X", &values.x, 0.1f, 0.0f, 0.0f, "%.2f");
@@ -111,9 +102,11 @@ static void drawVec3Control(const std::string& label, glm::vec3& values, float i
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f });
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.3f, 0.8f, 0.3f, 1.0f });
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f });
+    ImGui::PushFont(boldFont);
     if (ImGui::Button("Y", buttonSize)) {
         values.y = initialValue;
     }
+    ImGui::PopFont();
     ImGui::PopStyleColor(3);
     ImGui::SameLine();
     ImGui::DragFloat("##Y", &values.y, 0.1f, 0.0f, 0.0f, "%.2f");
@@ -124,9 +117,11 @@ static void drawVec3Control(const std::string& label, glm::vec3& values, float i
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.3f, 0.8f, 1.0f });
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.2f, 0.4f, 0.9f, 1.0f });
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.3f, 0.8f, 1.0f });
+    ImGui::PushFont(boldFont);
     if (ImGui::Button("Z", buttonSize)) {
         values.z = initialValue;
     }
+    ImGui::PopFont();
     ImGui::PopStyleColor(3);
     ImGui::SameLine();
     ImGui::DragFloat("##Z", &values.z, 0.1f, 0.0f, 0.0f, "%.2f");
@@ -140,25 +135,40 @@ static void drawVec3Control(const std::string& label, glm::vec3& values, float i
 }
 
 void SceneHierarchyPanel::drawEntityComponents(Entity entity) {
-    entity.drawComponent<TagComponent, false>("Tag", [&]() {
+    if (entity.hasComponent<TagComponent>()) {
         auto& tag = entity.getComponent<TagComponent>().tag;
         char buffer[256];
         std::memset(buffer, 0, sizeof(buffer));
         std::memcpy(buffer, tag.c_str(), sizeof(buffer));
-        if (ImGui::InputText("Tag", buffer, sizeof(buffer))) {
+        if (ImGui::InputText("##TagComponent", buffer, sizeof(buffer))) {
             tag = std::string{ buffer };
         }
-    });
-    entity.drawComponent<TransformComponent, false>("Transform", [&]() {
-        auto& transform = entity.getComponent<TransformComponent>();
-        drawVec3Control("Translation", transform.translation);
-        glm::vec3 rotation = glm::degrees(transform.rotation);
+    };
+    ImGui::SameLine();
+    ImGui::PushItemWidth(-1);
+    if (ImGui::Button("Add component")) {
+        ImGui::OpenPopup("##AddComponent");
+    }
+    if (ImGui::BeginPopup("##AddComponent")) {
+        if (ImGui::MenuItem("Camera")) {
+            selectedEntity.addComponent<CameraComponent>();
+            ImGui::CloseCurrentPopup();
+        }
+        if (ImGui::MenuItem("Sprite")) {
+            selectedEntity.addComponent<SpriteComponent>();
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
+    }
+    ImGui::PopItemWidth();
+    entity.drawComponent<TransformComponent>("Transform", [&](auto& component) {
+        drawVec3Control("Translation", component.translation);
+        glm::vec3 rotation = glm::degrees(component.rotation);
         drawVec3Control("Rotation", rotation);
-        transform.rotation = glm::radians(rotation);
-        drawVec3Control("Scale", transform.scale, 1.0f);
+        component.rotation = glm::radians(rotation);
+        drawVec3Control("Scale", component.scale, 1.0f);
     });
-    entity.drawComponent<CameraComponent, true>("Camera", [&]() {
-        auto& component = entity.getComponent<CameraComponent>();
+    entity.drawComponent<CameraComponent>("Camera", [&](auto& component) {
         auto& camera = component.camera;
         ImGui::Checkbox("Primary", &component.primary);
         const char* projectionTypes[] = { "Perspective", "Orthographic" };
@@ -212,9 +222,8 @@ void SceneHierarchyPanel::drawEntityComponents(Entity entity) {
             }
         }
     });
-    entity.drawComponent<SpriteComponent, true>("Sprite", [&]() {
-        auto& color = entity.getComponent<SpriteComponent>().color;
-        ImGui::ColorEdit4("Color", glm::value_ptr(color));
+    entity.drawComponent<SpriteComponent>("Sprite", [&](auto& component) {
+        ImGui::ColorEdit4("Color", glm::value_ptr(component.color));
     });
 }
 }
