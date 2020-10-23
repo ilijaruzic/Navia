@@ -47,8 +47,9 @@ set(SOURCE_FILES
         src/scene/Components.cpp
         src/scene/Entity.cpp
         src/scene/Scene.cpp
-        src/scene/ScriptableEntity.cpp
-        src/scene/SceneCamera.cpp)
+        src/scene/SceneCamera.cpp
+        src/scene/SceneSerializer.cpp
+        src/scene/ScriptableEntity.cpp)
 set(INCLUDE_FILES
         include/navia/core/Application.hpp
         include/navia/core/Base.hpp
@@ -96,6 +97,7 @@ set(INCLUDE_FILES
         include/navia/scene/Entity.hpp
         include/navia/scene/Scene.hpp
         include/navia/scene/SceneCamera.hpp
+        include/navia/scene/SceneSerializer.hpp
         include/navia/scene/ScriptableEntity.hpp
         PrecompiledHeaders.hpp)
 
@@ -105,9 +107,10 @@ add_subdirectory(lib/glad)
 add_subdirectory(lib/glfw)
 add_subdirectory(lib/glm)
 add_subdirectory(lib/stb)
+add_subdirectory(lib/yaml-cpp)
 
 add_library(Navia.Engine STATIC ${SOURCE_FILES} ${INCLUDE_FILES})
-target_link_libraries(Navia.Engine PUBLIC imgui PRIVATE opengl32 glad glfw)
+target_link_libraries(Navia.Engine PUBLIC imgui yaml-cpp PRIVATE opengl32 glad glfw)
 target_precompile_headers(Navia.Engine PUBLIC PrecompiledHeaders.hpp)
 target_include_directories(Navia.Engine
         PUBLIC
@@ -116,6 +119,7 @@ target_include_directories(Navia.Engine
             lib/glm
             lib/imgui
             lib/spdlog/include
+            lib/yaml-cpp/include
         PRIVATE
             lib/glad/include
             lib/glfw/include

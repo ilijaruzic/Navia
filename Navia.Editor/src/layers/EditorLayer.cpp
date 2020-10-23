@@ -1,4 +1,5 @@
 #include "layers/EditorLayer.hpp"
+#include "navia/scene/SceneSerializer.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
@@ -16,47 +17,6 @@ void EditorLayer::onAttach() {
     framebuffer = Framebuffer::create(properties);
 
     scene = createRef<Scene>();
-
-    greenSquareEntity = scene->createEntity("Green Square");
-    greenSquareEntity.addComponent<SpriteComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
-
-    redSquareEntity = scene->createEntity("Red Square");
-    redSquareEntity.addComponent<SpriteComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
-
-    primaryCameraEntity = scene->createEntity("Camera A");
-    primaryCameraEntity.addComponent<CameraComponent>();
-
-    secondaryCameraEntity = scene->createEntity("Camera B");
-    auto& camera = secondaryCameraEntity.addComponent<CameraComponent>();
-    camera.primary = false;
-
-    class CameraController : public ScriptableEntity {
-    public:
-        void onCreate() override {
-            auto& transform = getComponent<TransformComponent>();
-            transform.translation.x = std::rand() % 10 - 5.0f;
-        }
-
-        void onUpdate(Timestep timestep) override {
-            auto& transform = getComponent<TransformComponent>();
-            float cameraSpeed = 5.0f;
-            if (Input::isKeyPressed(Key::A)) {
-                transform.translation.x -= cameraSpeed * timestep;
-            }
-            if (Input::isKeyPressed(Key::D)) {
-                transform.translation.x += cameraSpeed * timestep;
-            }
-            if (Input::isKeyPressed(Key::W)) {
-                transform.translation.y += cameraSpeed * timestep;
-            }
-            if (Input::isKeyPressed(Key::S)) {
-                transform.translation.y -= cameraSpeed * timestep;
-            }
-        }
-    };
-    primaryCameraEntity.addComponent<NativeScriptComponent>().bind<CameraController>();
-    secondaryCameraEntity.addComponent<NativeScriptComponent>().bind<CameraController>();
-
     sceneHierarchyPanel.setContext(scene);
 }
 
@@ -113,6 +73,14 @@ void EditorLayer::onImGuiRender() {
     bool openStats = false;
     if (ImGui::BeginMenuBar()) {
         if (ImGui::BeginMenu("File")) {
+            if (ImGui::MenuItem("Load Scene")) {
+                SceneSerializer serializer{ scene };
+                serializer.deserialize("assets/scenes/example.navia", SceneSerializer::Mode::Text);
+            }
+            if (ImGui::MenuItem("Save Scene")) {
+                SceneSerializer serializer{ scene };
+                serializer.serialize("assets/scenes/example.navia", SceneSerializer::Mode::Text);
+            }
             if (ImGui::MenuItem("Exit")) {
                 Application::getInstance().close();
             }
