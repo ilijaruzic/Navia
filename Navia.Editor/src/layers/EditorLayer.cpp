@@ -1,5 +1,6 @@
 #include "layers/EditorLayer.hpp"
 #include "navia/scene/SceneSerializer.hpp"
+#include "navia/utils/PlatformUtils.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
@@ -73,16 +74,19 @@ void EditorLayer::onImGuiRender() {
     bool openStats = false;
     if (ImGui::BeginMenuBar()) {
         if (ImGui::BeginMenu("File")) {
-            if (ImGui::MenuItem("Load Scene")) {
-                SceneSerializer serializer{ scene };
-                serializer.deserialize("assets/scenes/example.navia", SceneSerializer::Mode::Text);
+            if (ImGui::MenuItem("New", "Ctrl+N")) {
+                newScene();
             }
-            if (ImGui::MenuItem("Save Scene")) {
-                SceneSerializer serializer{ scene };
-                serializer.serialize("assets/scenes/example.navia", SceneSerializer::Mode::Text);
+            if (ImGui::MenuItem("Open...", "Ctrl+O")) {
+                openScene();
             }
-            if (ImGui::MenuItem("Exit")) {
-                Application::getInstance().close();
+            ImGui::Separator();
+            if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S")) {
+                saveSceneAs();
+            }
+            ImGui::Separator();
+            if (ImGui::MenuItem("Exit", "Alt+F4")) {
+                close();
             }
             ImGui::EndMenu();
         }
@@ -165,5 +169,71 @@ void EditorLayer::onUpdate(Timestep timestep) {
 
 void EditorLayer::onEvent(Event& event) {
     cameraController.onEvent(event);
+    EventDispatcher dispatcher{ event };
+    dispatcher.dispatch<KeyPressedEvent>(NAVIA_BIND_EVENT_CALLBACK(EditorLayer::onKeyPressed));
 }
+
+bool EditorLayer::onKeyPressed(KeyPressedEvent& event) {
+    if (event.getRepeatCount() > 0) {
+        return false;
+    }
+    bool alt = Input::isKeyPressed(Key::LeftAlt) || Input::isKeyPressed(Key::RightAlt);
+    bool ctrl = Input::isKeyPressed(Key::LeftControl) || Input::isKeyPressed(Key::RightControl);
+    bool shift = Input::isKeyPressed(Key::LeftShift) || Input::isKeyPressed(Key::RightShift);
+    switch (event.getKeyCode()) {
+        case Key::N: {
+            if (ctrl) {
+                newScene();
+            }
+            break;
+        }
+        case Key::O: {
+            if (ctrl) {
+                openScene();
+            }
+            break;
+        }
+        case Key::S: {
+            if (ctrl && shift) {
+                saveSceneAs();
+            }
+            break;
+        }
+        case Key::F4: {
+            if (alt) {
+                close();
+            }
+            break;
+        }
+    }
+}
+
+void EditorLayer::newScene() {
+    scene = createRef<Scene>();
+    scene->onViewportResize(static_cast<uint32_t>(viewportSize.x), static_cast<uint32_t>(viewportSize.y));
+    sceneHierarchyPanel.setContext(scene);
+}
+
+void EditorLayer::openScene() {
+    std::string filepath = FileDialog::openFile("Navia Scene (*.navia)\0*.navia\0");
+    if (!filepath.empty()) {
+        newScene();
+        SceneSerializer serializer{ scene };
+        serializer.deserialize(filepath, SceneSerializer::Mode::Text);
+    }
+}
+
+void EditorLayer::saveSceneAs() {
+    std::string filepath = FileDialog::saveFile("Navia Scene (*.navia)\0*.navia\0");
+    if (!filepath.empty()) {
+        SceneSerializer serializer{scene};
+        serializer.serialize(filepath, SceneSerializer::Mode::Text);
+    }
+}
+
+void EditorLayer::close() {
+    Application::getInstance().close();
+}
+
+
 }

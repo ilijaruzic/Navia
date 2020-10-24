@@ -11,6 +11,7 @@ SceneHierarchyPanel::SceneHierarchyPanel(Ref<Scene> scene) {
 
 void SceneHierarchyPanel::setContext(Ref<Scene> scene) {
     this->scene = scene;
+    selectedEntity = Entity{};
 }
 
 void SceneHierarchyPanel::onImGuiRender() {

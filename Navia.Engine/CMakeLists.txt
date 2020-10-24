@@ -28,6 +28,7 @@ set(SOURCE_FILES
         src/platform/opengl/OpenGLVertexArray.cpp
         src/platform/opengl/OpenGLVertexBuffer.cpp
         src/platform/windows/WindowsInput.cpp
+        src/platform/windows/WindowsPlatformUtils.cpp
         src/platform/windows/WindowsWindow.cpp
         src/renderer/BufferLayout.cpp
         src/renderer/Camera.cpp
@@ -99,6 +100,7 @@ set(INCLUDE_FILES
         include/navia/scene/SceneCamera.hpp
         include/navia/scene/SceneSerializer.hpp
         include/navia/scene/ScriptableEntity.hpp
+        include/navia/utils/PlatformUtils.hpp
         PrecompiledHeaders.hpp)
 
 add_subdirectory(lib/entt)

@@ -33,6 +33,12 @@ private:
     glm::vec2 viewportSize{ 0.0f };
 
     SceneHierarchyPanel sceneHierarchyPanel;
+
+    bool onKeyPressed(KeyPressedEvent& event);
+    void newScene();
+    void openScene();
+    void saveSceneAs();
+    void close();
 };
 }
 
